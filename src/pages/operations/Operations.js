@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import './Blocks.scss';
-import Card from "../components/Card";
-import SearchBox from "../components/SearchBox";
+import './Operations.scss';
+import Card from "../../components/Card";
+import SearchBox from "../../components/SearchBox";
 
-class Blocks extends Component {
+class Operations extends Component {
     constructor(props) {
         super(props);
 
@@ -20,15 +20,15 @@ class Blocks extends Component {
 
     render() {
         return (
-            <div className="blocks-container">
+            <div className="operations-container">
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter block hash or block height"
+                        placeholder="Enter fact hash or account address"
                         onChange={(e) => this.onSearchChange(e)}
                         value={this.state.search} />
                 </Card>
-                <Card id="list" title="Blocks">
+                <Card id="list" title="Operations">
                     
                 </Card>
             </div>
@@ -36,4 +36,4 @@ class Blocks extends Component {
     }
 }
 
-export default Blocks;
+export default Operations;

@@ -19,7 +19,7 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { placeholder, onChange, disabled, value } = this.props;
+    const { placeholder, onChange, onSearch, disabled, value } = this.props;
 
     return (
       <div className="search-container">
@@ -38,7 +38,7 @@ class SearchBox extends Component {
           }
           placeholder={placeholder}
         />
-        <img id="button" src={searchImg} alt="search" />
+        <img id="button" src={searchImg} alt="search" onClick={onSearch}/>
       </div>
     );
   }
