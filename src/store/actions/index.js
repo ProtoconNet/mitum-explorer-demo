@@ -1,8 +1,10 @@
-export const SET_VERSION = "SET_VERSION";
+export const SET_NODE_INFO = "node/set-node-info";
 
-export function setVersion(version) {
+export function setNodeInfo(modelVersion, networkVersion, blockHeight) {
     return {
-        type: SET_VERSION,
-        version,
+        type: SET_NODE_INFO,
+        modelVersion,
+        networkVersion,
+        blockHeight
     }
 }

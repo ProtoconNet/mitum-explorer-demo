@@ -17,15 +17,15 @@ const operationsColumns = ["Fact hash", "Date", "Items"];
 const BalancesColumns = ["Currency ID", "Amount"];
 
 const getAccount = async (address) => {
-    return axios.get(network + accountApi + address);
+    return await axios.get(network + accountApi + address);
 }
 
 const getAccountOperation = async (address) => {
-    return axios.get(network + accountApi + address + operationsApi);
+    return await axios.get(network + accountApi + address + operationsApi);
 }
 
 const checkNextLink = async (next) => {
-    return axios.get(network + next);
+    return await axios.get(network + next);
 }
 
 const initialState = {
@@ -165,7 +165,8 @@ class Account extends Component {
         }
 
         if (this.isAddress(this.state.search)) {
-            this.props.history.push(`/account/${this.state.search}`)
+            this.props.history.push(`/account/${this.state.search}`);
+            window.location.reload();
         }
         else {
             this.props.history.push(`/accounts/${this.state.search}`);
@@ -215,7 +216,7 @@ class Account extends Component {
     onOperationPrev() {
         const { idx, linkStack } = this.state.operationsRes;
 
-        if (idx === 0) {
+        if (idx <= 0) {
             return;
         }
         else {
@@ -239,6 +240,9 @@ class Account extends Component {
                         });
                     }
                 )
+                .catch(
+                    e => alert("Network error!")
+                )
         }
     }
 
@@ -253,8 +257,6 @@ class Account extends Component {
                 .then(
                     res => {
                         const operations = res.data._embedded;
-                        const { next } = res.data._links;
-
                         const nextState = {
                             ...this.state.operationsRes,
                             operations: operations.map(
@@ -267,37 +269,42 @@ class Account extends Component {
                             idx: idx + 1,
                         }
 
-                        checkNextLink(next.href)
-                            .then(
-                                res => {
-                                    this.setState({
-                                        operationsRes: {
-                                            ...nextState,
-                                            linkStack: linkStack.concat([next.href]),
-                                        }
-                                    })
-                                }
-                            )
-                            .catch(
-                                e => {
-                                    this.setState({
-                                        operationsRes: {
-                                            ...nextState,
-                                        }
-                                    })
-                                }
-                            )
-
+                        if (idx + 2 >= linkStack.length) {
+                            const { next } = res.data._links;
+                            checkNextLink(next.href)
+                                .then(
+                                    nextRes => {
+                                        this.setState({
+                                            operationsRes: {
+                                                ...nextState,
+                                                linkStack: linkStack.concat([next.href]),
+                                            }
+                                        })
+                                    }
+                                )
+                                .catch(
+                                    e => {
+                                        this.setState({
+                                            operationsRes: {
+                                                ...nextState,
+                                            }
+                                        })
+                                    }
+                                )
+                        }
                     }
+                )
+                .catch(
+                    e => alert("Network error!")
                 )
         }
 
     }
 
     isAddress(target) {
-        const { version } = this.props;
+        const { modelVersion } = this.props;
 
-        if (target.indexOf(":mca-" + version) > -1) {
+        if (target.indexOf(":mca-" + modelVersion) > -1) {
             return true;
         }
         return false;
@@ -345,7 +352,7 @@ class Account extends Component {
                 <List columns={publicKeysColumns}
                     items={pubItems}
                     onElementClick={[
-                        (x) => this.props.history.push(`/accounts/${x}`), 
+                        (x) => this.props.history.push(`/accounts/${x}`),
                         null
                     ]}
                     onPrevClick={() => this.onPubPrev()}
@@ -357,7 +364,7 @@ class Account extends Component {
                 <List columns={BalancesColumns}
                     items={balancesItems}
                     onElementClick={[
-                        (x) => this.props.history.push(`/currencies/${x}`),
+                        (x) => this.props.history.push(`/currency/${x}`),
                         null
                     ]}
                     onPrevClick={() => this.onBalancePrev()}
@@ -419,7 +426,7 @@ class Account extends Component {
 }
 
 const mapStateToProps = state => ({
-    version: state.version.version,
+    modelVersion: state.info.modelVersion,
 });
 
 export default connect(

@@ -18,6 +18,14 @@ class Blocks extends Component {
         });
     }
 
+    renderBlock() {
+
+    }
+
+    renderBlocks() {
+
+    }
+
     render() {
         return (
             <div className="blocks-container">

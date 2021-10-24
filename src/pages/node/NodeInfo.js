@@ -3,16 +3,8 @@ import { connect } from 'react-redux';
 import './NodeInfo.scss';
 import Card from '../../components/Card';
 import SearchBox from '../../components/SearchBox';
-
-import packageInfo from '../../../package.json';
-
-import axios from 'axios';
 import DetailCard from '../../components/DetailCard';
-import { setVersion } from '../../store/actions';
-
-const getNodeInfo = async () => {
-    return await axios.get(process.env.REACT_APP_NETWORK);
-}
+import packageInfo from '../../../package.json';
 
 class NodeInfo extends Component {
     constructor(props) {
@@ -26,28 +18,7 @@ class NodeInfo extends Component {
     }
 
     load() {
-        getNodeInfo()
-        .then(
-            res => {
-                const data = res.data._embedded;
-                
-                const version = res.data._hint.slice("mitum-currency-hal-".length, -1);
-                this.props.setVersion(version);
-
-                this.setState({
-                    networkVersion: data.version,
-                    blockHeight: data.last_block.height
-                });
-            }
-        )
-        .catch(
-            e => {
-                this.setState({
-                    networkVersion: "Not found",
-                    blockHeight: "Not found"
-                });
-            }
-        )
+      
     }
 
     componentDidMount() {
@@ -62,9 +33,9 @@ class NodeInfo extends Component {
 
     render() {
         const items = [
-            ["Network version", this.state.networkVersion],
+            ["Network version", this.props.networkVersion],
             ["Explorer version", `v${packageInfo.version}`],
-            ["Current block height", this.state.blockHeight]
+            ["Current block height", this.props.blockHeight]
         ]
 
         return (
@@ -85,11 +56,12 @@ class NodeInfo extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    setVersion: (version) => dispatch(setVersion(version)),
+const mapStateToProps = state => ({
+    networkVersion: state.info.networkVersion,
+    blockHeight: state.info.blockHeight,
 });
 
 export default connect(
-    null,
-    mapDispatchToProps
+    mapStateToProps,
+    null
 )(NodeInfo);

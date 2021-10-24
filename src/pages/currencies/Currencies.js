@@ -135,7 +135,8 @@ class Currencies extends Component {
         if (currency === "") {
             return;
         }
-        this.props.history.push(`/currencies/${currency}`);
+        this.props.history.push(`/currency/${currency}`);
+        window.location.reload();
     }
 
     render() {
