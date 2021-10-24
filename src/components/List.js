@@ -8,6 +8,13 @@ const plainTextStyle = {
 
 class List extends Component {
 
+    contentComponent(content, func) {
+        if (func === null) {
+            return <p style={plainTextStyle}>{content}</p>
+        }
+        return <p onClick={() => func(content)}>{content}</p>
+    }
+
     listComponent(rowData, isAttribute) {
 
         if (isAttribute) {
@@ -15,7 +22,7 @@ class List extends Component {
                 <li key={Math.random()} style={{ color: "black", backgroundColor: "transparent" }}>
                     {rowData.map(
                         x => (
-                            <p style={{...plainTextStyle, fontWeight: "400"}}>{x}</p>
+                            <p style={{ ...plainTextStyle, fontWeight: "400" }}>{x}</p>
                         )
                     )}
                 </li>
@@ -23,20 +30,17 @@ class List extends Component {
         }
         else {
             const { onElementClick } = this.props;
-            let i = 0;
+            const combinded = [];
+
+            for (var i = 0; i < onElementClick.length; i++) {
+                combinded.push([rowData[i], onElementClick[i]]);
+            }
 
             return (
                 <li key={Math.random()}>
-                    {rowData.map(
-                        x => {
-                            if(onElementClick[i] !== null ){
-                                return <p onClick={() => onElementClick[i++](x)}>{x}</p>
-                            }
-                            else {
-                                return <p style={plainTextStyle} >{x}</p>
-                            }
-                        }
-                    )}
+                    {
+                        combinded.map(x => this.contentComponent(x[0], x[1]))
+                    }
                 </li>
 
             );

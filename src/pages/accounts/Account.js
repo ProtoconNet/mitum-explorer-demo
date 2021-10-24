@@ -29,19 +29,21 @@ const checkNextLink = async (next) => {
 }
 
 const initialState = {
-    result: {
-        address: null,
-        keys: {
-            threshold: -1,
-            keys: [],
-        },
+    keysRes: {
+        idx: 0,
+        keys: [],
+        threshold: -1,
+    },
+    balancesRes: {
+        idx: 0,
         balances: [],
+    },
+    operationsRes: {
+        idx: 0,
+        linkStack: [],
         operations: [],
     },
-    keysIdx: 0,
-    balancesIdx: 0,
-    operationsIdx: 0,
-    operationsStack: [],
+    addressRes: null,
 }
 
 class Account extends Component {
@@ -50,7 +52,7 @@ class Account extends Component {
 
         this.state = {
             search: "",
-            searchRes: initialState,
+            ...initialState,
         }
     }
 
@@ -61,30 +63,25 @@ class Account extends Component {
                     const data = res.data._embedded;
 
                     this.setState({
-                        isLoad: true,
-                        searchRes: {
-                            ...this.state.searchRes,
-                            result: {
-                                ...this.state.searchRes.result,
-                                address: data.address,
-                                keys: {
-                                    threshold: data.keys.threshold,
-                                    keys: data.keys.keys.map(
-                                        key => ({
-                                            key: key.key,
-                                            weight: key.weight,
-                                        })
-                                    ),
-                                },
-                                balances: data.balance.map(
-                                    balance => ({
-                                        currency: balance.currency,
-                                        amount: balance.amount,
-                                    })
-                                ),
-                            },
-                            keysIdx: 0,
-                            balancesIdx: 0,
+                        addressRes: data.address,
+                        keysRes: {
+                            threshold: data.keys.threshold,
+                            keys: data.keys.keys.map(
+                                key => ({
+                                    key: key.key,
+                                    weight: key.weight,
+                                })
+                            ),
+                            idx: 0,
+                        },
+                        balancesRes: {
+                            balances: data.balance.map(
+                                balance => ({
+                                    currency: balance.currency,
+                                    amount: balance.amount,
+                                })
+                            ),
+                            idx: 0,
                         }
                     });
                 }
@@ -92,7 +89,7 @@ class Account extends Component {
             .catch(
                 e => {
                     this.setState({
-                        searchRes: initialState,
+                        ...initialState,
                     });
                 }
             )
@@ -103,36 +100,34 @@ class Account extends Component {
                     const operations = res.data._embedded;
                     const { self, next } = res.data._links;
                     const nextState = {
-                        searchRes: {
-                            ...this.state.searchRes,
-                            result: {
-                                ...this.state.searchRes.result,
-                                operations: operations.map(
-                                    operation => ({
-                                        factHash: operation._embedded.operation.fact.hash,
-                                        date: operation._embedded.confirmed_at,
-                                        items: operation._embedded.operation.fact.items.length,
-                                    })
-                                )
-                            },
-                            operationsIdx: 0,
-                        }
+                        operations: operations.map(
+                            operation => ({
+                                factHash: operation._embedded.operation.fact.hash,
+                                date: operation._embedded.confirmed_at,
+                                items: operation._embedded.operation.fact.items.length,
+                            })
+                        ),
+                        idx: 0,
                     }
 
                     checkNextLink(next.href)
                         .then(
                             res => {
                                 this.setState({
-                                    ...nextState,
-                                    operationsStack: [self.href, next.href],
+                                    operationsRes: {
+                                        ...nextState,
+                                        linkStack: [self.href, next.href],
+                                    }
                                 })
                             }
                         )
                         .catch(
                             e => {
                                 this.setState({
-                                    ...nextState,
-                                    operationsStack: [self.href],
+                                    operationsRes: {
+                                        ...nextState,
+                                        linkStack: [self.href],
+                                    }
                                 })
                             }
                         )
@@ -142,7 +137,7 @@ class Account extends Component {
             .catch(
                 e => {
                     this.setState({
-                        searchRes: initialState,
+                        ...initialState,
                     });
                 }
             )
@@ -178,26 +173,124 @@ class Account extends Component {
     }
 
     onPubPrev() {
-
+        const { idx } = this.state.keysRes;
+        this.setState({
+            keysRes: {
+                ...this.state.keysRes,
+                idx: idx - 3 < 0 ? 0 : idx - 3
+            }
+        });
     }
 
     onPubNext() {
-
+        const { idx, keys } = this.state.keysRes;
+        this.setState({
+            keysRes: {
+                ...this.state.keysRes,
+                idx: idx + 3 > keys.length ? idx : idx + 3,
+            }
+        })
     }
 
     onBalancePrev() {
-
+        const { idx } = this.state.balancesRes;
+        this.setState({
+            balancesRes: {
+                ...this.state.balancesRes,
+                idx: idx - 3 <= 0 ? 0 : idx - 3,
+            }
+        });
     }
 
     onBalanceNext() {
-
+        const { idx, balances } = this.state.balancesRes;
+        this.setState({
+            balancesRes: {
+                ...this.state.balancesRes,
+                idx: idx + 3 > balances.length ? idx : idx + 3,
+            }
+        });
     }
 
     onOperationPrev() {
+        const { idx, linkStack } = this.state.operationsRes;
 
+        if (idx === 0) {
+            return;
+        }
+        else {
+            checkNextLink(linkStack[idx - 1])
+                .then(
+                    res => {
+                        const operations = res.data._embedded;
+
+                        this.setState({
+                            operationsRes: {
+                                ...this.state.operationsRes,
+                                operations: operations.map(
+                                    operation => ({
+                                        factHash: operation._embedded.operation.fact.hash,
+                                        date: operation._embedded.confirmed_at,
+                                        items: operation._embedded.operation.fact.items.length,
+                                    })
+                                ),
+                                idx: idx - 1,
+                            }
+                        });
+                    }
+                )
+        }
     }
 
     onOperationNext() {
+        const { idx, linkStack } = this.state.operationsRes;
+
+        if (idx + 1 >= linkStack.length) {
+            return;
+        }
+        else {
+            checkNextLink(linkStack[idx + 1])
+                .then(
+                    res => {
+                        const operations = res.data._embedded;
+                        const { next } = res.data._links;
+
+                        const nextState = {
+                            ...this.state.operationsRes,
+                            operations: operations.map(
+                                operation => ({
+                                    factHash: operation._embedded.operation.fact.hash,
+                                    date: operation._embedded.confirmed_at,
+                                    items: operation._embedded.operation.fact.items.length,
+                                })
+                            ),
+                            idx: idx + 1,
+                        }
+
+                        checkNextLink(next.href)
+                            .then(
+                                res => {
+                                    this.setState({
+                                        operationsRes: {
+                                            ...nextState,
+                                            linkStack: linkStack.concat([next.href]),
+                                        }
+                                    })
+                                }
+                            )
+                            .catch(
+                                e => {
+                                    this.setState({
+                                        operationsRes: {
+                                            ...nextState,
+                                        }
+                                    })
+                                }
+                            )
+
+                    }
+                )
+        }
 
     }
 
@@ -211,9 +304,9 @@ class Account extends Component {
     }
 
     renderAccountInfo() {
-        const { searchRes } = this.state;
+        const { addressRes, balancesRes, keysRes } = this.state;
 
-        if (!searchRes.result.address) {
+        if (!addressRes) {
             return (
                 <Card id="account-info" title="Account Information">
                     <p>Not found</p>
@@ -221,16 +314,15 @@ class Account extends Component {
             )
         }
 
-        const { keysIdx, balancesIdx } = searchRes;
-        const { keys } = searchRes.result.keys;
-        const { balances } = searchRes.result;
+        const { keys } = keysRes;
+        const { balances } = balancesRes;
 
         const pubItems = keys
             .map(key => [key.key, key.weight])
-            .slice(keysIdx, (keysIdx + 10 >= keys.length ? keys.length : keysIdx + 10))
-        const balalncesItems = balances
+            .slice(keysRes.idx, (keysRes.idx + 3 >= keys.length ? keys.length : keysRes.idx + 3))
+        const balancesItems = balances
             .map(currency => [currency.currency, currency.amount])
-            .slice(balancesIdx, (balancesIdx + 10 >= balances.length ? balances.length : balancesIdx + 10))
+            .slice(balancesRes.idx, (balancesRes.idx + 3 >= balances.length ? balances.length : balancesRes.idx + 3))
 
         const plainTitleStyle = {
             fontSize: "0.9rem",
@@ -245,35 +337,39 @@ class Account extends Component {
         return (
             <Card id="account-info" title="Account Information">
                 <DetailCard items={[
-                    ["Address", searchRes.result.address],
-                    ["Threshold", searchRes.result.keys.threshold]
+                    ["Address", addressRes],
+                    ["Threshold", keysRes.threshold]
                 ]} />
 
                 <p style={plainTitleStyle}>Keys</p>
                 <List columns={publicKeysColumns}
                     items={pubItems}
-                    onElementClick={[null, null]}
+                    onElementClick={[
+                        (x) => this.props.history.push(`/accounts/${x}`), 
+                        null
+                    ]}
                     onPrevClick={() => this.onPubPrev()}
                     onNextClick={() => this.onPubNext()}
-                    isFirstPage={keysIdx === 0}
-                    isLastPage={keysIdx + 10 >= keys.length} />
+                    isFirstPage={keysRes.idx === 0}
+                    isLastPage={keysRes.idx + 3 >= keys.length} />
 
                 <p style={plainTitleStyle}>Balances</p>
                 <List columns={BalancesColumns}
-                    items={balalncesItems}
-                    onElementClick={[null, null]}
+                    items={balancesItems}
+                    onElementClick={[
+                        (x) => this.props.history.push(`/currencies/${x}`),
+                        null
+                    ]}
                     onPrevClick={() => this.onBalancePrev()}
                     onNextClick={() => this.onBalanceNext()}
-                    isFirstPage={balancesIdx === 0}
-                    isLastPage={balancesIdx + 10 >= balances.length} />
+                    isFirstPage={balancesRes.idx === 0}
+                    isLastPage={balancesRes.idx + 3 >= balances.length} />
             </Card>
         );
     }
 
     renderOperations() {
-        const { searchRes } = this.state;
-        const { operationsIdx, operationsStack } = searchRes;
-        const { operations } = searchRes.result;
+        const { idx, linkStack, operations } = this.state.operationsRes;
 
         if (!operations) {
             return (
@@ -290,11 +386,15 @@ class Account extends Component {
             <Card id="operations" title="Operations">
                 <List columns={operationsColumns}
                     items={operationItems}
-                    onElementClick={[null, null]}
+                    onElementClick={[
+                        (x) => this.props.history.push(`/operation/${x}`),
+                        null,
+                        null,
+                    ]}
                     onPrevClick={() => this.onOperationPrev()}
                     onNextClick={() => this.onOperationNext()}
-                    isFirstPage={operationsIdx === 0}
-                    isLastPage={operationsIdx + 1 >= operationsStack.length} />
+                    isFirstPage={idx === 0}
+                    isLastPage={idx + 1 >= linkStack.length} />
             </Card>
         );
     }
