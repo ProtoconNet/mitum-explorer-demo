@@ -10,7 +10,7 @@ import DetailCard from "../../components/DetailCard";
 
 const network = process.env.REACT_APP_NETWORK;
 const accountApi = process.env.REACT_APP_ACCOUNT;
-const operationsApi = process.env.REACT_APP_ACCOUNT_OPERATIONS;
+const operationsApi = process.env.REACT_APP_OPERATIONS;
 
 const publicKeysColumns = ["Public key", "Weight"];
 const operationsColumns = ["Fact hash", "Date", "Items"];
@@ -104,7 +104,9 @@ class Account extends Component {
                             operation => ({
                                 factHash: operation._embedded.operation.fact.hash,
                                 date: operation._embedded.confirmed_at,
-                                items: operation._embedded.operation.fact.items.length,
+                                items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
+                                    ? operation._embedded.operation.fact.items.length
+                                    : 0
                             })
                         ),
                         idx: 0,
@@ -149,7 +151,7 @@ class Account extends Component {
             this.loadAccountInfo(params.address);
         }
         else {
-            this.loadAccountInfo(process.env.REACT_APP_GENESIS_ACCOUNT);
+            this.props.history.push(`/accounts`);
         }
     }
 
@@ -232,7 +234,9 @@ class Account extends Component {
                                     operation => ({
                                         factHash: operation._embedded.operation.fact.hash,
                                         date: operation._embedded.confirmed_at,
-                                        items: operation._embedded.operation.fact.items.length,
+                                        items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
+                                            ? operation._embedded.operation.fact.items.length
+                                            : 0
                                     })
                                 ),
                                 idx: idx - 1,
@@ -263,7 +267,9 @@ class Account extends Component {
                                 operation => ({
                                     factHash: operation._embedded.operation.fact.hash,
                                     date: operation._embedded.confirmed_at,
-                                    items: operation._embedded.operation.fact.items.length,
+                                    items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
+                                        ? operation._embedded.operation.fact.items.length
+                                        : 0
                                 })
                             ),
                             idx: idx + 1,

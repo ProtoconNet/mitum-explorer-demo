@@ -17,7 +17,7 @@ export default function Navigation() {
       <nav className="nav-menu">
         <Link to="/blocks">Blocks</Link>
         <Link to="/operations">Operations</Link>
-        <Link to="/account">Accounts</Link>
+        <Link to="/accounts">Accounts</Link>
         <Link to="/currencies">Currencies</Link>
       </nav>
     </header>

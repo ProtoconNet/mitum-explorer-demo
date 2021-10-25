@@ -17,18 +17,33 @@ class NodeInfo extends Component {
         }
     }
 
-    load() {
-      
-    }
+    isAddress(target) {
+        const { modelVersion } = this.props;
 
-    componentDidMount() {
-        this.load();
+        if (target.indexOf(":mca-" + modelVersion) > -1) {
+            return true;
+        }
+        return false;
     }
 
     onSearchChange(e) {
         this.setState({
             search: e.target.value
         });
+    }
+
+    onSearch() {
+        const {search} = this.state;
+        if(!search) {
+            return;
+        }
+
+        if(this.isAddress(search)) {
+            this.props.history.push(`/account/${search}`);
+        }
+        else {
+            this.props.history.push(`/operation/${search}`);
+        }
     }
 
     render() {
@@ -45,6 +60,7 @@ class NodeInfo extends Component {
                         disabled={false}
                         placeholder="Enter fact hash or account address"
                         onChange={(e) => this.onSearchChange(e)}
+                        onSearch={() => this.onSearch()}
                         value={this.state.search} />
                 </Card>
                 <Card id="list" title="MITUM Network Information">

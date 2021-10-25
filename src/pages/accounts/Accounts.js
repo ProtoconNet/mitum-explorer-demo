@@ -85,7 +85,7 @@ class Accounts extends Component {
         }
         else {
             this.loadAccounts(process.env.REACT_APP_GENESIS_PUB_KEY);
-            this.setState({pubkey: process.env.REACT_APP_GENESIS_PUB_KEY});
+            this.setState({pubKey: process.env.REACT_APP_GENESIS_PUB_KEY});
         }
     }
 

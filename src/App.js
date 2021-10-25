@@ -9,7 +9,6 @@ import Currencies from './pages/currencies/Currencies';
 import NodeInfo from './pages/node/NodeInfo';
 import Operation from './pages/operations/Operation';
 import Operations from './pages/operations/Operations';
-import Items from './pages/operations/Items';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setNodeInfo } from './store/actions';
@@ -26,16 +25,16 @@ class App extends Component {
         res => {
           const data = res.data._embedded;
 
-          const modelVersion = res.data._hint.slice(process.env.REACT_APP_HAL_HINT.length, -1);
+          const modelVersion = res.data._hint.slice(process.env.REACT_APP_HAL_HINT.length + 1, res.data._hint.length);
           const networkVersion = data.version;
           const blockHeight = data.last_block.height;
-
           this.props.setNodeInfo(modelVersion, networkVersion, blockHeight);
         }
       )
       .catch(
         e => {
           console.error("Cannot load node information");
+          console.log(e);
         }
       )
 
@@ -56,6 +55,7 @@ class App extends Component {
           <Route exact path="/" component={NodeInfo} />
 
           <Route exact path="/blocks" component={Blocks} />
+          <Route exact path="/block" component={Blocks} />
           <Route path="/block/:block" component={Blocks} />
 
           <Route exact path="/account" component={Account} />
@@ -69,9 +69,9 @@ class App extends Component {
 
           <Route exact path="/operation" component={Operation} />
           <Route exact path="/operation/:hash" component={Operation} />
-          <Route path="/operation/:hash/item" component={Items} />
 
           <Route exact path="/currencies" component={Currencies} />
+          <Route exact path="/currency" component={Currencies} />
           <Route path="/currency/:currency" component={Currencies} />
         </BrowserRouter>
       </div>
