@@ -1,28 +1,30 @@
 import React, { Component } from "react";
+
 import './Currencies.scss';
-import Card from "../../components/Card";
+
+import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
 import CurrencyInfo from "./CurrencyInfo";
 import CurrencyList from "./CurrencyList";
 
-import axios from "axios";
+import page, { currency as pageInfo } from '../../lib/page.json';
+import { getCurrencies, getCurrency, parseCurrency } from "../../lib";
 
-const getCurrencies = async () => {
-    return await axios.get(process.env.REACT_APP_NETWORK + process.env.REACT_APP_CURRENCIES);
-}
-
-const getCurrency = async (currency) => {
-    const network = process.env.REACT_APP_NETWORK;
-    const currenciesApi = process.env.REACT_APP_CURRENCIES;
-    return await axios.get(network + currenciesApi + "/" + currency);
-}
-
-const parseCurrency = (currency) => {
-    var idx = currency.indexOf(':');
-    if (idx < 0 || currency.indexOf('{') > -1) {
-        return null;
-    }
-    return currency.substring(idx + 1, currency.length);
+const initialState = {
+    currencies: [],
+    idx: 0,
+    currencyRes: {
+        showResult: false,
+        currency: null,
+        amount: null,
+        minBalance: null,
+        feeer: {
+            type: null,
+            receiver: null,
+            amount: null,
+        }
+    },
+    isLoad: false,
 }
 
 class Currencies extends Component {
@@ -31,20 +33,7 @@ class Currencies extends Component {
 
         this.state = {
             search: "",
-            currencies: [],
-            idx: 0,
-
-            searchRes: {
-                showResult: false,
-                currency: null,
-                amount: null,
-                minBalance: null,
-                feeer: {
-                    type: null,
-                    receiver: null,
-                    amount: null,
-                }
-            },
+            ...initialState,
         }
     }
 
@@ -62,8 +51,19 @@ class Currencies extends Component {
                     });
 
                     this.setState({
+                        isLoad: true,
+                        idx: 0,
                         currencies: parseResult
                     });
+                }
+            )
+            .catch(
+                e => {
+                    this.setState({
+                        ...initialState,
+                        isLoad: true,
+                    })
+                    console.error("Network error! Cannot load currencies.");
                 }
             )
     }
@@ -76,7 +76,7 @@ class Currencies extends Component {
                     const feeer = data.policy.feeer;
 
                     this.setState({
-                        searchRes: {
+                        currencyRes: {
                             showResult: true,
                             currency: data.amount.currency,
                             amount: data.amount.amount,
@@ -88,15 +88,17 @@ class Currencies extends Component {
                             }
                         },
                         search: "",
+                        isLoad: true,
                     })
                 }
             )
             .catch(
                 e => {
                     this.setState({
-                        searchRes: {
+                        currencyRes: {
                             showResult: true,
                             currency: null,
+                            isLoad: true,
                         }
                     })
                 }
@@ -105,7 +107,7 @@ class Currencies extends Component {
 
     componentDidMount() {
         const { params } = this.props.match;
-        if (Object.prototype.hasOwnProperty.call(params, "currency")) {
+        if (Object.prototype.hasOwnProperty.call(params, pageInfo.key)) {
             this.loadCurrency(params.currency);
         }
         else {
@@ -135,7 +137,7 @@ class Currencies extends Component {
         if (currency === "") {
             return;
         }
-        this.props.history.push(`/currency/${currency}`);
+        this.props.history.push(`${page.currency.default}/${currency}`);
         window.location.reload();
     }
 
@@ -152,9 +154,10 @@ class Currencies extends Component {
                         onSearch={() => this.onSearchCurrency(state.search)}
                         value={state.search} />
                 </Card>
-                {state.searchRes.showResult
-                    ? <CurrencyInfo data={state.searchRes} />
+                {state.currencyRes.showResult
+                    ? <CurrencyInfo data={state.currencyRes} isLoad={state.isLoad}/>
                     : <CurrencyList
+                        isLoad={state.isLoad}
                         onPrev={() => this.onPrev()}
                         onNext={() => this.onNext()}
                         onSearchCurrency={(currency) => this.onSearchCurrency(currency)}

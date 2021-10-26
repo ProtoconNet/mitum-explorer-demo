@@ -4,6 +4,7 @@ const initialState = {
     modelVersion: "v0.0.1",
     networkVersion: "v0.0.0",
     blockHeight: 0,
+    isLoad: false,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -11,9 +12,10 @@ export const reducer = (state = initialState, action) => {
         case actions.SET_NODE_INFO:
             return {
                 ...state,
-               modelVersion: action.modelVersion,
-               networkVersion: action.networkVersion,
-               blockHeight: action.blockHeight,
+                modelVersion: action.modelVersion,
+                networkVersion: action.networkVersion,
+                blockHeight: action.blockHeight,
+                isLoad: true,
             };
         default:
             return state;

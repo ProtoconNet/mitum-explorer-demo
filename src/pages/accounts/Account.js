@@ -1,32 +1,16 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import './Accounts.scss';
-import Card from "../../components/Card";
+
+import './Account.scss';
+import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
-import List from "../../components/List";
+import List from "../../components/views/List";
+import DetailCard from "../../components/views/DetailCard";
 
-import axios from "axios";
-import DetailCard from "../../components/DetailCard";
-
-const network = process.env.REACT_APP_NETWORK;
-const accountApi = process.env.REACT_APP_ACCOUNT;
-const operationsApi = process.env.REACT_APP_OPERATIONS;
-
-const publicKeysColumns = ["Public key", "Weight"];
-const operationsColumns = ["Fact hash", "Date", "Items"];
-const BalancesColumns = ["Currency ID", "Amount"];
-
-const getAccount = async (address) => {
-    return await axios.get(network + accountApi + address);
-}
-
-const getAccountOperation = async (address) => {
-    return await axios.get(network + accountApi + address + operationsApi);
-}
-
-const checkNextLink = async (next) => {
-    return await axios.get(network + next);
-}
+import page, { account as pageInfo } from '../../lib/page.json';
+import columns from '../../lib/columns.json';
+import { getAccount, getAccountOperations, getResponse, isAddress, parseDate } from "../../lib";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const initialState = {
     keysRes: {
@@ -44,6 +28,8 @@ const initialState = {
         operations: [],
     },
     addressRes: null,
+    isAccountLoad: false,
+    isOperLoad: false,
 }
 
 class Account extends Component {
@@ -63,6 +49,7 @@ class Account extends Component {
                     const data = res.data._embedded;
 
                     this.setState({
+                        isAccountLoad: true,
                         addressRes: data.address,
                         keysRes: {
                             threshold: data.keys.threshold,
@@ -90,11 +77,12 @@ class Account extends Component {
                 e => {
                     this.setState({
                         ...initialState,
+                        isAccountLoad: true,
                     });
                 }
             )
 
-        getAccountOperation(address)
+        getAccountOperations(address)
             .then(
                 res => {
                     const operations = res.data._embedded;
@@ -104,18 +92,17 @@ class Account extends Component {
                             operation => ({
                                 factHash: operation._embedded.operation.fact.hash,
                                 date: operation._embedded.confirmed_at,
-                                items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
-                                    ? operation._embedded.operation.fact.items.length
-                                    : 0
+                                height: operation._embedded.height,
                             })
                         ),
                         idx: 0,
                     }
 
-                    checkNextLink(next.href)
+                    getResponse(next.href)
                         .then(
                             res => {
                                 this.setState({
+                                    isOperLoad: true,
                                     operationsRes: {
                                         ...nextState,
                                         linkStack: [self.href, next.href],
@@ -126,6 +113,7 @@ class Account extends Component {
                         .catch(
                             e => {
                                 this.setState({
+                                    isOperLoad: true,
                                     operationsRes: {
                                         ...nextState,
                                         linkStack: [self.href],
@@ -139,7 +127,10 @@ class Account extends Component {
             .catch(
                 e => {
                     this.setState({
-                        ...initialState,
+                        isOperLoad: true,
+                        operationsRes: {
+                            ...initialState.operationsRes,
+                        }
                     });
                 }
             )
@@ -147,11 +138,11 @@ class Account extends Component {
 
     componentDidMount() {
         const { params } = this.props.match;
-        if (Object.prototype.hasOwnProperty.call(params, "address")) {
+        if (Object.prototype.hasOwnProperty.call(params, pageInfo.key)) {
             this.loadAccountInfo(params.address);
         }
         else {
-            this.props.history.push(`/accounts`);
+            this.props.history.push(page.accounts.default);
         }
     }
 
@@ -162,16 +153,19 @@ class Account extends Component {
     }
 
     onSearch() {
-        if (this.state.search === "") {
+        const search = this.state.search.trim();
+        const version = this.props.modelVersion;
+
+        if (search === "") {
             return;
         }
 
-        if (this.isAddress(this.state.search)) {
-            this.props.history.push(`/account/${this.state.search}`);
+        if (isAddress(search, version)) {
+            this.props.history.push(`${page.account.default}/${search}`);
             window.location.reload();
         }
         else {
-            this.props.history.push(`/accounts/${this.state.search}`);
+            this.props.history.push(`${page.accounts.default}/${search}`);
         }
     }
 
@@ -219,10 +213,11 @@ class Account extends Component {
         const { idx, linkStack } = this.state.operationsRes;
 
         if (idx <= 0) {
+            this.setState({ isOperLoad: true });
             return;
         }
         else {
-            checkNextLink(linkStack[idx - 1])
+            getResponse(linkStack[idx - 1])
                 .then(
                     res => {
                         const operations = res.data._embedded;
@@ -234,18 +229,22 @@ class Account extends Component {
                                     operation => ({
                                         factHash: operation._embedded.operation.fact.hash,
                                         date: operation._embedded.confirmed_at,
-                                        items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
-                                            ? operation._embedded.operation.fact.items.length
-                                            : 0
+                                        height: operation._embedded.height,
                                     })
                                 ),
                                 idx: idx - 1,
-                            }
+                            },
+                            isOperLoad: true,
                         });
                     }
                 )
                 .catch(
-                    e => alert("Network error!")
+                    e => {
+                        this.setState({
+                            isOperLoad: true,
+                        });
+                        console.error("Network error! Cannot load operations.");
+                    }
                 )
         }
     }
@@ -254,10 +253,11 @@ class Account extends Component {
         const { idx, linkStack } = this.state.operationsRes;
 
         if (idx + 1 >= linkStack.length) {
+            this.setState({ isOperLoad: true });
             return;
         }
         else {
-            checkNextLink(linkStack[idx + 1])
+            getResponse(linkStack[idx + 1])
                 .then(
                     res => {
                         const operations = res.data._embedded;
@@ -267,24 +267,23 @@ class Account extends Component {
                                 operation => ({
                                     factHash: operation._embedded.operation.fact.hash,
                                     date: operation._embedded.confirmed_at,
-                                    items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
-                                        ? operation._embedded.operation.fact.items.length
-                                        : 0
+                                    height: operation._embedded.height,
                                 })
                             ),
                             idx: idx + 1,
                         }
 
-                        if (idx + 2 >= linkStack.length) {
+                        if (idx + 2 > linkStack.length) {
                             const { next } = res.data._links;
-                            checkNextLink(next.href)
+                            getResponse(next.href)
                                 .then(
                                     nextRes => {
                                         this.setState({
                                             operationsRes: {
                                                 ...nextState,
                                                 linkStack: linkStack.concat([next.href]),
-                                            }
+                                            },
+                                            isOperLoad: true,
                                         })
                                     }
                                 )
@@ -293,31 +292,36 @@ class Account extends Component {
                                         this.setState({
                                             operationsRes: {
                                                 ...nextState,
-                                            }
+                                            },
+                                            isOperLoad: true,
                                         })
                                     }
                                 )
                         }
+                        else {
+                            this.setState({
+                                operationsRes: {
+                                    ...nextState,
+                                },
+                                isOperLoad: true,
+                            })
+                        }
                     }
                 )
                 .catch(
-                    e => alert("Network error!")
+                    e => {
+                        this.setState({
+                            isOperLoad: true,
+                        });
+                        console.error("Network error! Cannot load operations.");
+                    }
                 )
         }
 
     }
 
-    isAddress(target) {
-        const { modelVersion } = this.props;
-
-        if (target.indexOf(":mca-" + modelVersion) > -1) {
-            return true;
-        }
-        return false;
-    }
-
     renderAccountInfo() {
-        const { addressRes, balancesRes, keysRes } = this.state;
+        const { addressRes, balancesRes, keysRes, isAccountLoad } = this.state;
 
         if (!addressRes) {
             return (
@@ -347,41 +351,48 @@ class Account extends Component {
             textAlign: "start"
         }
 
-        return (
-            <Card id="account-info" title="Account Information">
-                <DetailCard items={[
-                    ["Address", addressRes],
-                    ["Threshold", keysRes.threshold]
-                ]} />
+        if (isAccountLoad) {
+            return (
+                <Card id="account-info" title="Account Information">
+                    <DetailCard items={[
+                        ["Address", addressRes],
+                        ["Threshold", keysRes.threshold]
+                    ]} />
 
-                <p style={plainTitleStyle}>Keys</p>
-                <List columns={publicKeysColumns}
-                    items={pubItems}
-                    onElementClick={[
-                        (x) => this.props.history.push(`/accounts/${x}`),
-                        null
-                    ]}
-                    onPrevClick={() => this.onPubPrev()}
-                    onNextClick={() => this.onPubNext()}
-                    isFirstPage={keysRes.idx === 0}
-                    isLastPage={keysRes.idx + 3 >= keys.length} />
+                    <p style={plainTitleStyle}>Keys</p>
+                    <List columns={Object.values(columns.public_keys)}
+                        items={pubItems}
+                        onElementClick={[
+                            (x) => this.props.history.push(`${page.accounts.default}/${x}`),
+                            null
+                        ]}
+                        onPrevClick={() => this.onPubPrev()}
+                        onNextClick={() => this.onPubNext()}
+                        isFirstPage={keysRes.idx === 0}
+                        isLastPage={keysRes.idx + 3 >= keys.length} />
 
-                <p style={plainTitleStyle}>Balances</p>
-                <List columns={BalancesColumns}
-                    items={balancesItems}
-                    onElementClick={[
-                        (x) => this.props.history.push(`/currency/${x}`),
-                        null
-                    ]}
-                    onPrevClick={() => this.onBalancePrev()}
-                    onNextClick={() => this.onBalanceNext()}
-                    isFirstPage={balancesRes.idx === 0}
-                    isLastPage={balancesRes.idx + 3 >= balances.length} />
-            </Card>
-        );
+                    <p style={plainTitleStyle}>Balances</p>
+                    <List columns={Object.values(columns.balances)}
+                        items={balancesItems}
+                        onElementClick={[
+                            (x) => this.props.history.push(`${page.currency.default}/${x}`),
+                            null
+                        ]}
+                        onPrevClick={() => this.onBalancePrev()}
+                        onNextClick={() => this.onBalanceNext()}
+                        isFirstPage={balancesRes.idx === 0}
+                        isLastPage={balancesRes.idx + 3 >= balances.length} />
+                </Card>
+            );
+        }
+        else {
+            return <Card id="account-info" title="Account Information"><LoadingIcon /></Card>
+        }
+
     }
 
     renderOperations() {
+        const { isOperLoad } = this.state;
         const { idx, linkStack, operations } = this.state.operationsRes;
 
         if (!operations) {
@@ -393,21 +404,27 @@ class Account extends Component {
         }
 
         const operationItems = operations
-            .map(operation => [operation.factHash, operation.date, operation.items]);
+            .map(operation => [operation.factHash, parseDate(operation.date), operation.height]);
 
         return (
             <Card id="operations" title="Operations">
-                <List columns={operationsColumns}
-                    items={operationItems}
-                    onElementClick={[
-                        (x) => this.props.history.push(`/operation/${x}`),
-                        null,
-                        null,
-                    ]}
-                    onPrevClick={() => this.onOperationPrev()}
-                    onNextClick={() => this.onOperationNext()}
-                    isFirstPage={idx === 0}
-                    isLastPage={idx + 1 >= linkStack.length} />
+                {
+                    isOperLoad
+                        ? (
+                            <List columns={Object.values(columns.operations)}
+                                items={operationItems}
+                                onElementClick={[
+                                    (x) => this.props.history.push(`${page.operation.default}/${x}`),
+                                    null,
+                                    (x) => this.props.history.push(`${page.block.default}/${x}`),
+                                ]}
+                                onPrevClick={() => { this.setState({ isOperLoad: false }); this.onOperationPrev(); }}
+                                onNextClick={() => { this.setState({ isOperLoad: false }); this.onOperationNext(); }}
+                                isFirstPage={idx === 0}
+                                isLastPage={idx + 1 >= linkStack.length} />
+                        )
+                        : <LoadingIcon />
+                }
             </Card>
         );
     }
@@ -415,7 +432,7 @@ class Account extends Component {
     render() {
         const state = this.state;
         return (
-            <div className="accounts-container">
+            <div className="account-container">
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}

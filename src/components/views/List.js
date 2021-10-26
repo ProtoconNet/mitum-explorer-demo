@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { key } from '../../lib';
 import './List.scss';
 
 const plainTextStyle = {
@@ -10,25 +11,25 @@ class List extends Component {
 
     contentComponent(content, func) {
         if (func === null) {
-            if(content === null) {
-                return <p style={{
-                    ...plainTextStyle,
-                    color: "gray"
-                }}>No element</p>
+            if (content === null) {
+                return (
+                    <p style={{ ...plainTextStyle, color: "gray" }}
+                        key={key()}>No element</p>
+                );
             }
-            return <p style={plainTextStyle}>{content}</p>
+            return <p key={key()} style={plainTextStyle}>{content}</p>
         }
-        return <p onClick={() => func(content)}>{content}</p>
+        return <p key={key()} onClick={() => func(content)}>{content}</p>
     }
 
     listComponent(rowData, isAttribute) {
 
         if (isAttribute) {
             return (
-                <li key={Math.random()} style={{ color: "black", backgroundColor: "transparent" }}>
+                <li key={key()} style={{ color: "black", backgroundColor: "transparent" }}>
                     {rowData.map(
                         x => (
-                            <p style={{ ...plainTextStyle, fontWeight: "400" }}>{x}</p>
+                            <p key={key()} style={{ ...plainTextStyle, fontWeight: "400" }}>{x}</p>
                         )
                     )}
                 </li>
@@ -39,7 +40,7 @@ class List extends Component {
             const combinded = [];
 
             for (var i = 0; i < onElementClick.length; i++) {
-                if(rowData[i] === null) {
+                if (rowData[i] === null) {
                     combinded.push([null, null]);
                 }
                 else {
@@ -48,7 +49,7 @@ class List extends Component {
             }
 
             return (
-                <li key={Math.random()}>
+                <li key={key()}>
                     {
                         combinded.map(x => this.contentComponent(x[0], x[1]))
                     }

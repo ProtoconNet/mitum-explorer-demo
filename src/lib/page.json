@@ -1,0 +1,41 @@
+{
+    "node": {
+        "default": "/"
+    },
+    "blocks": {
+        "default": "/blocks"
+    },
+    "block": {
+        "default": "/block",
+        "params": "/block/:block",
+        "key": "block"
+    },
+    "account": {
+        "default": "/account",
+        "params": "/account/:address",
+        "key": "address"
+    },
+    "accounts": {
+        "default": "/accounts",
+        "params": "/accounts/:publickey",
+        "key": "publickey"
+    },
+    "currencies": {
+        "default": "/currencies"
+    },
+    "currency": {
+        "default": "/currency",
+        "params": "/currency/:currency",
+        "key": "currency"
+    },
+    "operation": {
+        "default": "/operation",
+        "params": "/operation/:hash",
+        "key": "hash"
+    },
+    "operations": {
+        "default": "/operations",
+        "params": "/operations/:address",
+        "key": "address"
+    }
+}

@@ -1,31 +1,41 @@
 import React from "react";
-import Card from "../../components/Card";
-import DetailCard from "../../components/DetailCard";
+import LoadingIcon from "../../components/LoadingIcon";
 
-export default function CurrencyInfo({ data }) {
-    const items = [];
-    if (data.currency === null) {
-        items.push(["Currency ID", null]);
-        items.push(["Total Amount", null]);
-        items.push(["Minimum balance for new account", null]);
-        items.push(["Feeer", null]);
-    }
-    else {
-        items.push(["Currency ID", data.currency]);
-        items.push(["Total Amount", data.amount]);
-        items.push(["Minimum balance for new account", data.minBalance]);
-        items.push(["Feeer", [
-            ["Type", data.feeer.type],
-            ["Receiver", data.feeer.receiver],
-            ["Amount", data.feeer.amount],
-        ]]);
+import Card from "../../components/views/Card";
+import DetailCard from "../../components/views/DetailCard";
+
+import keys from "../../lib/keys.json";
+
+export default function CurrencyInfo({ data, isLoad }) {
+
+    const items = () => {
+        const items = [];
+        if (data.currency === null) {
+            items.push([keys.currency.currency, null]);
+            items.push([keys.currency.amount, null]);
+            items.push([keys.currency.min, null]);
+            items.push([keys.currency.feeer, null]);
+        }
+        else {
+            items.push([keys.currency.currency, data.currency]);
+            items.push([keys.currency.amount, data.amount]);
+            items.push([keys.currency.min, data.minBalance]);
+            items.push([keys.currency.feeer, [
+                [keys.feeer.type, data.feeer.type],
+                [keys.feeer.receiver, data.feeer.receiver],
+                [keys.feeer.amount, data.feeer.amount],
+            ]]);
+        }
+        return items;
     }
 
     return (
         <Card id="result" title="Currency Information">
-            <DetailCard
-                items={items}
-            />
+            {
+                isLoad
+                ? <DetailCard items={items()} />
+                : <LoadingIcon />
+            }
         </Card>
     )
 };

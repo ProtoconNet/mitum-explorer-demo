@@ -1,30 +1,22 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
+
 import './Accounts.scss';
-import Card from "../../components/Card";
+import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
-import List from "../../components/List";
+import List from "../../components/views/List";
+import DetailCard from "../../components/views/DetailCard";
 
-import axios from "axios";
-import DetailCard from "../../components/DetailCard";
-
-const network = process.env.REACT_APP_NETWORK;
-const accountsApi = process.env.REACT_APP_ACCOUNTS;
-
-const accountsColumns = ["Account"];
-
-const getAccounts = async (publicKey) => {
-    return await axios.get(network + accountsApi + publicKey);
-}
-
-const checkNextLink = async (next) => {
-    return await axios.get(network + next);
-}
+import page, { accounts as pageInfo } from '../../lib/page.json';
+import columns from "../../lib/columns.json";
+import { getAccounts, getResponse, isAddress } from "../../lib";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const initialState = {
     idx: 0,
     accounts: [],
     stack: [],
+    isLoad: false,
 }
 
 class Accounts extends Component {
@@ -47,9 +39,10 @@ class Accounts extends Component {
                     const nextState = {
                         accounts: accounts.map(account => account._embedded.address),
                         idx: 0,
+                        isLoad: true,
                     }
 
-                    checkNextLink(next.href)
+                    getResponse(next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -72,6 +65,7 @@ class Accounts extends Component {
                 e => {
                     this.setState({
                         ...initialState,
+                        isLoad: true,
                     });
                 }
             )
@@ -79,13 +73,13 @@ class Accounts extends Component {
 
     componentDidMount() {
         const { params } = this.props.match;
-        if (Object.prototype.hasOwnProperty.call(params, "publickey")) {
+        if (Object.prototype.hasOwnProperty.call(params, pageInfo.key)) {
             this.loadAccounts(params.publickey);
-            this.setState({pubKey: params.publickey});
+            this.setState({ pubKey: params.publickey });
         }
         else {
             this.loadAccounts(process.env.REACT_APP_GENESIS_PUB_KEY);
-            this.setState({pubKey: process.env.REACT_APP_GENESIS_PUB_KEY});
+            this.setState({ pubKey: process.env.REACT_APP_GENESIS_PUB_KEY });
         }
     }
 
@@ -96,11 +90,14 @@ class Accounts extends Component {
     }
 
     onSearch() {
-        if (this.isAddress(this.state.search)) {
-            this.props.history.push(`/account/${this.state.search}`);
+        const search = this.state.search.trim();
+        const version = this.props.modelVersion;
+
+        if (isAddress(search, version)) {
+            this.props.history.push(`${page.account.default}/${search}`);
         }
         else {
-            this.props.history.push(`/accounts/${this.state.search}`);
+            this.props.history.push(`${page.accounts.default}/${search}`);
             window.location.reload();
         }
     }
@@ -109,21 +106,28 @@ class Accounts extends Component {
         const { idx, stack } = this.state;
 
         if (idx <= 0) {
+            this.setState({ isLoad: true });
             return;
         }
 
-        checkNextLink(stack[idx - 1])
+        getResponse(stack[idx - 1])
             .then(
                 res => {
                     const accounts = res.data._embedded;
                     this.setState({
                         accounts: accounts.map(account => account._embedded.address),
-                        idx: idx - 1
+                        idx: idx - 1,
+                        isLoad: true,
                     });
                 }
             )
             .catch(
-                e => alert("Network error!")
+                e => {
+                    this.setState({
+                        isLoad: true
+                    });
+                    console.error("Network error! cannot load accounts.");
+                }
             )
     }
 
@@ -131,21 +135,23 @@ class Accounts extends Component {
         const { idx, stack } = this.state;
 
         if (idx + 1 >= stack.length) {
+            this.setState({ isLoad: true });
             return;
         }
 
-        checkNextLink(stack[idx + 1])
+        getResponse(stack[idx + 1])
             .then(
                 res => {
                     const accounts = res.data._embedded;
                     const nextState = {
                         accounts: accounts.map(account => account._embedded.address),
                         idx: idx + 1,
+                        isLoad: true,
                     };
 
-                    if (idx + 2 >= stack.length) {
+                    if (idx + 2 > stack.length) {
                         const { next } = res.data._links;
-                        checkNextLink(next.href)
+                        getResponse(next.href)
                             .then(
                                 nextRes => {
                                     this.setState({
@@ -162,47 +168,55 @@ class Accounts extends Component {
                                 }
                             )
                     }
+                    else {
+                        this.setState({
+                            ...nextState,
+                        })
+                    }
                 }
             )
             .catch(
-                e => alert("Network error!")
+                e => {
+                    this.setState({
+                        isLoad: true,
+                    });
+                    console.error("Network error! Cannot load accounts.");
+                }
             )
     }
 
-    isAddress(target) {
-        const { modelVersion } = this.props;
-
-        if (target.indexOf(`:${process.env.REACT_APP_ACCOUNT_HINT}-${modelVersion}`) > -1) {
-            return true;
-        }
-        return false;
-    }
-
     renderAccounts() {
-        const { accounts, idx, stack, pubKey } = this.state;
+        const { accounts, idx, stack, pubKey, isLoad } = this.state;
         const items = accounts.map(addr => ([addr]));
 
         return (
-            <Card id="accounts" title="Accounts">
-                <DetailCard items={[
-                    ["Public Key", pubKey],
-                ]} />
-                <List
-                    columns={accountsColumns}
-                    items={items}
-                    onElementClick={[(x) => this.props.history.push(`/account/${x}`)]}
-                    onPrev={() => this.onAccountsPrev()}
-                    onNext={() => this.onAccountsNext()}
-                    isFirstPage={idx <= 0}
-                    isLastPage={idx + 1 >= stack.length}
-                />
-            </Card>
+            isLoad
+                ? (
+                    <Card id="accounts" title="Accounts">
+                        <DetailCard items={[
+                            ["Public Key", pubKey],
+                        ]} />
+                        <List
+                            columns={Object.values(columns.accounts)}
+                            items={items}
+                            onElementClick={[(x) => this.props.history.push(`${page.account.default}/${x}`)]}
+                            onPrev={() => { this.setState({ isLoad: false }); this.onAccountsPrev(); }}
+                            onNext={() => { this.setState({ isLoad: false }); this.onAccountsNext(); }}
+                            isFirstPage={idx <= 0}
+                            isLastPage={idx + 1 >= stack.length}
+                        />
+                    </Card>
+                )
+                : (
+                    <Card id="accounts" title="Accounts">
+                        <LoadingIcon />
+                    </Card>
+                )
         );
 
     }
 
     render() {
-        const state = this.state;
         return (
             <div className="accounts-container">
                 <Card id="search" title="Search">
@@ -211,7 +225,7 @@ class Accounts extends Component {
                         placeholder="Enter account address or public key"
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
-                        value={state.search} />
+                        value={this.state.search} />
                 </Card>
                 {this.renderAccounts()}
             </div>

@@ -1,27 +1,22 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import './Operations.scss';
-import Card from "../../components/Card";
+
+import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
-import axios from "axios";
-import List from "../../components/List";
+import List from "../../components/views/List";
 
-const network = process.env.REACT_APP_NETWORK;
-const allOperationsApi = process.env.REACT_APP_ALL_OPERATIONS;
-
-const operationColumns = ["Fact hash", "Date", "Items"];
-
-const getAllOperations = async () => {
-    return await axios.get(network + allOperationsApi);
-}
-
-const checkNextLink = async (next) => {
-    return await axios.get(network + next);
-}
+import page from '../../lib/page.json';
+import columns from '../../lib/columns.json';
+import { getAllOperations, getResponse, isAddress, parseDate } from '../../lib';
+import LoadingIcon from "../../components/LoadingIcon";
 
 const initialState = {
     idx: 0,
     stack: [],
     operations: [],
+    isLoad: false,
 }
 
 class Operations extends Component {
@@ -47,14 +42,13 @@ class Operations extends Component {
                             operation => ({
                                 factHash: operation._embedded.operation.fact.hash,
                                 date: operation._embedded.confirmed_at,
-                                items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
-                                    ? operation._embedded.operation.fact.items.length
-                                    : 0
+                                height: operation._embedded.height,
                             })
-                        )
+                        ),
+                        isLoad: true,
                     };
 
-                    checkNextLink(next.href)
+                    getResponse(next.href)
                         .then(
                             res => {
                                 this.setState({
@@ -77,6 +71,7 @@ class Operations extends Component {
                 e => {
                     this.setState({
                         ...initialState,
+                        isLoad: true,
                     })
                 }
             )
@@ -87,20 +82,99 @@ class Operations extends Component {
     }
 
     onNext() {
+        const { idx, stack } = this.state;
 
+        if (idx + 1 >= stack.length) {
+            this.setState({isLoad: true});
+            return;
+        }
+
+        getResponse(stack[idx + 1])
+            .then(
+                res => {
+                    const operations = res.data._embedded;
+
+                    const nextState = {
+                        idx: idx + 1,
+                        operations: operations.map(
+                            operation => ({
+                                factHash: operation._embedded.operation.fact.hash,
+                                date: operation._embedded.confirmed_at,
+                                height: operation._embedded.height,
+                            })
+                        ),
+                        isLoad: true,
+                    };
+
+                    if (idx + 2 > stack.length) {
+                        this.setState({
+                            ...nextState,
+                        });
+                        return;
+                    }
+
+                    const { next } = res.data._links;
+                    getResponse(next.href)
+                        .then(
+                            nextRes => {
+                                this.setState({
+                                    ...nextState,
+                                    stack: stack.concat([next.href]),
+                                })
+                            }
+                        )
+                        .catch(
+                            e => {
+                                this.setState({
+                                    ...nextState,
+                                })
+                            }
+                        )
+                }
+            )
+            .catch(
+                e => {
+                    this.setState({
+                        isLoad: true,
+                    })
+                    console.error("Network error! Cannot load operations.");
+                }
+            )
     }
 
     onPrev() {
+        const { idx, stack } = this.state;
 
-    }
-
-    isAddress(target) {
-        const { modelVersion } = this.props;
-
-        if (target.indexOf(":mca-" + modelVersion) > -1) {
-            return true;
+        if (idx <= 0) {
+            this.setState({isLoad: true});
+            return;
         }
-        return false;
+
+        getResponse(stack[idx - 1])
+            .then(
+                res => {
+                    const operations = res.data._embedded;
+                    this.setState({
+                        idx: idx - 1,
+                        operations: operations.map(
+                            operation => ({
+                                factHash: operation._embedded.operation.fact.hash,
+                                date: operation._embedded.confirmed_at,
+                                height: operation._embedded.height,
+                            })
+                        ),
+                        isLoad: true,
+                    })
+                }
+            )
+            .catch(
+                e => {
+                    console.log("Network error! Cannot load operations.");
+                    this.setState({
+                        isLoad: true,
+                    })
+                }
+            )
     }
 
     onSearchChange(e) {
@@ -110,24 +184,25 @@ class Operations extends Component {
     }
 
     onSearch() {
-        const { search } = this.state;
+        const search = this.state.search.trim();
+        const version = this.props.modelVersion;
 
         if (!search) {
             return;
         }
 
-        if (this.isAddress(search)) {
-            this.props.history.push(`/account/${search}`);
+        if (isAddress(search, version)) {
+            this.props.history.push(`${page.account.default}/${search}`);
         }
         else {
-            this.props.history.push(`/operation/${search}`);
+            this.props.history.push(`${page.operation.default}/${search}`);
         }
     }
 
     render() {
         const { operations, idx, stack } = this.state;
         const items = operations.map(
-            operation => [operation.factHash, operation.date, operation.items]
+            operation => [operation.factHash, parseDate(operation.date), operation.height]
         );
 
         return (
@@ -141,20 +216,35 @@ class Operations extends Component {
                         value={this.state.search} />
                 </Card>
                 <Card id="list" title="Operations">
-                    <List
-                        columns={operationColumns}
-                        items={items}
-                        onElementClick={[
-                            (x) => { this.props.history.push(`/operation/${x}`); window.location.reload(); },
-                            null, null]}
-                        onPrevClick={() => this.onPrev()}
-                        onNextClick={() => this.onNext()}
-                        isLastPage={idx + 1 >= stack.length}
-                        isFirstPage={idx <= 0} />
+                    {
+                        this.state.isLoad
+                            ? (
+                                <List
+                                    columns={Object.values(columns.operations)}
+                                    items={items}
+                                    onElementClick={[
+                                        (x) => { this.props.history.push(`${page.operation.default}/${x}`); window.location.reload(); },
+                                        null,
+                                        (x) => { this.props.history.push(`${page.block.default}/${x}`) }
+                                    ]}
+                                    onPrevClick={() => { this.setState({ isLoad: false }); this.onPrev(); }}
+                                    onNextClick={() => { this.setState({ isLoad: false }); this.onNext(); }}
+                                    isLastPage={idx + 1 >= stack.length}
+                                    isFirstPage={idx <= 0} />
+                            )
+                            : <LoadingIcon />
+                    }
                 </Card>
             </div>
         )
     }
 }
 
-export default Operations;
+const mapStateToProps = state => ({
+    modelVersion: state.info.modelVersion,
+});
+
+export default connect(
+    mapStateToProps,
+    null
+)(Operations);

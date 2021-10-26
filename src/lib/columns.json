@@ -1,0 +1,26 @@
+{
+    "public_keys": {
+        "key": "Public key",
+        "weight": "Weight"
+    },
+    "operations": {
+        "hash": "Fact hash",
+        "date": "Date",
+        "height": "Block height"
+    },
+    "balances": {
+        "currency": "Currency ID",
+        "amount": "Amount"
+    },
+    "accounts": {
+        "account": "Account"
+    },
+    "blocks": {
+        "hash": "Hash", 
+        "height": "Height",
+        "date": "Date"
+    },
+    "currencies": {
+        "currency": "Currency ID"
+    }
+}

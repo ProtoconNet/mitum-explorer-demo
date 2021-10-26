@@ -1,24 +1,17 @@
 import React, { Component } from "react";
-import "./Blocks.scss";
-import Card from "../../components/Card";
-import SearchBox from "../../components/SearchBox";
-import axios from "axios";
 import { connect } from "react-redux";
-import DetailCard from "../../components/DetailCard";
-import List from "../../components/List";
 
-const network = process.env.REACT_APP_NETWORK;
-const blocksApi = process.env.REACT_APP_BLOCKS;
-const blockApi = process.env.REACT_APP_BLOCK;
-const operationsApi = process.env.REACT_APP_OPERATIONS;
-const manifestApi = process.env.REACT_APP_MANIFEST;
+import "./Blocks.scss";
 
-const blocksColumns = ["Hash", "Height", "Date"];
-const blockOperationColumns = ["Fact hash", "Date", "Items"];
+import Card from "../../components/views/Card";
+import SearchBox from "../../components/SearchBox";
+import DetailCard from "../../components/views/DetailCard";
+import List from "../../components/views/List";
 
-const checkNextLink = async (next) => {
-    return await axios.get(network + next);
-}
+import page, { block as pageInfo } from '../../lib/page.json';
+import columns from "../../lib/columns.json";
+import { getBlock, getBlockOperations, getBlocks, getResponse, parseDate } from "../../lib";
+import LoadingIcon from "../../components/LoadingIcon";
 
 const initialState = {
     idx: 0,
@@ -33,6 +26,8 @@ const initialState = {
         date: "",
         height: 0,
     },
+    isBlockLoad: false,
+    isBlocksLoad: false,
 }
 
 class Blocks extends Component {
@@ -46,16 +41,8 @@ class Blocks extends Component {
     }
 
     async getBlocks() {
-        return await axios.get(network + blocksApi + (this.props.blockHeight - 10));
+        return await getBlocks(this.props.blockHeight);
     };
-
-    async getBlock(block) {
-        return await axios.get(`${network}${blockApi}${block}${manifestApi}`);
-    };
-
-    async getBlockOperations(block) {
-        return await axios.get(`${network}${blockApi}${block}${operationsApi}`);
-    }
 
     loadBlocks() {
         this.getBlocks()
@@ -78,9 +65,10 @@ class Blocks extends Component {
                         ),
                         blockRes: {},
                         showBlocks: true,
+                        isBlocksLoad: true,
                     };
 
-                    checkNextLink(next.href)
+                    getResponse(next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -102,14 +90,15 @@ class Blocks extends Component {
             .catch(
                 e => {
                     this.setState({
-                        ...initialState
+                        ...initialState,
+                        isBlocksLoad: true,
                     });
                 }
             )
     }
 
     loadBlock(block) {
-        this.getBlock(block)
+        getBlock(block)
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -122,7 +111,7 @@ class Blocks extends Component {
                         date: confirmed_at,
                     }
 
-                    this.getBlockOperations(block)
+                    getBlockOperations(block)
                         .then(
                             nextRes => {
                                 const data = nextRes.data._embedded;
@@ -132,13 +121,11 @@ class Blocks extends Component {
                                     operation => ({
                                         factHash: operation._embedded.operation.fact.hash,
                                         date: operation._embedded.confirmed_at,
-                                        items: Object.prototype.hasOwnProperty.call(operation._embedded.operation.fact, "items")
-                                            ? operation._embedded.operation.fact.items.length
-                                            : 0
+                                        height: operation._embedded.height,
                                     })
                                 )
 
-                                checkNextLink(next.href)
+                                getResponse(next.href)
                                     .then(
                                         finalRes => {
                                             this.setState({
@@ -149,6 +136,7 @@ class Blocks extends Component {
                                                     stack: [self.href, next.href]
                                                 },
                                                 showBlocks: false,
+                                                isBlockLoad: true,
                                             });
                                         }
                                     )
@@ -161,7 +149,8 @@ class Blocks extends Component {
                                                     ...nextState,
                                                     operations,
                                                     stack: [self.href],
-                                                }
+                                                },
+                                                isBlockLoad: true,
                                             })
                                         }
                                     )
@@ -177,7 +166,8 @@ class Blocks extends Component {
                                         idx: 0,
                                         stack: [],
                                         operations: [],
-                                    }
+                                    },
+                                    isBlockLoad: true,
                                 })
                             }
                         )
@@ -187,6 +177,7 @@ class Blocks extends Component {
                 e => {
                     this.setState({
                         ...initialState,
+                        isBlockLoad: true,
                     })
                 }
             )
@@ -194,7 +185,7 @@ class Blocks extends Component {
 
     componentDidMount() {
         const { params } = this.props.match;
-        if (Object.prototype.hasOwnProperty.call(params, "block")) {
+        if (Object.prototype.hasOwnProperty.call(params, pageInfo.key)) {
             this.loadBlock(params.block);
         }
         else {
@@ -211,18 +202,21 @@ class Blocks extends Component {
     onSearch() {
         const { search } = this.state;
         if (search) {
-            this.props.history.push(`/block/${this.state.search}`);
+            this.props.history.push(`${page.block.default}/${this.state.search}`);
             window.location.reload();
         }
     }
 
     onBlocksPrev() {
-        const {idx, stack} = this.state;
-        if(idx <= 0) {
+        const { idx, stack } = this.state;
+        if (idx <= 0) {
+            this.setState({
+                isBlocksLoad: true,
+            })
             return;
         }
 
-        checkNextLink(stack[idx - 1])
+        getResponse(stack[idx - 1])
             .then(
                 res => {
                     const blocks = res.data._embedded;
@@ -240,6 +234,7 @@ class Blocks extends Component {
                         ),
                         blockRes: {},
                         showBlocks: true,
+                        isBlocksLoad: true,
                     })
                 }
             )
@@ -247,19 +242,23 @@ class Blocks extends Component {
                 e => {
                     this.setState({
                         ...initialState,
+                        isBlocksLoad: true,
                     })
                 }
             )
     }
 
     onBlocksNext() {
-        const {idx, stack} = this.state;
+        const { idx, stack } = this.state;
 
-        if(idx + 1 >= stack.length) {
+        if (idx + 1 >= stack.length) {
+            this.setState({
+                isBlocksLoad: true,
+            })
             return false;
         }
 
-        checkNextLink(stack[idx + 1])
+        getResponse(stack[idx + 1])
             .then(
                 res => {
                     const blocks = res.data._embedded;
@@ -279,15 +278,16 @@ class Blocks extends Component {
                         ),
                         blockRes: {},
                         showBlocks: true,
+                        isBlocksLoad: true,
                     };
 
-                    if(idx + 2 >= stack.length) {
+                    if (idx + 2 > stack.length) {
                         this.setState({
                             ...nextState,
                         })
                     }
 
-                    checkNextLink(next.href)
+                    getResponse(next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -305,17 +305,137 @@ class Blocks extends Component {
                         )
                 }
             )
+            .catch(
+                e => {
+                    this.setState({
+                        isBlocksLoad: true,
+                    });
+                    console.log("Network error! Cannot load blocks");
+                }
+            )
     }
 
     onOperationsPrev() {
+        const block = this.state.blockRes;
+        const { idx, stack } = block;
 
+        if (idx <= 0) {
+            this.setState({
+                isBlockLoad: true,
+            })
+            return;
+        }
+
+        getResponse(stack[idx - 1])
+            .then(
+                res => {
+                    const data = res.data._embedded;
+                    const operations = data.map(
+                        operation => ({
+                            factHash: operation._embedded.operation.fact.hash,
+                            date: operation._embedded.confirmed_at,
+                            height: operation._embedded.height,
+                        })
+                    );
+
+                    this.setState({
+                        blockRes: {
+                            idx: idx - 1,
+                            operations,
+                        },
+                        showBlocks: false,
+                        isBlockLoad: true,
+                    });
+                }
+            )
+            .catch(
+                e => {
+                    this.setState({
+                        isBlockLoad: true,
+                    })
+                    console.error("Network error! Cannot load operations.");
+                }
+            )
     }
 
     onOperationsNext() {
+        const block = this.state.blockRes;
+        const { idx, stack } = block;
 
+        if (idx + 1 >= stack.length) {
+            this.setState({
+                isBlockLoad: true,
+            })
+            return;
+        }
+
+        getResponse(stack[idx + 1])
+            .then(
+                res => {
+                    const data = res.data._embedded;
+                    const operations = data.map(
+                        operation => ({
+                            factHash: operation._embedded.operation.fact.hash,
+                            date: operation._embedded.confirmed_at,
+                            height: operation._embedded.height,
+                        })
+                    );
+
+                    const nextState = {
+                        operations,
+                        idx: idx + 1,
+                    }
+
+                    if (idx + 2 > stack.length) {
+                        this.setState({
+                            blockRes: {
+                                ...nextState
+                            },
+                            showBlocks: false,
+                            isBlockLoad: true,
+                        });
+                        return;
+                    }
+
+                    const { next } = res.data._links;
+                    getResponse(next.href)
+                        .then(
+                            nextRes => {
+                                this.setState({
+                                    blockRes: {
+                                        ...nextState,
+                                        stack: stack.concat([next.href]),
+                                    },
+                                    showBlocks: false,
+                                    isBlockLoad: true,
+                                });
+                            }
+                        )
+                        .catch(
+                            e => {
+                                this.setState({
+                                    blockRes: {
+                                        ...nextState,
+                                    },
+                                    showBlocks: false,
+                                    isBlockLoad: true,
+                                });
+                            }
+                        )
+                }
+            )
+            .catch(
+                e => {
+                    this.setState({
+                        isBlockLoad: true,
+                    })
+                    console.error("Network error! Cannot load operations.");
+                }
+            )
     }
 
     renderBlock() {
+        const { isBlockLoad } = this.state;
         const { hash, date, height, operations } = this.state.blockRes;
 
         if (!hash || !operations) {
@@ -327,16 +447,16 @@ class Blocks extends Component {
         }
 
         const infoItems = [
-            ["Hash", hash],
-            ["Height", height],
-            ["Date", date],
+            [columns.blocks.hash, hash],
+            [columns.blocks.height, height],
+            [columns.blocks.date, parseDate(date)],
         ];
 
         const operationItems = operations.map(
             operation => [
                 operation.factHash,
-                operation.date,
-                operation.items,
+                parseDate(operation.date),
+                operation.height,
             ]
         )
 
@@ -353,28 +473,36 @@ class Blocks extends Component {
         }
 
         return (
-            <Card title="Block Information">
-                <DetailCard items={infoItems} />
-                <p style={plainTitleStyle}>Operations</p>
-                <List
-                    columns={blockOperationColumns}
-                    items={operationItems}
-                    onElementClick={[
-                        (x) => { this.props.history.push(`/operation/${x}`); window.location.reload(); },
-                        null,
-                        null
-                    ]}
-                    onPrevClick={() => this.onOperationsPrev()}
-                    onNextClick={() => this.onOperationsNext()}
-                    isLastPage={idx + 1 >= stack.length}
-                    isFirstPage={idx <= 0}
-                />
-            </Card>
+            isBlockLoad
+                ? (
+                    <Card title="Block Information">
+                        <DetailCard items={infoItems} />
+                        <p style={plainTitleStyle}>Operations</p>
+                        <List
+                            columns={Object.values(columns.operations)}
+                            items={operationItems}
+                            onElementClick={[
+                                (x) => { this.props.history.push(`${page.operation.default}/${x}`); },
+                                null,
+                                (x) => { this.props.history.push(`${page.block.default}/${x}`); window.location.reload() }
+                            ]}
+                            onPrevClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsPrev(); }}
+                            onNextClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsNext(); }}
+                            isLastPage={idx + 1 >= stack.length}
+                            isFirstPage={idx <= 0}
+                        />
+                    </Card>
+                )
+                : (
+                    <Card title="Block Information">
+                        <LoadingIcon />
+                    </Card>
+                )
         );
     }
 
     renderBlocks() {
-        const { idx, stack, blocks } = this.state;
+        const { idx, stack, blocks, isBlocksLoad } = this.state;
 
         if (!blocks) {
             return (
@@ -387,25 +515,31 @@ class Blocks extends Component {
             block => [
                 block.hash,
                 block.height,
-                block.date,
+                parseDate(block.date),
             ]
         );
 
         const { history } = this.props;
         return (
             <Card title="Blocks">
-                <List
-                    columns={blocksColumns}
-                    items={items}
-                    onElementClick={[
-                        (x) => { history.push(`/block/${x}`); window.location.reload(); },
-                        (x) => { history.push(`/block/${x}`); window.location.reload(); },
-                        null]}
-                    onPrevClick={() => this.onBlocksPrev()}
-                    onNextClick={() => this.onBlocksNext()}
-                    isLastPage={idx + 1 >= stack.length}
-                    isFirstPage={idx <= 0}
-                />
+                {
+                    isBlocksLoad
+                        ? (
+                            <List
+                                columns={Object.values(columns.blocks)}
+                                items={items}
+                                onElementClick={[
+                                    (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
+                                    (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
+                                    null]}
+                                onPrevClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksPrev(); }}
+                                onNextClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksNext(); }}
+                                isLastPage={idx + 1 >= stack.length}
+                                isFirstPage={idx <= 0}
+                            />
+                        )
+                        : <LoadingIcon />
+                }
             </Card>
         )
     }

@@ -53,3 +53,25 @@
         }
     }
 }
+
+.active {
+    color: cadetblue !important;
+
+    p {
+        color: cadetblue !important;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.background {
+    &:hover {
+        background-color: azure;
+    }
+
+    &:active {
+        background-color: lightblue;
+    }
+}

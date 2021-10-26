@@ -1,0 +1,34 @@
+{
+    "node": {
+        "network": "Network version",
+        "explorer": "Explorer version",
+        "height": "Current block height"
+    },
+    "currency": {
+        "currency": "Currency ID", 
+        "amount": "Total amount", 
+        "min": "Minimum balance for new account", 
+        "feeer": "Feeer"
+    },
+    "feeer": {
+        "type": "Type",
+        "receiver": "Receiver", 
+        "amount": "Amount"
+    },
+    "operation": {
+        "hash": "Fact hash",
+        "type": "Operation type",
+        "date": "Date",
+        "height": "Block height",
+        "processed": "In state",
+        "reason": "Reason",
+        "items": "Items"
+    },
+    "keys": {
+        "keys": "Keys",
+        "threshold": "Threshold"
+    },
+    "amounts": {
+        "amounts": "Amounts"
+    }
+}

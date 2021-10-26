@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
+
 import './App.scss';
+
 import Navigation from './components/Navigation';
 import Account from './pages/accounts/Account';
 import Accounts from './pages/accounts/Accounts';
@@ -9,13 +12,11 @@ import Currencies from './pages/currencies/Currencies';
 import NodeInfo from './pages/node/NodeInfo';
 import Operation from './pages/operations/Operation';
 import Operations from './pages/operations/Operations';
-import axios from 'axios';
-import { connect } from 'react-redux';
-import { setNodeInfo } from './store/actions';
 
-const getNodeInfo = async () => {
-  return await axios.get(process.env.REACT_APP_NETWORK);
-}
+import page from './lib/page.json';
+import { getNodeInfo } from './lib';
+
+import { setNodeInfo } from './store/actions';
 
 class App extends Component {
 
@@ -48,31 +49,32 @@ class App extends Component {
   }
 
   render() {
+    const { node, account, accounts, block, blocks, operation, operations, currency, currencies } = page;
     return (
       <div className="App" >
         <BrowserRouter>
           <Navigation />
-          <Route exact path="/" component={NodeInfo} />
+          <Route exact path={node.default} component={NodeInfo} />
 
-          <Route exact path="/blocks" component={Blocks} />
-          <Route exact path="/block" component={Blocks} />
-          <Route path="/block/:block" component={Blocks} />
+          <Route exact path={blocks.default} component={Blocks} />
+          <Route exact path={block.default} component={Blocks} />
+          <Route path={block.params} component={Blocks} />
 
-          <Route exact path="/account" component={Account} />
-          <Route path="/account/:address" component={Account} />
+          <Route exact path={account.default} component={Account} />
+          <Route path={account.params} component={Account} />
 
-          <Route exact path="/accounts" component={Accounts} />
-          <Route path="/accounts/:publickey" component={Accounts} />
+          <Route exact path={accounts.default} component={Accounts} />
+          <Route path={accounts.params} component={Accounts} />
 
-          <Route exact path="/operations" component={Operations} />
-          <Route path="/operations/:address" component={Operations} />
+          <Route exact path={operations.default} component={Operations} />
+          <Route path={operations.params} component={Operations} />
 
-          <Route exact path="/operation" component={Operation} />
-          <Route exact path="/operation/:hash" component={Operation} />
+          <Route exact path={operation.default} component={Operation} />
+          <Route exact path={operation.params} component={Operation} />
 
-          <Route exact path="/currencies" component={Currencies} />
-          <Route exact path="/currency" component={Currencies} />
-          <Route path="/currency/:currency" component={Currencies} />
+          <Route exact path={currencies.default} component={Currencies} />
+          <Route exact path={currency.default} component={Currencies} />
+          <Route path={currency.params} component={Currencies} />
         </BrowserRouter>
       </div>
     );

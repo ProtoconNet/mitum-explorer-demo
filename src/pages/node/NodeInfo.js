@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import './NodeInfo.scss';
-import Card from '../../components/Card';
+
+import Card from '../../components/views/Card';
 import SearchBox from '../../components/SearchBox';
-import DetailCard from '../../components/DetailCard';
+import DetailCard from '../../components/views/DetailCard';
 import packageInfo from '../../../package.json';
+
+import page from '../../lib/page.json';
+import keys from '../../lib/keys.json';
+import { isAddress } from '../../lib';
+import LoadingIcon from '../../components/LoadingIcon';
 
 class NodeInfo extends Component {
     constructor(props) {
@@ -17,15 +24,6 @@ class NodeInfo extends Component {
         }
     }
 
-    isAddress(target) {
-        const { modelVersion } = this.props;
-
-        if (target.indexOf(":mca-" + modelVersion) > -1) {
-            return true;
-        }
-        return false;
-    }
-
     onSearchChange(e) {
         this.setState({
             search: e.target.value
@@ -33,24 +31,26 @@ class NodeInfo extends Component {
     }
 
     onSearch() {
-        const {search} = this.state;
-        if(!search) {
+        const search = this.state.search.trim();
+        const version = this.props.modelVersion;
+
+        if (!search) {
             return;
         }
 
-        if(this.isAddress(search)) {
-            this.props.history.push(`/account/${search}`);
+        if (isAddress(search, version)) {
+            this.props.history.push(`${page.account.default}/${search}`);
         }
         else {
-            this.props.history.push(`/operation/${search}`);
+            this.props.history.push(`${page.operation.default}/${search}`);
         }
     }
 
     render() {
         const items = [
-            ["Network version", this.props.networkVersion],
-            ["Explorer version", `v${packageInfo.version}`],
-            ["Current block height", this.props.blockHeight]
+            [keys.node.network, this.props.networkVersion],
+            [keys.node.explorer, `v${packageInfo.version}`],
+            [keys.node.height, this.props.blockHeight]
         ]
 
         return (
@@ -64,8 +64,7 @@ class NodeInfo extends Component {
                         value={this.state.search} />
                 </Card>
                 <Card id="list" title="MITUM Network Information">
-                    <DetailCard
-                        items={items} />
+                    {this.props.isLoad ? <DetailCard items={items} /> : <LoadingIcon />}
                 </Card>
             </div>
         );
@@ -73,8 +72,10 @@ class NodeInfo extends Component {
 }
 
 const mapStateToProps = state => ({
+    modelVersion: state.info.modelVersion,
     networkVersion: state.info.networkVersion,
     blockHeight: state.info.blockHeight,
+    isLoad: state.info.isLoad,
 });
 
 export default connect(
