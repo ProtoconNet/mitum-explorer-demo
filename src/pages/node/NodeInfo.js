@@ -54,6 +54,14 @@ class NodeInfo extends Component {
             [keys.node.height, this.props.blockHeight]
         ]
 
+        const suffrages = this.props.suffrages.map(
+            suffrage => ([suffrage.address, suffrage.url, [null, (x) => window.location.href = x]])
+        );
+
+        items.push([
+            keys.node.suffrages, suffrages
+        ])
+
         return (
             <div className="node-container">
                 <Card id="search" title="Search">
@@ -76,6 +84,7 @@ const mapStateToProps = state => ({
     modelVersion: state.info.modelVersion,
     networkVersion: state.info.networkVersion,
     blockHeight: state.info.blockHeight,
+    suffrages: state.info.suffrages,
     isLoad: state.info.isLoad,
 });
 

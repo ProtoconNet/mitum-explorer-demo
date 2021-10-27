@@ -77,14 +77,24 @@
         }
     }
 
+    &:hover {
+        text-decoration: underline;
+    }
+
     pre {
         width: 100%;
+
+        text-decoration: none !important;
+
         border: 1px solid lightgray;
         background-color: #f5fbfe;
+
         color: black;
         font-size: 0.7rem;
+
         padding: 1rem;
         margin: 0.2rem;
+        
         overflow: visible;
         white-space: pre-wrap;
         word-break: break-all;

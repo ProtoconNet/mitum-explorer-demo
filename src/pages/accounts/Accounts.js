@@ -33,7 +33,7 @@ class Accounts extends Component {
     }
 
     loadAccounts(publicKey) {
-        getAccounts(publicKey)
+        getAccounts(this.props.api, publicKey)
             .then(
                 res => {
                     const accounts = res.data._embedded;
@@ -44,7 +44,7 @@ class Accounts extends Component {
                         isLoad: true,
                     }
 
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -112,7 +112,7 @@ class Accounts extends Component {
             return;
         }
 
-        getResponse(stack[idx - 1])
+        getResponse(this.props.api, stack[idx - 1])
             .then(
                 res => {
                     const accounts = res.data._embedded;
@@ -141,7 +141,7 @@ class Accounts extends Component {
             return;
         }
 
-        getResponse(stack[idx + 1])
+        getResponse(this.props.api, stack[idx + 1])
             .then(
                 res => {
                     const accounts = res.data._embedded;
@@ -153,7 +153,7 @@ class Accounts extends Component {
 
                     if (idx + 2 > stack.length) {
                         const { next } = res.data._links;
-                        getResponse(next.href)
+                        getResponse(this.props.api, next.href)
                             .then(
                                 nextRes => {
                                     this.setState({
@@ -196,7 +196,7 @@ class Accounts extends Component {
                 ? (
                     <Card id="accounts" title="Accounts">
                         <DetailCard items={[
-                            [accountsKeys.keys, pubKey],
+                            [accountsKeys.keys, accounts.length > 0 ? pubKey : message.replace.null],
                         ]} />
                         <List
                             columns={Object.values(columns.accounts)}
@@ -236,6 +236,7 @@ class Accounts extends Component {
 }
 
 const mapStateToProps = state => ({
+    api: state.network.api,
     modelVersion: state.info.modelVersion,
 });
 

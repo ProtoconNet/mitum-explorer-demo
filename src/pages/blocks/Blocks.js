@@ -42,7 +42,7 @@ class Blocks extends Component {
     }
 
     async getBlocks() {
-        return await getBlocks(this.props.blockHeight);
+        return await getBlocks(this.props.api, this.props.blockHeight);
     };
 
     loadBlocks() {
@@ -69,7 +69,7 @@ class Blocks extends Component {
                         isBlocksLoad: true,
                     };
 
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -99,7 +99,7 @@ class Blocks extends Component {
     }
 
     loadBlock(block) {
-        getBlock(block)
+        getBlock(this.props.api, block)
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -112,7 +112,7 @@ class Blocks extends Component {
                         date: confirmed_at,
                     }
 
-                    getBlockOperations(block)
+                    getBlockOperations(this.props.api, block)
                         .then(
                             nextRes => {
                                 const data = nextRes.data._embedded;
@@ -126,7 +126,7 @@ class Blocks extends Component {
                                     })
                                 )
 
-                                getResponse(next.href)
+                                getResponse(this.props.api, next.href)
                                     .then(
                                         finalRes => {
                                             this.setState({
@@ -217,7 +217,7 @@ class Blocks extends Component {
             return;
         }
 
-        getResponse(stack[idx - 1])
+        getResponse(this.props.api, stack[idx - 1])
             .then(
                 res => {
                     const blocks = res.data._embedded;
@@ -259,7 +259,7 @@ class Blocks extends Component {
             return false;
         }
 
-        getResponse(stack[idx + 1])
+        getResponse(this.props.api, stack[idx + 1])
             .then(
                 res => {
                     const blocks = res.data._embedded;
@@ -288,7 +288,7 @@ class Blocks extends Component {
                         })
                     }
 
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -327,7 +327,7 @@ class Blocks extends Component {
             return;
         }
 
-        getResponse(stack[idx - 1])
+        getResponse(this.props.api, stack[idx - 1])
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -370,7 +370,7 @@ class Blocks extends Component {
             return;
         }
 
-        getResponse(stack[idx + 1])
+        getResponse(this.props.api, stack[idx + 1])
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -399,7 +399,7 @@ class Blocks extends Component {
                     }
 
                     const { next } = res.data._links;
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -569,6 +569,7 @@ class Blocks extends Component {
 
 const mapStateToProps = state => ({
     blockHeight: state.info.blockHeight,
+    api: state.network.api,
 });
 
 export default connect(

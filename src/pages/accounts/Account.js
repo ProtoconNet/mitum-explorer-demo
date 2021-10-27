@@ -45,7 +45,7 @@ class Account extends Component {
     }
 
     loadAccountInfo(address) {
-        getAccount(address)
+        getAccount(this.props.api, address)
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -84,7 +84,7 @@ class Account extends Component {
                 }
             )
 
-        getAccountOperations(address)
+        getAccountOperations(this.props.api, address)
             .then(
                 res => {
                     const operations = res.data._embedded;
@@ -100,7 +100,7 @@ class Account extends Component {
                         idx: 0,
                     }
 
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             res => {
                                 this.setState({
@@ -219,7 +219,7 @@ class Account extends Component {
             return;
         }
         else {
-            getResponse(linkStack[idx - 1])
+            getResponse(this.props.api, linkStack[idx - 1])
                 .then(
                     res => {
                         const operations = res.data._embedded;
@@ -259,7 +259,7 @@ class Account extends Component {
             return;
         }
         else {
-            getResponse(linkStack[idx + 1])
+            getResponse(this.props.api, linkStack[idx + 1])
                 .then(
                     res => {
                         const operations = res.data._embedded;
@@ -277,7 +277,7 @@ class Account extends Component {
 
                         if (idx + 2 > linkStack.length) {
                             const { next } = res.data._links;
-                            getResponse(next.href)
+                            getResponse(this.props.api, next.href)
                                 .then(
                                     nextRes => {
                                         this.setState({
@@ -451,6 +451,7 @@ class Account extends Component {
 }
 
 const mapStateToProps = state => ({
+    api: state.network.api,
     modelVersion: state.info.modelVersion,
 });
 

@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
 
-// network
 const env = process.env;
 export const urls = {
     default: env.REACT_APP_NETWORK,
@@ -15,52 +14,52 @@ export const urls = {
     allOperation: env.REACT_APP_ALL_OPERATIONS,
 }
 
-export function link(apiLink) {
-    return urls.default + apiLink;
+export async function getResponse(api, next) {
+    return await axios.get(api + next);
 }
 
-export async function getResponse(next) {
-    return await axios.get(link(next));
+export async function getNodeInfo(api) {
+    return await axios.get(api + "");
 }
 
-export async function getNodeInfo() {
-    return await axios.get(link(""));
+export async function getAccount(api, address) {
+    return await axios.get(api + urls.account + address);
 }
 
-export async function getAccount(address) {
-    return await axios.get(link(urls.account + address));
+export async function getAllOperations(api) {
+    return await axios.get(api + urls.allOperation);
 }
 
-export async function getAllOperations() {
-    return await axios.get(link(urls.allOperation));
+export async function getAccountOperations(api, address) {
+    return await axios.get(api + urls.account + address + urls.operations);
 }
 
-export async function getAccountOperations(address) {
-    return await axios.get(link(urls.account + address + urls.operations));
+export async function getOperation(api, hash) {
+    return await axios.get(api + urls.operation + hash);
 }
 
-export async function getAccounts(publicKey) {
-    return await axios.get(link(urls.accounts + publicKey));
+export async function getAccounts(api, publicKey) {
+    return await axios.get(api + urls.accounts + publicKey);
 }
 
-export async function getBlock(block) {
-    return await axios.get(link(`${urls.block}${block}${urls.manifest}`));
+export async function getBlock(api, block) {
+    return await axios.get(api + `${urls.block}${block}${urls.manifest}`);
 };
 
-export async function getBlockOperations(block) {
-    return await axios.get(link(`${urls.block}${block}${urls.operations}`));
+export async function getBlockOperations(api, block) {
+    return await axios.get(api + `${urls.block}${block}${urls.operations}`);
 }
 
-export async function getBlocks(currHeight) {
-    return await axios.get(link(urls.blocks + (currHeight - 10)));
+export async function getBlocks(api, currHeight) {
+    return await axios.get(api + urls.blocks + (currHeight - 10));
 };
 
-export async function getCurrencies() {
-    return await axios.get(link(urls.currencies));
+export async function getCurrencies(api) {
+    return await axios.get(api + urls.currencies);
 }
 
-export async function getCurrency(currency) {
-    return await axios.get(link(urls.currencies + "/" + currency));
+export async function getCurrency(api, currency) {
+    return await axios.get(api + urls.currencies + "/" + currency);
 }
 
 // libs

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 
 import './Operation.scss';
 
@@ -11,12 +10,8 @@ import DetailCard from "../../components/views/DetailCard";
 import message from '../../lib/message.json';
 import page, { operation as pageInfo } from '../../lib/page.json';
 import { operation as operKeys, keys as keysKeys, amounts as amountsKeys } from '../../lib/keys.json';
-import { isAddress, link, parseDate, urls } from "../../lib";
+import { getOperation, isAddress, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
-
-const getOperation = async (hash) => {
-    return await axios.get(link(urls.operation + hash));
-}
 
 const initialState = {
     factHash: "",
@@ -51,7 +46,7 @@ class Operation extends Component {
 
     loadOperation(hash) {
 
-        getOperation(hash)
+        getOperation(this.props.api, hash)
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -175,6 +170,7 @@ class Operation extends Component {
 
 const mapStateToProps = state => ({
     modelVersion: state.info.modelVersion,
+    api: state.network.api,
 });
 
 export default connect(

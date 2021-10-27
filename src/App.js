@@ -17,11 +17,12 @@ import page from './lib/page.json';
 import { getNodeInfo } from './lib';
 
 import { setNodeInfo } from './store/actions';
+import NetworkBox from './components/NetworkBox';
 
 class App extends Component {
 
   loadNodeInfo() {
-    getNodeInfo()
+    getNodeInfo(this.props.api)
       .then(
         res => {
           const data = res.data._embedded;
@@ -29,7 +30,13 @@ class App extends Component {
           const modelVersion = res.data._hint.slice(process.env.REACT_APP_HAL_HINT.length + 1, res.data._hint.length);
           const networkVersion = data.version;
           const blockHeight = data.last_block.height;
-          this.props.setNodeInfo(modelVersion, networkVersion, blockHeight);
+          const suffrages = data.suffrage.map(
+            suffrage => ({
+              address: suffrage.address,
+              url: suffrage.conninfo.url
+            })
+          );
+          this.props.setNodeInfo(modelVersion, networkVersion, blockHeight, suffrages);
         }
       )
       .catch(
@@ -75,17 +82,22 @@ class App extends Component {
           <Route exact path={currencies.default} component={Currencies} />
           <Route exact path={currency.default} component={Currencies} />
           <Route path={currency.params} component={Currencies} />
+          <NetworkBox />
         </BrowserRouter>
       </div>
     );
   }
 }
 
+const mapStateToProps = state => ({
+  api: state.network.api,
+});
+
 const mapDispatchToProps = dispatch => ({
-  setNodeInfo: (modelVer, netVer, height) => dispatch(setNodeInfo(modelVer, netVer, height)),
+  setNodeInfo: (modelVer, netVer, height, suffrages) => dispatch(setNodeInfo(modelVer, netVer, height, suffrages)),
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);

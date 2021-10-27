@@ -33,5 +33,11 @@
     "button": {
         "prev": "PREV",
         "next": "NEXT"
+    },
+    "setting": {
+        "network": {
+            "success": "success. network: ",
+            "fail": "fail. network: "
+        }
     }
 }

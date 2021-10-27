@@ -10,6 +10,7 @@ import CurrencyList from "./CurrencyList";
 import message from '../../lib/message.json';
 import page, { currency as pageInfo } from '../../lib/page.json';
 import { getCurrencies, getCurrency, parseCurrency } from "../../lib";
+import { connect } from "react-redux";
 
 const initialState = {
     currencies: [],
@@ -39,7 +40,7 @@ class Currencies extends Component {
     }
 
     loadCurrencies() {
-        getCurrencies()
+        getCurrencies(this.props.api)
             .then(
                 res => {
                     const currencies = Object.keys(res.data._links);
@@ -70,7 +71,7 @@ class Currencies extends Component {
     }
 
     loadCurrency(currency) {
-        getCurrency(currency)
+        getCurrency(this.props.api, currency)
             .then(
                 res => {
                     const data = res.data._embedded;
@@ -156,7 +157,7 @@ class Currencies extends Component {
                         value={state.search} />
                 </Card>
                 {state.currencyRes.showResult
-                    ? <CurrencyInfo data={state.currencyRes} isLoad={state.isLoad}/>
+                    ? <CurrencyInfo data={state.currencyRes} isLoad={state.isLoad} />
                     : <CurrencyList
                         isLoad={state.isLoad}
                         onPrev={() => this.onPrev()}
@@ -169,4 +170,11 @@ class Currencies extends Component {
     }
 }
 
-export default Currencies;
+const mapStateToProps = state => ({
+    api: state.network.api,
+});
+
+export default connect(
+    mapStateToProps,
+    null
+)(Currencies);

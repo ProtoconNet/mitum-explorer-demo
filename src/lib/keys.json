@@ -2,7 +2,8 @@
     "node": {
         "network": "Network version",
         "explorer": "Explorer version",
-        "height": "Current block height"
+        "height": "Current block height",
+        "suffrages": "Suffrage nodes"
     },
     "currency": {
         "currency": "Currency ID", 

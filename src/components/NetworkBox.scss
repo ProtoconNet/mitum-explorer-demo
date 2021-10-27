@@ -1,0 +1,82 @@
+.network-box-container {
+    width: 400px;
+    height: fit-content;
+    text-align: end;
+
+    z-index: 1;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+
+    margin: 0;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    #network-box-active {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        #network-box-input {
+            width: 70%;
+            height: auto;
+
+            border-radius: 2px;
+            border: 0.5px solid lightgray;
+
+            font-weight: 300;
+            letter-spacing: 1px;
+    
+            font-size: 1rem;
+            color: black;
+            margin: 0.2rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+    
+            &:focus {
+                outline: none !important;
+                border: 0.5px solid lightblue;
+            }
+        }
+
+        #network-box-button {
+            width: 15%;
+            height: auto;
+
+            font-size: 1rem;
+            padding: 0.2rem;
+            margin: 0.2rem;
+            
+            border: 0 solid transparent;
+            color: white;
+            background-color: lightskyblue;
+    
+            &:hover {
+                background-color: cadetblue;
+            }
+        }
+    }
+
+    #network-box-api {
+        font-size: 1rem;
+        color: cadetblue;
+        text-decoration: underline;
+
+        width: fit-content;
+        padding: 0.2rem;
+        margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+
+        &:hover  {
+            color: gray;
+            background-color: lightgray;
+        }
+    }
+}

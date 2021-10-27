@@ -31,7 +31,7 @@ class Operations extends Component {
     }
 
     loadOperations() {
-        getAllOperations()
+        getAllOperations(this.props.api)
             .then(
                 res => {
                     const operations = res.data._embedded;
@@ -49,7 +49,7 @@ class Operations extends Component {
                         isLoad: true,
                     };
 
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             res => {
                                 this.setState({
@@ -90,7 +90,7 @@ class Operations extends Component {
             return;
         }
 
-        getResponse(stack[idx + 1])
+        getResponse(this.props.api, stack[idx + 1])
             .then(
                 res => {
                     const operations = res.data._embedded;
@@ -115,7 +115,7 @@ class Operations extends Component {
                     }
 
                     const { next } = res.data._links;
-                    getResponse(next.href)
+                    getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
                                 this.setState({
@@ -151,7 +151,7 @@ class Operations extends Component {
             return;
         }
 
-        getResponse(stack[idx - 1])
+        getResponse(this.props.api, stack[idx - 1])
             .then(
                 res => {
                     const operations = res.data._embedded;
@@ -243,6 +243,7 @@ class Operations extends Component {
 
 const mapStateToProps = state => ({
     modelVersion: state.info.modelVersion,
+    api: state.network.api,
 });
 
 export default connect(
