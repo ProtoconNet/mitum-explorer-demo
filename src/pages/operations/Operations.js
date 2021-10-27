@@ -7,6 +7,7 @@ import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
 import List from "../../components/views/List";
 
+import message from '../../lib/message.json';
 import page from '../../lib/page.json';
 import columns from '../../lib/columns.json';
 import { getAllOperations, getResponse, isAddress, parseDate } from '../../lib';
@@ -137,7 +138,7 @@ class Operations extends Component {
                     this.setState({
                         isLoad: true,
                     })
-                    console.error("Network error! Cannot load operations.");
+                    console.error(`${message.error.network} ${message.error.operations}`);
                 }
             )
     }
@@ -169,10 +170,10 @@ class Operations extends Component {
             )
             .catch(
                 e => {
-                    console.log("Network error! Cannot load operations.");
                     this.setState({
                         isLoad: true,
-                    })
+                    });
+                    console.error(`${message.error.network} ${message.error.operations}`);
                 }
             )
     }
@@ -210,7 +211,7 @@ class Operations extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter fact hash or account address"
+                        placeholder={message.placeholder.account}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />

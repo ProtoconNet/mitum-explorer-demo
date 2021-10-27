@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import message from '../../lib/message.json';
 import { key } from '../../lib';
 import './List.scss';
 
@@ -14,7 +15,7 @@ class List extends Component {
             if (content === null) {
                 return (
                     <p style={{ ...plainTextStyle, color: "gray" }}
-                        key={key()}>No element</p>
+                        key={key()}>{message.replace.zero}</p>
                 );
             }
             return <p key={key()} style={plainTextStyle}>{content}</p>
@@ -71,9 +72,9 @@ class List extends Component {
                 </ul>
                 <section>
                     <button onClick={onPrevClick}
-                        style={{ visibility: isFirstPage ? "hidden" : "visible" }}>PREV</button>
+                        style={{ visibility: isFirstPage ? "hidden" : "visible" }}>{message.button.prev}</button>
                     <button onClick={onNextClick}
-                        style={{ visibility: isLastPage ? "hidden" : "visible" }}>NEXT</button>
+                        style={{ visibility: isLastPage ? "hidden" : "visible" }}>{message.button.next}</button>
                 </section>
             </div>
         );

@@ -8,6 +8,8 @@ import List from "../../components/views/List";
 import DetailCard from "../../components/views/DetailCard";
 
 import page, { account as pageInfo } from '../../lib/page.json';
+import { account as accountKeys } from '../../lib/keys.json';
+import message from '../../lib/message.json';
 import columns from '../../lib/columns.json';
 import { getAccount, getAccountOperations, getResponse, isAddress, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
@@ -156,7 +158,7 @@ class Account extends Component {
         const search = this.state.search.trim();
         const version = this.props.modelVersion;
 
-        if (search === "") {
+        if (!search) {
             return;
         }
 
@@ -243,7 +245,7 @@ class Account extends Component {
                         this.setState({
                             isOperLoad: true,
                         });
-                        console.error("Network error! Cannot load operations.");
+                        console.error(`${message.error.network} ${message.error.operations}`);
                     }
                 )
         }
@@ -313,7 +315,7 @@ class Account extends Component {
                         this.setState({
                             isOperLoad: true,
                         });
-                        console.error("Network error! Cannot load operations.");
+                        console.error(`${message.error.network} ${message.error.operations}`);
                     }
                 )
         }
@@ -355,8 +357,8 @@ class Account extends Component {
             return (
                 <Card id="account-info" title="Account Information">
                     <DetailCard items={[
-                        ["Address", addressRes],
-                        ["Threshold", keysRes.threshold]
+                        [accountKeys.address, addressRes],
+                        [accountKeys.threshold, keysRes.threshold]
                     ]} />
 
                     <p style={plainTitleStyle}>Keys</p>
@@ -398,7 +400,7 @@ class Account extends Component {
         if (!operations) {
             return (
                 <Card id="operations" title="Operations">
-                    <p>Not found</p>
+                    <p>{message.replace.null}</p>
                 </Card>
             )
         }
@@ -436,7 +438,7 @@ class Account extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter account address or public key"
+                        placeholder={message.placeholder.account}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={state.search} />

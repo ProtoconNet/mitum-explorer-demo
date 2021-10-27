@@ -30,5 +30,12 @@
     },
     "amounts": {
         "amounts": "Amounts"
+    },
+    "account": {
+        "threshold": "Threshold",
+        "address": "Address"
+    },
+    "accounts": {
+        "keys": "Public Key"
     }
 }

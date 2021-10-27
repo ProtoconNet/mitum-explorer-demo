@@ -7,8 +7,10 @@ import SearchBox from "../../components/SearchBox";
 import List from "../../components/views/List";
 import DetailCard from "../../components/views/DetailCard";
 
-import page, { accounts as pageInfo } from '../../lib/page.json';
+import message from '../../lib/message.json';
 import columns from "../../lib/columns.json";
+import { accounts as accountsKeys } from '../../lib/keys.json';
+import page, { accounts as pageInfo } from '../../lib/page.json';
 import { getAccounts, getResponse, isAddress } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 
@@ -126,7 +128,7 @@ class Accounts extends Component {
                     this.setState({
                         isLoad: true
                     });
-                    console.error("Network error! cannot load accounts.");
+                    console.error(`${message.error.network} ${message.error.accounts}`);
                 }
             )
     }
@@ -180,7 +182,7 @@ class Accounts extends Component {
                     this.setState({
                         isLoad: true,
                     });
-                    console.error("Network error! Cannot load accounts.");
+                    console.error(`${message.error.network} ${message.error.accounts}`);
                 }
             )
     }
@@ -194,7 +196,7 @@ class Accounts extends Component {
                 ? (
                     <Card id="accounts" title="Accounts">
                         <DetailCard items={[
-                            ["Public Key", pubKey],
+                            [accountsKeys.keys, pubKey],
                         ]} />
                         <List
                             columns={Object.values(columns.accounts)}
@@ -222,7 +224,7 @@ class Accounts extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter account address or public key"
+                        placeholder={message.placeholder.account}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />

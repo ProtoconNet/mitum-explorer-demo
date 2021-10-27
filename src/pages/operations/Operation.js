@@ -8,6 +8,7 @@ import Card from "../../components/views/Card";
 import SearchBox from "../../components/SearchBox";
 import DetailCard from "../../components/views/DetailCard";
 
+import message from '../../lib/message.json';
 import page, { operation as pageInfo } from '../../lib/page.json';
 import { operation as operKeys, keys as keysKeys, amounts as amountsKeys } from '../../lib/keys.json';
 import { isAddress, link, parseDate, urls } from "../../lib";
@@ -43,7 +44,7 @@ class Operation extends Component {
     parseType(_hint) {
         const idx = _hint.indexOf(`-${this.props.modelVersion}`);
         if (idx < 0) {
-            return "Unknown";
+            return message.replace.unknown;
         }
         return _hint.substring(0, idx);
     }
@@ -159,7 +160,7 @@ class Operation extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter fact hash or account address"
+                        placeholder={message.placeholder.operation}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />

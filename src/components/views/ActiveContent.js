@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import message from '../../lib/message.json';
 import { key } from '../../lib';
 
 class ActiveContent extends Component {
@@ -28,7 +29,7 @@ class ActiveContent extends Component {
                 <li className="active background" id="sub-li" key={key()} onClick={(() => this.setState({ showSubContent: !showSubContent }))}>
                     <section id="sub-section" style={{ margin: "0", padding: "0", width: "100%", height: "fit-content" }}>
                         <p id="sub-title">{title}</p>
-                        <p id="sub-content">{content ? content : "-"}</p>
+                        <p id="sub-content">{content ? content : message.replace.empty}</p>
                     </section>
                     {
                         showSubContent
@@ -48,7 +49,7 @@ class ActiveContent extends Component {
                 <p className={titleFunc ? "active" : null} id="sub-title"
                     onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</p>
                 <p className={contentFunc ? "active" : null} id="sub-content"
-                    onClick={() => contentFunc ? contentFunc(content) : {}}>{content ? content : "-"}</p>
+                    onClick={() => contentFunc ? contentFunc(content) : {}}>{content ? content : message.replace.empty}</p>
             </li>
         );
     }

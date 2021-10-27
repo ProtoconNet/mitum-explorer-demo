@@ -7,6 +7,7 @@ import SearchBox from "../../components/SearchBox";
 import CurrencyInfo from "./CurrencyInfo";
 import CurrencyList from "./CurrencyList";
 
+import message from '../../lib/message.json';
 import page, { currency as pageInfo } from '../../lib/page.json';
 import { getCurrencies, getCurrency, parseCurrency } from "../../lib";
 
@@ -63,7 +64,7 @@ class Currencies extends Component {
                         ...initialState,
                         isLoad: true,
                     })
-                    console.error("Network error! Cannot load currencies.");
+                    console.error(`${message.error.network} ${message.error.currencies}`);
                 }
             )
     }
@@ -149,7 +150,7 @@ class Currencies extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter currency id"
+                        placeholder={message.placeholder.currency}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearchCurrency(state.search)}
                         value={state.search} />

@@ -1,0 +1,37 @@
+{
+    "title": "Protocon Explorer",
+    "menu": {
+        "blocks": "Blocks",
+        "operations": "Operations",
+        "accounts": "Accounts",
+        "currencies": "Currencies"
+    },
+    "placeholder": {
+        "node": "Enter fact hash or account address...",
+        "block": "Enter block height or block hash...",
+        "operation": "Enter fact hash or account address...",
+        "account": "Enter account address or public key...",
+        "currency": "Enter currency ID..."
+    },
+    "replace": {
+        "null": "Not found",
+        "empty": "-",
+        "zero": "No element",
+        "unknown": "Unknown"
+    },
+    "error": {
+        "network": "Network error!",
+        "node": "Cannot load network information",
+        "operations": "Cannot load operations.",
+        "account": "Cannot load account information",
+        "accounts": "Cannot load accounts.",
+        "currency": "Cannot load currency information.",
+        "currencies": "Cannot load currencies.",
+        "block": "Cannot load block information.",
+        "blocks": "Cannot load blocks."       
+    },
+    "button": {
+        "prev": "PREV",
+        "next": "NEXT"
+    }
+}

@@ -9,6 +9,7 @@ import DetailCard from "../../components/views/DetailCard";
 import List from "../../components/views/List";
 
 import page, { block as pageInfo } from '../../lib/page.json';
+import message from '../../lib/message.json';
 import columns from "../../lib/columns.json";
 import { getBlock, getBlockOperations, getBlocks, getResponse, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
@@ -310,7 +311,7 @@ class Blocks extends Component {
                     this.setState({
                         isBlocksLoad: true,
                     });
-                    console.log("Network error! Cannot load blocks");
+                    console.error(`${message.error.network} ${message.error.blocks}`);
                 }
             )
     }
@@ -353,7 +354,7 @@ class Blocks extends Component {
                     this.setState({
                         isBlockLoad: true,
                     })
-                    console.error("Network error! Cannot load operations.");
+                    console.error(`${message.error.network} ${message.error.operations}`);
                 }
             )
     }
@@ -429,7 +430,7 @@ class Blocks extends Component {
                     this.setState({
                         isBlockLoad: true,
                     })
-                    console.error("Network error! Cannot load operations.");
+                    console.error(`${message.error.network} ${message.error.operations}`);
                 }
             )
     }
@@ -441,7 +442,7 @@ class Blocks extends Component {
         if (!hash || !operations) {
             return (
                 <Card title="Block Information">
-                    <p>Not found</p>
+                    <p>{message.replace.null}</p>
                 </Card>
             )
         }
@@ -550,7 +551,7 @@ class Blocks extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter block hash or block height"
+                        placeholder={message.placeholder.block}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search}

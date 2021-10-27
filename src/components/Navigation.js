@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Navigation.scss";
 import logo from "../images/logo_white.png";
+import message from "../lib/message.json";
 
 export default function Navigation() {
   const reload = () => {
@@ -12,13 +13,13 @@ export default function Navigation() {
     <header className="nav-container" onClick={() => reload()}>
       <Link className="nav-title" to="/">
         <img id="logo" src={logo} alt="logo" />
-        Protocon Explorer
+        {message.title}
       </Link>
       <nav className="nav-menu">
-        <Link to="/blocks">Blocks</Link>
-        <Link to="/operations">Operations</Link>
-        <Link to="/accounts">Accounts</Link>
-        <Link to="/currencies">Currencies</Link>
+        <Link to="/blocks">{message.menu.blocks}</Link>
+        <Link to="/operations">{message.menu.operations}</Link>
+        <Link to="/accounts">{message.menu.accounts}</Link>
+        <Link to="/currencies">{message.menu.currencies}</Link>
       </nav>
     </header>
   );

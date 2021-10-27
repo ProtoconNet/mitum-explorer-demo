@@ -8,6 +8,7 @@ import SearchBox from '../../components/SearchBox';
 import DetailCard from '../../components/views/DetailCard';
 import packageInfo from '../../../package.json';
 
+import message from '../../lib/message.json';
 import page from '../../lib/page.json';
 import keys from '../../lib/keys.json';
 import { isAddress } from '../../lib';
@@ -58,7 +59,7 @@ class NodeInfo extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder="Enter fact hash or account address"
+                        placeholder={message.placeholder.node}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { key } from "../../lib";
 import ActiveContent from "./ActiveContent";
 import "./DetailCard.scss";
+import message from '../../lib/message.json';
+import { key } from "../../lib";
 
 class DetailCard extends Component {
 
@@ -25,7 +26,7 @@ class DetailCard extends Component {
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
           <p className={contentFunc ? "active" : null} id="main-content"
             onClick={() => contentFunc ? contentFunc(content) : {}}>
-            {content || content === 0 ? content : "Not found"}
+            {content || content === 0 ? content : message.replace.null}
           </p>
         </li>
       );
@@ -37,7 +38,7 @@ class DetailCard extends Component {
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
           <p className={contentFunc ? "active" : null} id="main-content"
             onClick={() => contentFunc ? contentFunc(content) : {}}>
-            {content && Object.prototype.hasOwnProperty.call(content, "msg") ? content.msg : "Not found"}
+            {content && Object.prototype.hasOwnProperty.call(content, "msg") ? content.msg : message.replace.null}
           </p>
         </li>
       )
