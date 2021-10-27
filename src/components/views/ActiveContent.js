@@ -26,8 +26,10 @@ class ActiveContent extends Component {
         if (isSubContentExist) {
             return (
                 <li className="active background" id="sub-li" key={key()} onClick={(() => this.setState({ showSubContent: !showSubContent }))}>
-                    <p id="sub-title">{title}</p>
-                    <p id="sub-content">{content ? content : "-"}</p>
+                    <section id="sub-section" style={{ margin: "0", padding: "0", width: "100%", height: "fit-content" }}>
+                        <p id="sub-title">{title}</p>
+                        <p id="sub-content">{content ? content : "-"}</p>
+                    </section>
                     {
                         showSubContent
                             ? (
@@ -42,10 +44,10 @@ class ActiveContent extends Component {
         }
 
         return (
-            <li id="sub-li" key={key()}>
-                <p className={titleFunc ? "active" : null} id="sub-title" 
+            <li className="inactive" id="sub-li" key={key()}>
+                <p className={titleFunc ? "active" : null} id="sub-title"
                     onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</p>
-                <p className={contentFunc ? "active" : null} id="sub-content" 
+                <p className={contentFunc ? "active" : null} id="sub-content"
                     onClick={() => contentFunc ? contentFunc(content) : {}}>{content ? content : "-"}</p>
             </li>
         );

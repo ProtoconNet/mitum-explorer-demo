@@ -132,7 +132,7 @@ class Operation extends Component {
         if (items.length > 0) {
             infoItem.push([operKeys.items,
             items.map(
-                (item, idx) => [idx, this.parseType(item._hint), JSON.stringify(item)]),
+                (item, idx) => [idx, this.parseType(item._hint), JSON.stringify(item, null, 4)]),
             ]);
         }
         if (Object.keys(keys).length !== 0) {
