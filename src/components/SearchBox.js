@@ -26,11 +26,11 @@ class SearchBox extends Component {
         <input
           id="input"
           type="text/plain"
-          autoComplete="on"
-          autoCorrect="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoFocus="off"
+          autoComplete="false"
+          autoCorrect="false"
+          autoCapitalize="false"
+          autoSave="false"
+          autoFocus={false}
           value={this.state.value ? this.state.value : value}
           disabled={disabled}
           onChange={

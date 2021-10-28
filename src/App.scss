@@ -1,5 +1,13 @@
 .App {
   margin: 0;
+  padding: 0;
   height: 100%;
   width: 100%;
+
+  p,
+  pre {
+    overflow: visible;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
 }

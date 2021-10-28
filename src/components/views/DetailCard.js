@@ -22,9 +22,9 @@ class DetailCard extends Component {
     ) {
       return (
         <li id="main-li" key={key()}>
-          <h3 className={titleFunc ? "active" : null} id="main-title"
+          <h3 key={key()} className={titleFunc ? "active" : null} id="main-title"
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
-          <p className={contentFunc ? "active" : null} id="main-content"
+          <p key={key()} className={contentFunc ? "active" : null} id="main-content"
             onClick={() => contentFunc ? contentFunc(content) : {}}>
             {content || content === 0 ? content : message.replace.null}
           </p>
@@ -34,9 +34,9 @@ class DetailCard extends Component {
     else if (contentType === "object" && Object.prototype.hasOwnProperty.call(content, "msg")) {
       return (
         <li id="main-li" key={key()}>
-          <h3 className={titleFunc ? "active" : null} id="main-title"
+          <h3 key={key()} className={titleFunc ? "active" : null} id="main-title"
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
-          <p className={contentFunc ? "active" : null} id="main-content"
+          <p key={key()} className={contentFunc ? "active" : null} id="main-content"
             onClick={() => contentFunc ? contentFunc(content) : {}}>
             {content && Object.prototype.hasOwnProperty.call(content, "msg") ? content.msg : message.replace.null}
           </p>
@@ -46,9 +46,9 @@ class DetailCard extends Component {
     else {
       return (
         <li id="main-li" key={key()}>
-          <h3 className={titleFunc ? "active" : null} id="main-title"
+          <h3 key={key()} className={titleFunc ? "active" : null} id="main-title"
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
-          <ul id="sub-ul">
+          <ul key={key()} id="sub-ul">
             {content ? content.map((x) => this.subListComponent(x)) : false}
           </ul>
         </li>
@@ -57,7 +57,7 @@ class DetailCard extends Component {
   }
 
   subListComponent(item) {
-    return <ActiveContent item={item} />
+    return <ActiveContent key={key()} item={item} />
   }
 
   render() {

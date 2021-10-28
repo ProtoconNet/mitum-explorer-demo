@@ -10,27 +10,42 @@ const plainTextStyle = {
 
 class List extends Component {
 
-    contentComponent(content, func) {
+    contentComponent(content, func, lonely) {
+        const textStyle = {
+            ...plainTextStyle,
+        }
+
+        if (lonely) {
+            textStyle['width'] = "100%";
+        }
+
         if (func === null) {
             if (content === null) {
                 return (
-                    <p style={{ ...plainTextStyle, color: "gray" }}
+                    <p style={{ ...textStyle, color: "gray" }}
                         key={key()}>{message.replace.zero}</p>
                 );
             }
-            return <p key={key()} style={plainTextStyle}>{content}</p>
+            return <p key={key()} style={textStyle}>{content}</p>
         }
-        return <p key={key()} onClick={() => func(content)}>{content}</p>
+        return <p key={key()} style={lonely ? { width: "100%" } : {}} onClick={() => func(content)}>{content}</p>
     }
 
-    listComponent(rowData, isAttribute) {
+    listComponent(rowData, isAttribute, lonely) {
+        const textStyle = {
+            ...plainTextStyle,
+        }
+
+        if (lonely) {
+            textStyle['width'] = "100%";
+        }
 
         if (isAttribute) {
             return (
                 <li key={key()} style={{ color: "black", backgroundColor: "transparent" }}>
                     {rowData.map(
                         x => (
-                            <p key={key()} style={{ ...plainTextStyle, fontWeight: "400" }}>{x}</p>
+                            <p key={key()} style={{ ...textStyle, fontWeight: "400" }}>{x}</p>
                         )
                     )}
                 </li>
@@ -38,21 +53,21 @@ class List extends Component {
         }
         else {
             const { onElementClick } = this.props;
-            const combinded = [];
+            const combined = [];
 
             for (var i = 0; i < onElementClick.length; i++) {
                 if (rowData[i] === null) {
-                    combinded.push([null, null]);
+                    combined.push([null, null]);
                 }
                 else {
-                    combinded.push([rowData[i], onElementClick[i]]);
+                    combined.push([rowData[i], onElementClick[i]]);
                 }
             }
 
             return (
                 <li key={key()}>
                     {
-                        combinded.map(x => this.contentComponent(x[0], x[1]))
+                        combined.map(x => this.contentComponent(x[0], x[1], lonely))
                     }
                 </li>
 
@@ -65,10 +80,10 @@ class List extends Component {
         return (
             <div className="list-container">
                 <ul>
-                    {this.listComponent(columns, true)}
+                    {this.listComponent(columns, true, columns.length === 1)}
                     {items.length > 0
-                        ? items.map(x => this.listComponent(x, false))
-                        : this.listComponent(columns.map(x => null), false)}
+                        ? items.map(x => this.listComponent(x, false, columns.length === 1))
+                        : this.listComponent(columns.map(x => null), false, columns.length === 1)}
                 </ul>
                 <section>
                     <button onClick={onPrevClick}

@@ -42,12 +42,28 @@
 
         &:hover {
             background-color: aliceblue;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         &:active {
             background-color: lightblue;
-            border-radius: 10px;
+            border-radius: 8px;
+        }
+    }
+}
+
+@media screen and (max-width: 899px) {
+    .search-container {
+        #input {
+            height: 40px;
+    
+            font-size: 0.8rem;
+            margin: 0.5rem;
+        }
+    
+        #button {
+            height: 35px;
+            padding: 5px;
         }
     }
 }

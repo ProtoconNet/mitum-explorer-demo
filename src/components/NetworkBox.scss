@@ -80,3 +80,27 @@
         }
     }
 }
+
+@media screen and (max-width: 599px) {
+    .network-box-container {
+        width: 300px;
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+
+        #network-box-active {
+            #network-box-input {
+                font-size: 0.9rem;
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+            }
+    
+            #network-box-button {
+                font-size: 0.9rem;
+            }
+        }
+    
+        #network-box-api {
+            font-size: 0.9rem;
+            margin: 0.2rem 0.4rem 0.4rem 0.4rem;
+        }
+    }    
+}

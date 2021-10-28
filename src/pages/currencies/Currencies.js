@@ -143,6 +143,10 @@ class Currencies extends Component {
         window.location.reload();
     }
 
+    onClickCurrency(currency) {
+        this.props.history.push(`${page.currency.default}/${currency}`);
+    }
+
     render() {
         const state = this.state;
 
@@ -162,7 +166,7 @@ class Currencies extends Component {
                         isLoad={state.isLoad}
                         onPrev={() => this.onPrev()}
                         onNext={() => this.onNext()}
-                        onSearchCurrency={(currency) => this.onSearchCurrency(currency)}
+                        onSearchCurrency={(currency) => this.onClickCurrency(currency)}
                         currencies={state.currencies}
                         idx={state.idx} />}
             </div>

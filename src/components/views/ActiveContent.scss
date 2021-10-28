@@ -1,0 +1,52 @@
+.background {
+    &:hover {
+        background-color: azure;
+    }
+
+    &:active {
+        background-color: lightblue;
+    }
+}
+
+.sub-active {
+
+    section {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+
+        p {
+            color: cadetblue !important;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    pre {
+        width: 95%;
+
+        text-decoration: none !important;
+
+        border-radius: 3px;
+        border: 1px solid lightgray;
+        background-color: #f5fbfe;
+
+        color: darkslategray;
+        font-size: 0.95rem;
+
+        padding: 0.5rem;
+        margin: 0.2rem;
+    }
+}
+
+@media screen and (max-width: 1199px) {
+    .sub-active pre {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 599px) {
+
+}

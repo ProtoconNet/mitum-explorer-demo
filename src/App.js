@@ -18,8 +18,13 @@ import { getNodeInfo } from './lib';
 
 import { setNodeInfo } from './store/actions';
 import NetworkBox from './components/NetworkBox';
+import DropNavigation from './components/DropNavigation';
 
 class App extends Component {
+
+  componentDidMount() {
+    this.loadNodeInfo();
+  }
 
   loadNodeInfo() {
     getNodeInfo(this.props.api)
@@ -51,16 +56,13 @@ class App extends Component {
     );
   }
 
-  componentDidMount() {
-    this.loadNodeInfo();
-  }
-
   render() {
     const { node, account, accounts, block, blocks, operation, operations, currency, currencies } = page;
     return (
       <div className="App" >
         <BrowserRouter>
           <Navigation />
+          <DropNavigation />
           <Route exact path={node.default} component={NodeInfo} />
 
           <Route exact path={blocks.default} component={Blocks} />
