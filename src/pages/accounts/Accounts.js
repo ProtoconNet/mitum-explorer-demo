@@ -195,10 +195,12 @@ class Accounts extends Component {
             isLoad
                 ? (
                     <Card id="accounts" title="Accounts">
-                        <DetailCard items={[
+                        <DetailCard 
+                            keyIndex={null}
+                            items={[
                             [accountsKeys.keys, accounts.length > 0 ? pubKey : message.replace.null],
                         ]} />
-                        <List
+                        <List isShow={true}
                             columns={Object.values(columns.accounts)}
                             items={items}
                             onElementClick={[(x) => this.props.history.push(`${page.account.default}/${x}`)]}

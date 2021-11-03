@@ -1,4 +1,4 @@
-.list-container {
+.balance-list-resp-container {
     width: 100%;
 
     margin: 0;
@@ -16,24 +16,15 @@
 
             display: flex;
             flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
+            align-items: flex-start;
+            justify-content: flex-start;
 
-            padding: 0.1rem 0 0.1rem 0;
+            padding: 0;
             margin: 0;
 
             border-bottom: 0.5px solid lightgray;
 
-            p:nth-child(1) {
-                width: 50%;
-            }
-
-            p:nth-child(n+2):nth-child(-n+12) {
-                width: 25%;
-            }
-
             p {
-                text-align: left;
                 text-decoration: none;
 
                 font-size: 0.9rem;
@@ -68,11 +59,10 @@
         justify-content: space-between;
 
         button {
-            width: 6rem;
+            width: 5rem;
+            padding: 0.4rem;
 
-            padding: 0.5rem;
-
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: white;
             background-color: lightsteelblue;
 
@@ -90,17 +80,20 @@
     }
 }
 
-@media screen and (max-width: 1199px) {
-    .list-container section button {
-        width: 5rem;
-        padding: 0.4rem;
-
-        font-size: 0.9rem;
+@media screen and (min-width: 900px) {
+    .balance-list-resp-container {
+        display: none;
     }
 }
 
-@media screen and (max-width: 899px) {
-    .list-container {
+@media screen and (min-width: 600px) {
+    #short {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    #full {
         display: none;
     }
 }

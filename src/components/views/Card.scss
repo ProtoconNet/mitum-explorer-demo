@@ -35,17 +35,13 @@
 @media screen and (max-width: 1199px) {
     .card-container {
         width: 75%;
+        padding: 2rem;
     }
 }
 
 @media screen and (max-width: 899px) {
-    .card-container {
-        margin: 0.8rem;
-        padding: 1.5rem;
-        
-        h2 {
-            font-size: 1.2rem;
-        }
+    .card-container h2 {
+        font-size: 1.2rem;
     }
 }
 

@@ -33,7 +33,7 @@ export default function CurrencyInfo({ data, isLoad }) {
         <Card id="result" title="Currency Information">
             {
                 isLoad
-                ? <DetailCard items={items()} />
+                ? <DetailCard keyIndex={null} items={items()} />
                 : <LoadingIcon />
             }
         </Card>

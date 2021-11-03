@@ -13,6 +13,8 @@ import message from '../../lib/message.json';
 import columns from "../../lib/columns.json";
 import { getBlock, getBlockOperations, getBlocks, getResponse, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
+import OperationRespList from "../../components/responsive/OperationRespList";
+import BlockRespList from "../../components/responsive/BlockRespList";
 
 const initialState = {
     idx: 0,
@@ -450,13 +452,13 @@ class Blocks extends Component {
         const infoItems = [
             [columns.blocks.hash, hash],
             [columns.blocks.height, height],
-            [columns.blocks.date, parseDate(date)],
+            [columns.blocks.date, parseDate(date, true)],
         ];
 
         const operationItems = operations.map(
             operation => [
                 operation.factHash,
-                parseDate(operation.date),
+                parseDate(operation.date, false),
                 operation.height,
             ]
         )
@@ -477,7 +479,7 @@ class Blocks extends Component {
             isBlockLoad
                 ? (
                     <Card title="Block Information">
-                        <DetailCard items={infoItems} />
+                        <DetailCard keyIndex={null} items={infoItems} />
                         <p style={plainTitleStyle}>Operations</p>
                         <List
                             columns={Object.values(columns.operations)}
@@ -490,8 +492,14 @@ class Blocks extends Component {
                             onPrevClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsPrev(); }}
                             onNextClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsNext(); }}
                             isLastPage={idx + 1 >= stack.length}
-                            isFirstPage={idx <= 0}
-                        />
+                            isFirstPage={idx <= 0} />
+                        <OperationRespList
+                            history={this.props.history}
+                            items={operationItems}
+                            onPrevClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsPrev(); }}
+                            onNextClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsNext(); }}
+                            isLastPage={idx + 1 >= stack.length}
+                            isFirstPage={idx <= 0} />
                     </Card>
                 )
                 : (
@@ -516,32 +524,37 @@ class Blocks extends Component {
             block => [
                 block.hash,
                 block.height,
-                parseDate(block.date),
+                parseDate(block.date, false),
             ]
         );
 
         const { history } = this.props;
         return (
-            <Card title="Blocks">
-                {
-                    isBlocksLoad
-                        ? (
-                            <List
-                                columns={Object.values(columns.blocks)}
-                                items={items}
-                                onElementClick={[
-                                    (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
-                                    (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
-                                    null]}
-                                onPrevClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksPrev(); }}
-                                onNextClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksNext(); }}
-                                isLastPage={idx + 1 >= stack.length}
-                                isFirstPage={idx <= 0}
-                            />
-                        )
-                        : <LoadingIcon />
-                }
-            </Card>
+            isBlocksLoad
+                ? (
+                    <Card title="Blocks">
+                        <List
+                            columns={Object.values(columns.blocks)}
+                            items={items}
+                            onElementClick={[
+                                (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
+                                (x) => { history.push(`${page.block.default}/${x}`); window.location.reload(); },
+                                null]}
+                            onPrevClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksPrev(); }}
+                            onNextClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksNext(); }}
+                            isLastPage={idx + 1 >= stack.length}
+                            isFirstPage={idx <= 0}
+                        />
+                        <BlockRespList
+                            history={this.props.history}
+                            items={items}
+                            onPrevClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksPrev(); }}
+                            onNextClick={() => { this.setState({ isBlocksLoad: false }); this.onBlocksNext(); }}
+                            isLastPage={idx + 1 >= stack.length}
+                            isFirstPage={idx <= 0} />
+                    </Card>
+                )
+                : <Card title="Blocks"><LoadingIcon /></Card>
         )
     }
 

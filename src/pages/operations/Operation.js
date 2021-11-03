@@ -119,12 +119,13 @@ class Operation extends Component {
         const infoItem = [
             [operKeys.hash, factHash],
             [operKeys.type, type],
-            [operKeys.date, parseDate(date)],
+            [operKeys.date, parseDate(date, true)],
             [operKeys.height, height, [null, (x) => this.props.history.push(`${page.block.default}/${x}`)]],
             [operKeys.processed, "" + in_state],
             !in_state ? [operKeys.reason, reason] : null,
         ];
 
+        var keyIndex = null;
         if (items.length > 0) {
             infoItem.push([operKeys.items,
             items.map(
@@ -138,6 +139,8 @@ class Operation extends Component {
                     key => [key.key, key.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]
                 ))
             ]);
+
+            keyIndex = infoItem.length - 1;
         }
         if (amounts.length > 0) {
             infoItem.push([amountsKeys.amounts,
@@ -145,10 +148,14 @@ class Operation extends Component {
             ]);
         }
 
-        return infoItem;
+        return {
+            keyIndex,
+            infoItem
+        }
     }
 
     render() {
+        const infoItem = this.state.isLoad ? this.infoItem() : null;
 
         return (
             <div className="operation-container">
@@ -161,7 +168,7 @@ class Operation extends Component {
                         value={this.state.search} />
                 </Card>
                 <Card id="list" title="Operation Information">
-                    {this.state.isLoad ? <DetailCard items={this.infoItem()} /> : <LoadingIcon />}
+                    {this.state.isLoad ? <DetailCard keyIndex={infoItem.keyIndex} items={infoItem.infoItem} /> : <LoadingIcon />}
                 </Card>
             </div>
         )

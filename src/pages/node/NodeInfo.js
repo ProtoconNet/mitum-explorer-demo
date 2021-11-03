@@ -73,7 +73,7 @@ class NodeInfo extends Component {
                         value={this.state.search} />
                 </Card>
                 <Card id="list" title="MITUM Network Information">
-                    {this.props.isLoad ? <DetailCard items={items} /> : <LoadingIcon />}
+                    {this.props.isLoad ? <DetailCard items={items} keyIndex={null} /> : <LoadingIcon />}
                 </Card>
             </div>
         );

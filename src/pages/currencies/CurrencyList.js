@@ -10,7 +10,8 @@ export default function CurrencyList({ onPrev, onNext, onSearchCurrency, currenc
             {
                 isLoad
                     ? (
-                        <List columns={Object.values(columns.currencies)} items={
+                        <List isShow={true} 
+                            columns={Object.values(columns.currencies)} items={
                             currencies.slice(
                                 idx,
                                 (idx + 10 >= currencies.length

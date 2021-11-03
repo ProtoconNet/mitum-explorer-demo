@@ -12,6 +12,7 @@ import page from '../../lib/page.json';
 import columns from '../../lib/columns.json';
 import { getAllOperations, getResponse, isAddress, parseDate } from '../../lib';
 import LoadingIcon from "../../components/LoadingIcon";
+import OperationRespList from "../../components/responsive/OperationRespList";
 
 const initialState = {
     idx: 0,
@@ -86,7 +87,7 @@ class Operations extends Component {
         const { idx, stack } = this.state;
 
         if (idx + 1 >= stack.length) {
-            this.setState({isLoad: true});
+            this.setState({ isLoad: true });
             return;
         }
 
@@ -147,7 +148,7 @@ class Operations extends Component {
         const { idx, stack } = this.state;
 
         if (idx <= 0) {
-            this.setState({isLoad: true});
+            this.setState({ isLoad: true });
             return;
         }
 
@@ -203,7 +204,7 @@ class Operations extends Component {
     render() {
         const { operations, idx, stack } = this.state;
         const items = operations.map(
-            operation => [operation.factHash, parseDate(operation.date), operation.height]
+            operation => [operation.factHash, parseDate(operation.date, false), operation.height]
         );
 
         return (
@@ -216,10 +217,10 @@ class Operations extends Component {
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />
                 </Card>
-                <Card id="list" title="Operations">
-                    {
-                        this.state.isLoad
-                            ? (
+                {
+                    this.state.isLoad
+                        ? (
+                            <Card id="list" title="Operations">
                                 <List
                                     columns={Object.values(columns.operations)}
                                     items={items}
@@ -232,10 +233,17 @@ class Operations extends Component {
                                     onNextClick={() => { this.setState({ isLoad: false }); this.onNext(); }}
                                     isLastPage={idx + 1 >= stack.length}
                                     isFirstPage={idx <= 0} />
-                            )
-                            : <LoadingIcon />
-                    }
-                </Card>
+                                <OperationRespList
+                                    items={items}
+                                    history={this.props.history}
+                                    onPrevClick={() => { this.setState({ isLoad: false }); this.onPrev(); }}
+                                    onNextClick={() => { this.setState({ isLoad: false }); this.onNext(); }}
+                                    isLastPage={idx + 1 >= stack.length}
+                                    isFirstPage={idx <= 0} />
+                            </Card>
+                        )
+                        : <LoadingIcon />
+                }
             </div>
         )
     }

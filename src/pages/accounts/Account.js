@@ -13,6 +13,9 @@ import message from '../../lib/message.json';
 import columns from '../../lib/columns.json';
 import { getAccount, getAccountOperations, getResponse, isAddress, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
+import KeyRespList from "../../components/responsive/KeyRespList";
+import BalanceRespList from "../../components/responsive/BalanceRespList";
+import OperationRespList from "../../components/responsive/OperationRespList";
 
 const initialState = {
     keysRes: {
@@ -356,10 +359,12 @@ class Account extends Component {
         if (isAccountLoad) {
             return (
                 <Card id="account-info" title="Account Information">
-                    <DetailCard items={[
-                        [accountKeys.address, addressRes],
-                        [accountKeys.threshold, keysRes.threshold]
-                    ]} />
+                    <DetailCard
+                        keyIndex={null}
+                        items={[
+                            [accountKeys.address, addressRes],
+                            [accountKeys.threshold, keysRes.threshold]
+                        ]} />
 
                     <p style={plainTitleStyle}>Keys</p>
                     <List columns={Object.values(columns.public_keys)}
@@ -372,7 +377,12 @@ class Account extends Component {
                         onNextClick={() => this.onPubNext()}
                         isFirstPage={keysRes.idx === 0}
                         isLastPage={keysRes.idx + 3 >= keys.length} />
-
+                    <KeyRespList items={pubItems}
+                        history={this.props.history}
+                        onPrevClick={() => this.onPubPrev()}
+                        onNextClick={() => this.onPubNext()}
+                        isFirstPage={keysRes.idx === 0}
+                        isLastPage={keysRes.idx + 3 >= keys.length} />
                     <p style={plainTitleStyle}>Balances</p>
                     <List columns={Object.values(columns.balances)}
                         items={balancesItems}
@@ -380,6 +390,12 @@ class Account extends Component {
                             (x) => this.props.history.push(`${page.currency.default}/${x}`),
                             null
                         ]}
+                        onPrevClick={() => this.onBalancePrev()}
+                        onNextClick={() => this.onBalanceNext()}
+                        isFirstPage={balancesRes.idx === 0}
+                        isLastPage={balancesRes.idx + 3 >= balances.length} />
+                    <BalanceRespList items={balancesItems}
+                        history={this.props.history}
                         onPrevClick={() => this.onBalancePrev()}
                         onNextClick={() => this.onBalanceNext()}
                         isFirstPage={balancesRes.idx === 0}
@@ -406,28 +422,37 @@ class Account extends Component {
         }
 
         const operationItems = operations
-            .map(operation => [operation.factHash, parseDate(operation.date), operation.height]);
+            .map(operation => [operation.factHash, parseDate(operation.date, false), operation.height]);
 
         return (
-            <Card id="operations" title="Operations">
-                {
-                    isOperLoad
-                        ? (
-                            <List columns={Object.values(columns.operations)}
-                                items={operationItems}
-                                onElementClick={[
-                                    (x) => this.props.history.push(`${page.operation.default}/${x}`),
-                                    null,
-                                    (x) => this.props.history.push(`${page.block.default}/${x}`),
-                                ]}
-                                onPrevClick={() => { this.setState({ isOperLoad: false }); this.onOperationPrev(); }}
-                                onNextClick={() => { this.setState({ isOperLoad: false }); this.onOperationNext(); }}
-                                isFirstPage={idx === 0}
-                                isLastPage={idx + 1 >= linkStack.length} />
-                        )
-                        : <LoadingIcon />
-                }
-            </Card>
+            isOperLoad
+                ? (
+                    <Card id="operations" title="Operations">
+                        <List columns={Object.values(columns.operations)}
+                            items={operationItems}
+                            onElementClick={[
+                                (x) => this.props.history.push(`${page.operation.default}/${x}`),
+                                null,
+                                (x) => this.props.history.push(`${page.block.default}/${x}`),
+                            ]}
+                            onPrevClick={() => { this.setState({ isOperLoad: false }); this.onOperationPrev(); }}
+                            onNextClick={() => { this.setState({ isOperLoad: false }); this.onOperationNext(); }}
+                            isFirstPage={idx === 0}
+                            isLastPage={idx + 1 >= linkStack.length} />
+                        <OperationRespList
+                            history={this.props.history}
+                            items={operationItems}
+                            onPrevClick={() => { this.setState({ isOperLoad: false }); this.onOperationPrev(); }}
+                            onNextClick={() => { this.setState({ isOperLoad: false }); this.onOperationNext(); }}
+                            isFirstPage={idx === 0}
+                            isLastPage={idx + 1 >= linkStack.length} />
+                    </Card>
+                )
+                : (
+                    <Card id="operations" title="Operations">
+                        <LoadingIcon />
+                    </Card>
+                )
         );
     }
 

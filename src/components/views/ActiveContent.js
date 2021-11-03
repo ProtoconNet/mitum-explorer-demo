@@ -25,17 +25,21 @@ class ActiveContent extends Component {
 
         const isSubContentExist = item.length >= 3 && item[2] && typeof item[2] === "string";
 
+        const isTitleImportant = this.props.isTitleImportant;
+        const titleStyle = isTitleImportant ? { width: "70%" } : {};
+        const contentStyle = isTitleImportant ? { width: "30%" } : {};
+
         if (isSubContentExist) {
             return (
                 <li className="sub-active background" id="sub-li" key={key()} onClick={(() => this.setState({ showSubContent: !showSubContent }))}>
                     <section id="sub-section" style={{ margin: "0", padding: "0", width: "100%", height: "fit-content" }} key={key()}>
-                        <p id="sub-title" key={key()}>{title}</p>
-                        <p id="sub-content" key={key()}>{content ? content : message.replace.empty}</p>
+                        <p style={titleStyle} id="sub-title" key={key()}>{title}</p>
+                        <p style={contentStyle} id="sub-content" key={key()}>{content ? content : message.replace.empty}</p>
                     </section>
                     {
                         showSubContent
                             ? (
-                                <pre style={{textDecoration: "none"}} key={key()}>
+                                <pre style={{ textDecoration: "none" }} key={key()}>
                                     {item[2]}
                                 </pre>
                             )
@@ -47,9 +51,9 @@ class ActiveContent extends Component {
 
         return (
             <li className="inactive" id="sub-li" key={key()}>
-                <p className={titleFunc ? "active" : null} id="sub-title" key={key()}
+                <p style={titleStyle} className={titleFunc ? "active" : null} id="sub-title" key={key()}
                     onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</p>
-                <p className={contentFunc ? "active" : null} id="sub-content" key={key()}
+                <p style={contentStyle} className={contentFunc ? "active" : null} id="sub-content" key={key()}
                     onClick={() => contentFunc ? contentFunc(content) : {}}>{content ? content : message.replace.empty}</p>
             </li>
         );

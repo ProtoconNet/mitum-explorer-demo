@@ -76,9 +76,9 @@ class List extends Component {
     }
 
     render() {
-        const { columns, items, onPrevClick, onNextClick, isLastPage, isFirstPage } = this.props;
+        const { columns, items, onPrevClick, onNextClick, isLastPage, isFirstPage, isShow } = this.props;
         return (
-            <div className="list-container">
+            <div style={isShow ? {display: "block"} : {}} className="list-container">
                 <ul>
                     {this.listComponent(columns, true, columns.length === 1)}
                     {items.length > 0

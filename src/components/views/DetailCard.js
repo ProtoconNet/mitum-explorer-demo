@@ -6,7 +6,7 @@ import { key } from "../../lib";
 
 class DetailCard extends Component {
 
-  listComponent(item) {
+  listComponent(item, idx) {
     const title = item[0];
     const content = item[1];
 
@@ -49,15 +49,15 @@ class DetailCard extends Component {
           <h3 key={key()} className={titleFunc ? "active" : null} id="main-title"
             onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
           <ul key={key()} id="sub-ul">
-            {content ? content.map((x) => this.subListComponent(x)) : false}
+            {content ? content.map((x) => this.subListComponent(x, idx)) : false}
           </ul>
         </li>
       );
     }
   }
 
-  subListComponent(item) {
-    return <ActiveContent key={key()} item={item} />
+  subListComponent(item, idx) {
+    return <ActiveContent key={key()} item={item} isTitleImportant={idx === this.props.keyIndex}/>
   }
 
   render() {
@@ -65,7 +65,7 @@ class DetailCard extends Component {
 
     return (
       <ul id="main-ul">
-        {items.map((item) => item ? this.listComponent(item) : false)}
+        {items.map((item, idx) => item ? this.listComponent(item, idx) : false)}
       </ul>
     );
   }

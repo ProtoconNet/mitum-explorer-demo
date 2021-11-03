@@ -71,8 +71,8 @@ export function parseCurrency(currency) {
     return currency.substring(idx + 1, currency.length);
 }
 
-export function parseDate(date) {
-    return Array.from(date)
+export function parseDate(date, isFull) {
+    let parsed = Array.from(date)
         .map(
             x => {
                 switch (x) {
@@ -88,6 +88,14 @@ export function parseDate(date) {
             }
         )
         .join('');
+
+    const idx = parsed.indexOf('.');
+    if(idx < 0 || isFull) {
+        return parsed;
+    }
+    else {
+        return parsed.substring(0, idx);
+    }
 }
 
 export function key() {
