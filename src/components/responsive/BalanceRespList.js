@@ -61,7 +61,7 @@ class BalanceRespList extends Component {
                 <ul>
                     <li style={{ backgroundColor: "transparent" }}>
                         <p id="full" style={titleStyle}>Currency - Balance</p>
-                        <p id="short" style={titleStyle}>Currency - Balance (10<sup>10</sup>)</p>
+                        <p id="short" style={titleStyle}>Currency - Balance (* 0.1<sup>18</sup>)</p>
                     </li>
                     {items.length > 0
                         ? items.map(x => this.listComponent(x))

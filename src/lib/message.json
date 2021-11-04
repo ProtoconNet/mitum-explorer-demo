@@ -7,7 +7,7 @@
         "currencies": "Currencies"
     },
     "placeholder": {
-        "node": "Enter fact hash or account address...",
+        "node": "Enter fact hash, account address, or public key...",
         "block": "Enter block height or block hash...",
         "operation": "Enter fact hash or account address...",
         "account": "Enter account address or public key...",

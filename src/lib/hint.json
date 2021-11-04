@@ -1,0 +1,8 @@
+{
+    "account": "mca",
+    "pubkey": {
+        "btc": "btc-pub",
+        "ether": "ether-pub",
+        "stellar": "stellar-pub"
+    }
+}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import hint from './hint.json';
 
 const env = process.env;
 export const urls = {
@@ -104,7 +105,7 @@ export function key() {
 
 export function isAddress(target, version) {
 
-    const idx = target.indexOf(`:${process.env.REACT_APP_ACCOUNT_HINT}-${version}`);
+    const idx = target.indexOf(`:${hint.account}-${version}`);
     if (idx < 0) {
         return false;
     }
@@ -115,4 +116,21 @@ export function isAddress(target, version) {
     }
 
     return true;
+}
+
+export function isPublicKey(target, version) {
+
+    const idx = target.indexOf(':');
+    if(idx < 0) {
+        return false;
+    }
+
+    const pubHint =  target.substring(idx + 1);
+    switch(pubHint) {
+        case hint.pubkey.btc + `-${version}`:
+        case hint.pubkey.ether + `-${version}`:
+        case hint.pubkey.stellar + `-${version}`:
+            return true;
+        default: return false;
+    }
 }

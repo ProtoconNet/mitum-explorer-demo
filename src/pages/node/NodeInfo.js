@@ -11,7 +11,7 @@ import packageInfo from '../../../package.json';
 import message from '../../lib/message.json';
 import page from '../../lib/page.json';
 import keys from '../../lib/keys.json';
-import { isAddress } from '../../lib';
+import { isAddress, isPublicKey } from '../../lib';
 import LoadingIcon from '../../components/LoadingIcon';
 
 class NodeInfo extends Component {
@@ -41,6 +41,9 @@ class NodeInfo extends Component {
 
         if (isAddress(search, version)) {
             this.props.history.push(`${page.account.default}/${search}`);
+        }
+        else if(isPublicKey(search, version)) {
+            this.props.history.push(`${page.accounts.default}/${search}`);
         }
         else {
             this.props.history.push(`${page.operation.default}/${search}`);
