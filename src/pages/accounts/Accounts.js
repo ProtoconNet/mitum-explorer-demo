@@ -47,10 +47,18 @@ class Accounts extends Component {
                     getResponse(this.props.api, next.href)
                         .then(
                             nextRes => {
-                                this.setState({
-                                    ...nextState,
-                                    stack: [self.href, next.href],
-                                })
+                                if(nextRes.data._embedded) {
+                                    this.setState({
+                                        ...nextState,
+                                        stack: [self.href, next.href],
+                                    });
+                                }
+                                else {
+                                    this.setState({
+                                        ...nextState,
+                                        stack: [self.href],
+                                    });
+                                }
                             }
                         )
                         .catch(
@@ -156,10 +164,17 @@ class Accounts extends Component {
                         getResponse(this.props.api, next.href)
                             .then(
                                 nextRes => {
-                                    this.setState({
-                                        ...nextState,
-                                        stack: stack.concat([next.href])
-                                    });
+                                    if(nextRes.data._embedded) {
+                                        this.setState({
+                                            ...nextState,
+                                            stack: stack.concat([next.href])
+                                        });
+                                    }
+                                    else {
+                                        this.setState({
+                                            ...nextState,
+                                        });
+                                    }
                                 }
                             )
                             .catch(
