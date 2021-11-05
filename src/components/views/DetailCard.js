@@ -15,6 +15,10 @@ class DetailCard extends Component {
 
     const contentType = typeof content;
 
+    if(!item) {
+      return false;
+    }
+
     if (
       contentType === "string" ||
       contentType === "number" ||
@@ -31,18 +35,6 @@ class DetailCard extends Component {
         </li>
       );
     }
-    else if (contentType === "object" && Object.prototype.hasOwnProperty.call(content, "msg")) {
-      return (
-        <li id="main-li" key={key()}>
-          <h3 key={key()} className={titleFunc ? "active" : null} id="main-title"
-            onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</h3>
-          <p key={key()} className={contentFunc ? "active" : null} id="main-content"
-            onClick={() => contentFunc ? contentFunc(content) : {}}>
-            {content && Object.prototype.hasOwnProperty.call(content, "msg") ? content.msg : message.replace.null}
-          </p>
-        </li>
-      )
-    }
     else {
       return (
         <li id="main-li" key={key()}>
@@ -57,6 +49,9 @@ class DetailCard extends Component {
   }
 
   subListComponent(item, idx) {
+    if(!item) {
+      return false;
+    }
     return <ActiveContent key={key()} item={item} isTitleImportant={idx === this.props.keyIndex}/>
   }
 

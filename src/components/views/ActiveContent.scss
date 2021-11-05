@@ -6,6 +6,12 @@
     &:active {
         background-color: lightblue;
     }
+
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .sub-active {
@@ -15,12 +21,28 @@
         flex-direction: row;
         justify-content: flex-start;
 
-        p {
-            color: cadetblue !important;
-        }
+        button {
+            width: 5rem;
 
-        &:hover {
-            text-decoration: underline;
+            padding: 0.2rem;
+
+            font-weight: 400;
+
+            border-radius: 1px;
+            border: 1px solid cadetblue;
+            color: cadetblue;
+            background-color: transparent;
+
+            &:hover {
+                background-color: cadetblue;
+                color: white;
+            }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -31,12 +53,12 @@
 
         border-radius: 3px;
         border: 1px solid lightgray;
-        background-color: #f5fbfe;
+        background-color: #FAFAFA;
 
         color: darkslategray;
-        font-size: 0.95rem;
+        font-size: 0.93rem;
 
-        padding: 0.5rem;
+        padding: 1rem;
         margin: 0.2rem;
     }
 }

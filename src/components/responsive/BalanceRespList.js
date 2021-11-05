@@ -40,9 +40,9 @@ class BalanceRespList extends Component {
 
         return (
             <li key={key()}>
-                <p id="short" onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{`[${item[0]}]`}</p>
+                <p id="short" onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{`[ ${item[0]} ]`}</p>
                 <p id="short" style={plainTextStyle}>{` ${parseAmount(item[1])}`}</p>
-                <p id="full" onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{`[${item[0]}]`}</p>
+                <p id="full" onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{`[ ${item[0]} ]`}</p>
                 <p id="full" style={plainTextStyle}>{` ${item[1]}`}</p>
             </li>
 

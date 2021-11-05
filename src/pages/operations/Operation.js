@@ -15,6 +15,8 @@ import LoadingIcon from "../../components/LoadingIcon";
 
 const initialState = {
     factHash: "",
+    operationHash: "",
+    sender: "",
     type: "",
     items: [],
     keys: {},
@@ -24,6 +26,16 @@ const initialState = {
     in_state: false,
     reason: "",
     isLoad: false,
+}
+
+const plainTitleStyle = {
+    fontSize: "0.9rem",
+    fontWeight: "500",
+    color: "#404040",
+    padding: "0",
+    margin: "0",
+    width: "100%",
+    textAlign: "start"
 }
 
 class Operation extends Component {
@@ -57,16 +69,23 @@ class Operation extends Component {
                     const amounts = Object.prototype.hasOwnProperty.call(operation.fact, "amounts")
                         ? operation.fact.amounts.map(x => ({ currency: x.currency, amount: x.amount })) : [];
 
+                    const sender = Object.prototype.hasOwnProperty.call(operation.fact, "sender") ? operation.fact.sender : null;
+
                     this.setState({
+                        raw: JSON.stringify(operation, null, 4),
+                        operationHash: operation.hash,
                         factHash: operation.fact.hash,
                         type: this.parseType(operation._hint),
                         items,
                         keys,
                         amounts,
-                        date: data.confirmed_at,
+                        confirm: data.confirmed_at,
                         height: data.height,
                         in_state: data.in_state,
                         reason: data.reason,
+
+                        sender,
+
                         isLoad: true,
                     });
                 }
@@ -115,47 +134,61 @@ class Operation extends Component {
     }
 
     infoItem() {
-        const { factHash, type, items, keys, amounts, date, height, in_state, reason } = this.state;
-        const infoItem = [
-            [operKeys.hash, factHash],
-            [operKeys.type, type],
-            [operKeys.date, parseDate(date, true)],
-            [operKeys.height, height, [null, (x) => this.props.history.push(`${page.block.default}/${x}`)]],
-            [operKeys.processed, "" + in_state],
-            !in_state ? [operKeys.reason, reason] : null,
-        ];
+        const { operationHash, factHash, type, confirm, height, in_state, reason, sender } = this.state;
 
+        const infoItem = [[
+            operKeys.title, [
+                [operKeys.type, type],
+                [operKeys.operhash, operationHash],
+                [operKeys.hash, factHash],
+                sender ? [operKeys.sender, sender, [null, (x) => this.props.history.push(`${page.account.default}/${x}`)]] : null,
+                [operKeys.confirm, parseDate(confirm, true)],
+                [operKeys.height, height, [null, (x) => this.props.history.push(`${page.block.default}/${x}`)]],
+                [operKeys.processed, "" + in_state],
+                !in_state ? [operKeys.reason, reason.msg] : null
+            ]
+        ]];
+
+        return infoItem;
+    }
+
+
+    detailItem() {
+        const { items, keys, amounts } = this.state;
+        const detailInfo = [];
         var keyIndex = null;
-        if (items.length > 0) {
-            infoItem.push([operKeys.items,
-            items.map(
-                (item, idx) => [idx, this.parseType(item._hint), JSON.stringify(item, null, 4)]),
-            ]);
-        }
-        if (Object.keys(keys).length !== 0) {
-            infoItem.push([keysKeys.keys,
+
+        if (Object.keys(keys).length > 0) {
+            detailInfo.push([keysKeys.keys,
             [[keysKeys.threshold, keys.threshold]].concat(
                 keys.keys.map(
                     key => [key.key, key.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]
                 ))
             ]);
 
-            keyIndex = infoItem.length - 1;
+            keyIndex = detailInfo.length - 1;
         }
         if (amounts.length > 0) {
-            infoItem.push([amountsKeys.amounts,
+            detailInfo.push([amountsKeys.amounts,
             amounts.map(amount => [amount.currency, amount.amount, [(x) => this.props.history.push(`${page.currency.default}/${x}`), null]])
+            ]);
+        }
+        if (items.length > 0) {
+            detailInfo.push([operKeys.items,
+            items.map(
+                (item, idx) => [idx, this.parseType(item._hint), JSON.stringify(item, null, 4)]),
             ]);
         }
 
         return {
             keyIndex,
-            infoItem
+            item: detailInfo,
         }
     }
 
     render() {
         const infoItem = this.state.isLoad ? this.infoItem() : null;
+        const detailItem = this.state.isLoad ? this.detailItem() : null;
 
         return (
             <div className="operation-container">
@@ -167,9 +200,21 @@ class Operation extends Component {
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />
                 </Card>
-                <Card id="list" title="Operation Information">
-                    {this.state.isLoad ? <DetailCard keyIndex={infoItem.keyIndex} items={infoItem.infoItem} /> : <LoadingIcon />}
-                </Card>
+                {
+                    this.state.isLoad
+                        ? (
+                            <Card title="Operation Information">
+                                <DetailCard keyIndex={null} items={infoItem} />
+                                <p style={plainTitleStyle}>Details</p>
+                                <DetailCard keyIndex={detailItem.keyIndex} items={detailItem.item}/>
+                            </Card>
+                        ):
+                        (
+                            <Card title="Operation Information">
+                                <LoadingIcon />
+                            </Card>
+                        )
+                }
             </div>
         )
     }

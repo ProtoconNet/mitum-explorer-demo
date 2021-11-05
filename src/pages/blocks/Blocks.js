@@ -10,11 +10,13 @@ import List from "../../components/views/List";
 
 import page, { block as pageInfo } from '../../lib/page.json';
 import message from '../../lib/message.json';
+import { block as blockKeys } from '../../lib/keys.json';
 import columns from "../../lib/columns.json";
 import { getBlock, getBlockOperations, getBlocks, getResponse, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import OperationRespList from "../../components/responsive/OperationRespList";
 import BlockRespList from "../../components/responsive/BlockRespList";
+import DataView from "../../components/DataView";
 
 const initialState = {
     idx: 0,
@@ -28,6 +30,7 @@ const initialState = {
         hash: "",
         date: "",
         height: 0,
+        raw: "",
     },
     isBlockLoad: false,
     isBlocksLoad: false,
@@ -105,13 +108,15 @@ class Blocks extends Component {
             .then(
                 res => {
                     const data = res.data._embedded;
-                    const { hash, height, confirmed_at } = data;
+                    const { hash, height, confirmed_at, created_at } = data;
 
                     const nextState = {
                         idx: 0,
                         hash,
                         height,
-                        date: confirmed_at,
+                        create: created_at,
+                        confirm: confirmed_at,
+                        raw: JSON.stringify(data, null, 4),
                     }
 
                     getBlockOperations(this.props.api, block)
@@ -439,7 +444,7 @@ class Blocks extends Component {
 
     renderBlock() {
         const { isBlockLoad } = this.state;
-        const { hash, date, height, operations } = this.state.blockRes;
+        const { hash, create, confirm, height, operations, raw } = this.state.blockRes;
 
         if (!hash || !operations) {
             return (
@@ -449,11 +454,14 @@ class Blocks extends Component {
             )
         }
 
-        const infoItems = [
-            [columns.blocks.hash, hash],
-            [columns.blocks.height, height],
-            [columns.blocks.date, parseDate(date, true)],
-        ];
+        const infoItems = [[
+            blockKeys.title, [
+                [blockKeys.hash, hash],
+                [blockKeys.height, height],
+                [blockKeys.create, parseDate(create, true)],
+                [blockKeys.confirm, parseDate(confirm, true)],
+            ]
+        ]];
 
         const operationItems = operations.map(
             operation => [
@@ -500,6 +508,7 @@ class Blocks extends Component {
                             onNextClick={() => { this.setState({ isBlockLoad: false }); this.onOperationsNext(); }}
                             isLastPage={idx + 1 >= stack.length}
                             isFirstPage={idx <= 0} />
+                        <DataView data={raw} />
                     </Card>
                 )
                 : (

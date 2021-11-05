@@ -1,16 +1,10 @@
 .blocks-container {
     width: 100%;
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
     margin-top: 1.5rem;
-}
-
-@media screen and (max-width: 599px) {
-    .blocks-container {
-        margin-top: 3.5rem;
-    }
 }

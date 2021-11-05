@@ -24,7 +24,8 @@
 
             border-bottom: 0.5px solid lightgray;
 
-            p {
+            #block-list-resp-title,
+            #block-list-resp-content {
                 text-decoration: none;
 
                 font-size: 0.9rem;
@@ -87,13 +88,19 @@
 }
 
 @media screen and (max-width: 735px) {
-    .block-list-resp-container ul li p {
-        font-size: 0.7rem;
+    .block-list-resp-container ul li {
+        #block-list-resp-content {
+            font-size: 0.7rem;
+        }
+
+        #block-list-resp-title {
+            font-size: 0.8rem;
+        }
     }
 }
 
 @media screen and (max-width: 570px) {
-    .block-list-resp-container ul li p {
+    .block-list-resp-container ul li #block-list-resp-content {
         font-size: 0.6rem;
     }
 }

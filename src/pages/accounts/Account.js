@@ -16,6 +16,7 @@ import LoadingIcon from "../../components/LoadingIcon";
 import KeyRespList from "../../components/responsive/KeyRespList";
 import BalanceRespList from "../../components/responsive/BalanceRespList";
 import OperationRespList from "../../components/responsive/OperationRespList";
+import DataView from "../../components/DataView";
 
 const initialState = {
     keysRes: {
@@ -35,6 +36,7 @@ const initialState = {
     addressRes: null,
     isAccountLoad: false,
     isOperLoad: false,
+    raw: "",
 }
 
 class Account extends Component {
@@ -55,6 +57,7 @@ class Account extends Component {
 
                     this.setState({
                         isAccountLoad: true,
+                        raw: JSON.stringify(data, null, 4),
                         addressRes: data.address,
                         keysRes: {
                             threshold: data.keys.threshold,
@@ -400,6 +403,7 @@ class Account extends Component {
                         onNextClick={() => this.onBalanceNext()}
                         isFirstPage={balancesRes.idx === 0}
                         isLastPage={balancesRes.idx + 3 >= balances.length} />
+                  <DataView data={this.state.raw} />
                 </Card>
             );
         }

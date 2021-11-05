@@ -34,10 +34,10 @@ class KeyRespList extends Component {
             <div className="key-list-resp-container">
                 <ul>
                     <li style={{ backgroundColor: "transparent" }}>
-                        <p style={{ 
+                        <p id="key-list-resp-title" style={{ 
                             width: "100%", textAlign: "center", 
                             color: "black", textDecoration: "none",
-                            fontWeight: "400"
+                            fontWeight: "400",
                         }}>Public Key (Weight)</p>
                     </li>
                     {items.length > 0

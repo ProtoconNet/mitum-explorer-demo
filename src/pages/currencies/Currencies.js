@@ -24,7 +24,8 @@ const initialState = {
             type: null,
             receiver: null,
             amount: null,
-        }
+        },
+        raw: "",
     },
     isLoad: false,
 }
@@ -87,7 +88,8 @@ class Currencies extends Component {
                                 type: feeer.type,
                                 receiver: feeer.type !== "nil" ? feeer.receiver : null,
                                 amount: feeer.type !== "nil" ? feeer.amount : null,
-                            }
+                            },
+                            raw: JSON.stringify(data, null, 4)
                         },
                         search: "",
                         isLoad: true,

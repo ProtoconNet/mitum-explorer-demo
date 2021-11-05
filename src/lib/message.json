@@ -32,7 +32,10 @@
     },
     "button": {
         "prev": "PREV",
-        "next": "NEXT"
+        "next": "NEXT",
+        "open": "JSON Data ▼",
+        "simpopen": "JSON ▼",
+        "close": "Close ▲"
     },
     "setting": {
         "network": {

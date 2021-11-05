@@ -15,14 +15,14 @@ class OperationRespList extends Component {
     listComponent(item) {
         if (!item) {
             return (
-                <li key={key()}><p style={plainTextStyle}>{replace.zero}</p></li>
+                <li key={key()}><p id="operation-list-resp-content" style={plainTextStyle}>{replace.zero}</p></li>
             )
         }
 
         return (
             <li key={key()}>
-                <p style={plainTextStyle}>{`${item[1]} `}</p>
-                <p onClick={() => this.props.history.push(`${page.operation.default}/${item[0]}`)}>{item[0]}</p>
+                <p id="operation-list-resp-content" style={plainTextStyle}>{`${item[1]} `}</p>
+                <p id="operation-list-resp-content" onClick={() => this.props.history.push(`${page.operation.default}/${item[0]}`)}>{item[0]}</p>
             </li>
 
         );
@@ -35,10 +35,10 @@ class OperationRespList extends Component {
             <div className="operation-list-resp-container">
                 <ul>
                     <li style={{ backgroundColor: "transparent" }}>
-                        <p style={{
+                        <p id="operation-list-resp-title" style={{
                             width: "100%", textAlign: "center",
                             color: "black", textDecoration: "none",
-                            fontWeight: "400"
+                            fontWeight: "400",
                         }}>Operations</p>
                     </li>
                     {items.length > 0

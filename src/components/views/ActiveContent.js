@@ -31,10 +31,17 @@ class ActiveContent extends Component {
 
         if (isSubContentExist) {
             return (
-                <li className="sub-active background" id="sub-li" key={key()} onClick={(() => this.setState({ showSubContent: !showSubContent }))}>
+                <li className="sub-active background" id="sub-li" key={key()}>
                     <section id="sub-section" style={{ margin: "0", padding: "0", width: "100%", height: "fit-content" }} key={key()}>
                         <p style={titleStyle} id="sub-title" key={key()}>{title}</p>
-                        <p style={contentStyle} id="sub-content" key={key()}>{content ? content : message.replace.empty}</p>
+                        <p style={contentStyle} id="sub-content" key={key()}>{content || content === 0 ? content : message.replace.empty}</p>
+                        <button onClick={(() => this.setState({ showSubContent: !showSubContent }))}>
+                            {
+                                showSubContent
+                                ? message.button.close
+                                : message.button.simpopen
+                            }
+                        </button>
                     </section>
                     {
                         showSubContent
@@ -54,7 +61,7 @@ class ActiveContent extends Component {
                 <p style={titleStyle} className={titleFunc ? "active" : null} id="sub-title" key={key()}
                     onClick={() => titleFunc ? titleFunc(title) : {}}>{title}</p>
                 <p style={contentStyle} className={contentFunc ? "active" : null} id="sub-content" key={key()}
-                    onClick={() => contentFunc ? contentFunc(content) : {}}>{content ? content : message.replace.empty}</p>
+                    onClick={() => contentFunc ? contentFunc(content) : {}}>{content || content === 0 ? content : message.replace.empty}</p>
             </li>
         );
     }

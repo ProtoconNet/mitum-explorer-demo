@@ -17,13 +17,17 @@
         "amount": "Amount"
     },
     "operation": {
-        "hash": "Fact hash",
-        "type": "Operation type",
-        "date": "Date",
-        "height": "Block height",
-        "processed": "In state",
+        "title": "Operation Overview",
+        "detail": "Details",
+        "operhash": "Operation Hash",
+        "hash": "Fact Hash",
+        "type": "Operation Type",
+        "confirm": "Confirmed at",
+        "height": "Block Height",
+        "processed": "In State",
         "reason": "Reason",
-        "items": "Items"
+        "items": "Items",
+        "sender": "Sender"
     },
     "keys": {
         "keys": "Keys",
@@ -38,5 +42,12 @@
     },
     "accounts": {
         "keys": "Public Key"
+    },
+    "block": {
+        "title": "Block Overview",
+        "hash": "Block Hash",
+        "height": "Block Height",
+        "create": "Created at",
+        "confirm": "Confirmed at"
     }
 }

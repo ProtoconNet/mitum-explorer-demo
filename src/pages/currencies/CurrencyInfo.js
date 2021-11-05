@@ -5,6 +5,7 @@ import Card from "../../components/views/Card";
 import DetailCard from "../../components/views/DetailCard";
 
 import keys from "../../lib/keys.json";
+import DataView from "../../components/DataView";
 
 export default function CurrencyInfo({ data, isLoad }) {
 
@@ -29,13 +30,19 @@ export default function CurrencyInfo({ data, isLoad }) {
         return items;
     }
 
-    return (
-        <Card id="result" title="Currency Information">
-            {
-                isLoad
-                ? <DetailCard keyIndex={null} items={items()} />
-                : <LoadingIcon />
-            }
-        </Card>
-    )
+    if (isLoad) {
+        return (
+            <Card id="result" title="Currency Information">
+                <DetailCard keyIndex={null} items={items()} />
+                <DataView data={data.raw} />
+            </Card>
+        )
+    }
+    else {
+        return (
+            <Card id="result" title="Currency Information">
+                <LoadingIcon />
+            </Card>
+        )
+    }
 };
