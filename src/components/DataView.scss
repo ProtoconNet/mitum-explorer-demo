@@ -33,6 +33,34 @@
         transition: all 0.2s ease-in-out;
     }
 
+    #small-green-button {
+        width: 30%;
+        padding: 0.1rem;
+        margin: 0.5rem;
+
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: gray;
+        background-color: transparent;
+        border: 2px solid transparent;
+
+        &:hover {
+            width: 100%;
+            border-bottom: 2px solid gray;
+        }
+
+        &:active {
+            width: 30%;
+            border-bottom: 2px solid gray;
+        }
+
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -ms-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+    }
+
     #raw-data {
         width: 90%;
         margin: 1rem;
@@ -45,6 +73,19 @@
         color: darkslategray;
         font-size: 0.93rem;
     }
+
+    #small-raw-data {
+        width: 90%;
+        margin: 0.5rem;
+        padding: 1rem;
+
+        border-radius: 1px;
+        border: 1px solid lightgray;
+        background-color: #FAFAFA;
+
+        color: darkslategray;
+        font-size: 0.9rem;
+    }
 }
 
 
@@ -52,23 +93,28 @@
     .data-view-container #raw-data {
         font-size: 0.8rem;
     }
+
+    .data-view-container #small-raw-data {
+        font-size: 0.7rem;
+    }
 }
 
 @media screen and (max-width: 899px) {
-    .data-view-container #green-button {
-        width: 50%;
-
-        &:active {
+    .data-view-container {
+        #green-button,
+        #small-green-button {
             width: 50%;
+
+            &:active {
+                width: 50%;
+            }
         }
     }
 }
 
 @media screen and (max-width: 599px) {
     .data-view-container #green-button {
-        padding: 0.2rem;
         margin: 0.5rem;
-
         font-size: 0.9rem;
         font-weight: 400;
         border: 2px solid transparent;
@@ -80,6 +126,19 @@
         &:active {
             border-bottom: 2px solid cadetblue;
         }
+    }
 
+    .data-view-container #small-green-button {
+        margin: 0.3rem;
+        font-size: 0.7rem;
+        border: 1px solid transparent;
+
+        &:hover {
+            border-bottom: 1px solid gray;
+        }
+
+        &:active {
+            border-bottom: 1px solid gray;
+        }
     }
 }

@@ -18,16 +18,32 @@
     },
     "operation": {
         "title": "Operation Overview",
-        "detail": "Details",
+        "fact": {
+            "hash": "Fact Hash",
+            "receiver": "Receiver",
+            "key": "Key",
+            "keys": "Keys",
+            "threshold": "Threshold",
+            "weight": "Weight",
+            "amount": "Amount",
+            "amounts": "Amounts",
+            "currency": "Currency ID",
+            "items": "Items"
+        },
         "operhash": "Operation Hash",
-        "hash": "Fact Hash",
         "type": "Operation Type",
         "confirm": "Confirmed at",
         "height": "Block Height",
         "processed": "In State",
         "reason": "Reason",
         "items": "Items",
-        "sender": "Sender"
+        "sender": "Sender",
+        "fact_signs": {
+            "title": "Fact Signs",
+            "signer": "Signer",
+            "signed_at": "Signed at",
+            "signature": "Signature"
+        }
     },
     "keys": {
         "keys": "Keys",

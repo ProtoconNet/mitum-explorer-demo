@@ -35,7 +35,9 @@
         "next": "NEXT",
         "open": "JSON Data ▼",
         "simpopen": "JSON ▼",
-        "close": "Close ▲"
+        "close": "Close ▲",
+        "down": "▼",
+        "up": "▲"
     },
     "setting": {
         "network": {

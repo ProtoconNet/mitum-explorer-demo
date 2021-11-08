@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './DataView.scss';
 import { button } from '../lib/message.json';
 
-export default function DataView({ data }) {
+export default function DataView({ data, isSmall }) {
     const [isOpen, setOpen] = useState(false);
     if(!typeof data === "string") {
         data = JSON.stringify(data, null, 4);
@@ -10,7 +10,7 @@ export default function DataView({ data }) {
 
     return (
         <section className="data-view-container">
-            <button id="green-button"
+            <button id={ isSmall ? "small-green-button" : "green-button" }
                 onClick={() => setOpen(!isOpen)}>
                 {
                     isOpen
@@ -21,7 +21,7 @@ export default function DataView({ data }) {
             {
                 isOpen
                     ? (
-                        <pre id="raw-data">
+                        <pre id={ isSmall ? "small-raw-data" : "raw-data"}>
                             {data}
                         </pre>
                     )

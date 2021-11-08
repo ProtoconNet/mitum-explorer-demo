@@ -182,7 +182,7 @@ class Account extends Component {
         this.setState({
             keysRes: {
                 ...this.state.keysRes,
-                idx: idx - 3 < 0 ? 0 : idx - 3
+                idx: idx - 10 < 0 ? 0 : idx - 10
             }
         });
     }
@@ -192,7 +192,7 @@ class Account extends Component {
         this.setState({
             keysRes: {
                 ...this.state.keysRes,
-                idx: idx + 3 > keys.length ? idx : idx + 3,
+                idx: idx + 10 > keys.length ? idx : idx + 10,
             }
         })
     }
@@ -202,7 +202,7 @@ class Account extends Component {
         this.setState({
             balancesRes: {
                 ...this.state.balancesRes,
-                idx: idx - 3 <= 0 ? 0 : idx - 3,
+                idx: idx - 10 <= 0 ? 0 : idx - 10,
             }
         });
     }
@@ -212,7 +212,7 @@ class Account extends Component {
         this.setState({
             balancesRes: {
                 ...this.state.balancesRes,
-                idx: idx + 3 > balances.length ? idx : idx + 3,
+                idx: idx + 10 > balances.length ? idx : idx + 10,
             }
         });
     }
@@ -344,10 +344,10 @@ class Account extends Component {
 
         const pubItems = keys
             .map(key => [key.key, key.weight])
-            .slice(keysRes.idx, (keysRes.idx + 3 >= keys.length ? keys.length : keysRes.idx + 3))
+            .slice(keysRes.idx, (keysRes.idx + 10 >= keys.length ? keys.length : keysRes.idx + 10))
         const balancesItems = balances
             .map(currency => [currency.currency, currency.amount])
-            .slice(balancesRes.idx, (balancesRes.idx + 3 >= balances.length ? balances.length : balancesRes.idx + 3))
+            .slice(balancesRes.idx, (balancesRes.idx + 10 >= balances.length ? balances.length : balancesRes.idx + 10))
 
         const plainTitleStyle = {
             fontSize: "0.9rem",
