@@ -10,7 +10,7 @@ import DetailCard from "../../components/views/DetailCard";
 import message from '../../lib/message.json';
 import page, { operation as pageInfo } from '../../lib/page.json';
 import { operation as operKeys, keys as keysKeys, amounts as amountsKeys } from '../../lib/keys.json';
-import { getOperation, isAddress, parseDate } from "../../lib";
+import { getOperation, isAddress, isCurrency, isPublicKey, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import DataView from "../../components/DataView";
 import ActiveDetailCard from "../../components/views/ActiveDetailCard";
@@ -284,13 +284,13 @@ class Operation extends Component {
 
                     const keys = x.keys.keys;
                     for (i = 0; i < keys.length; i++) {
-                        item.push([`${operKeys.fact.key} ${i}`, `${keys[i].key} (${keys[i].weight})`])
+                        item.push([`${operKeys.fact.key} ${i}`, `${keys[i].key} (${keys[i].weight})`, [null, keys[i].key]])
                     }
                 }
                 if (Object.prototype.hasOwnProperty.call(x, "amounts")) {
                     const amounts = x.amounts;
                     for (i = 0; i < amounts.length; i++) {
-                        item.push([`${operKeys.fact.amount} ${i}`, `${amounts[i].currency} (${amounts[i].amount})`])
+                        item.push([`${operKeys.fact.amount} ${i}`, `${amounts[i].currency} (${amounts[i].amount})`, [null, amounts[i].currency]])
                     }
                 }
 
@@ -315,7 +315,17 @@ class Operation extends Component {
     }
 
     parseRedirect(target) {
-
+        target = target.trim();
+        const version = this.props.modelVersion;
+        if (isAddress(target, version)) {
+            this.props.history.push(`${page.account.default}/${target}`);
+        }
+        else if (isPublicKey(target, version)) {
+            this.props.history.push(`${page.accounts.default}/${target}`);
+        }
+        else if (isCurrency(target)) {
+            this.props.history.push(`${page.currency.default}/${target}`);
+        }
     }
 
     render() {

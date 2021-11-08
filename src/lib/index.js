@@ -134,3 +134,10 @@ export function isPublicKey(target, version) {
         default: return false;
     }
 }
+
+export function isCurrency(target) {
+    if (!/^[A-Z]{3}(?![^*])\b/.test(target.trim())) {
+        return false;
+    }
+    return true;
+}

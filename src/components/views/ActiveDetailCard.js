@@ -48,7 +48,10 @@ class ActiveDetailCard extends Component {
         const firstSpaceStyle = isSpaceReverse ? { width: "70%" } : {};
         const secondSpaceStyle = isSpaceReverse ? { width: "30%" } : {};
 
-        if(item.length > 2 && item[2]) {
+        const firstFuncTarget = item.length > 2 && Array.isArray(item[2]) && item[2][0] ? item[2][0] : item[0];
+        const secondeFuncTarget = item.length > 2 && Array.isArray(item[2]) && item[2][1] ? item[2][1] : item[1];
+        
+        if(item.length > 2 && typeof item[2] === "boolean" && item[2]) {
             firstSpaceStyle['color'] = "black";
             secondSpaceStyle['color'] = "black";
         }
@@ -56,9 +59,9 @@ class ActiveDetailCard extends Component {
         return (
             <li id="inner-li" key={key()}>
                 <p id="inner-text" style={func[1][idx][0] ? firstSpaceStyle : { ...plainText, ...firstSpaceStyle }}
-                    onClick={() => func[1][idx][0] ? func[1][idx][0](item[0]) : {}}>{item[0]}</p>
+                    onClick={() => func[1][idx][0] ? func[1][idx][0](firstFuncTarget) : {}}>{item[0]}</p>
                 <p id="inner-text" style={func[1][idx][1] ? secondSpaceStyle : { ...plainText, ...secondSpaceStyle }}
-                    onClick={() => func[1][idx][1] ? func[1][idx][1](item[1]) : {}}>{item[1]}</p>
+                    onClick={() => func[1][idx][1] ? func[1][idx][1](secondeFuncTarget) : {}}>{item[1]}</p>
             </li>
         )
     }
