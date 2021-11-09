@@ -38,6 +38,7 @@ class NetworkBox extends Component {
         this.props.clearNetwork();
         this.setState({
             isActive: false,
+            network: process.env.REACT_APP_NETWORK
         })
         alert(message.setting.network.success + process.env.REACT_APP_NETWORK);
     }
