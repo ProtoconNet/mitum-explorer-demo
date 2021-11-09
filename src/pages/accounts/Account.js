@@ -379,13 +379,13 @@ class Account extends Component {
                         onPrevClick={() => this.onPubPrev()}
                         onNextClick={() => this.onPubNext()}
                         isFirstPage={keysRes.idx === 0}
-                        isLastPage={keysRes.idx + 3 >= keys.length} />
+                        isLastPage={keysRes.idx + 10 >= keys.length} />
                     <KeyRespList items={pubItems}
                         history={this.props.history}
                         onPrevClick={() => this.onPubPrev()}
                         onNextClick={() => this.onPubNext()}
                         isFirstPage={keysRes.idx === 0}
-                        isLastPage={keysRes.idx + 3 >= keys.length} />
+                        isLastPage={keysRes.idx + 10 >= keys.length} />
                     <p style={plainTitleStyle}>Balances</p>
                     <List columns={Object.values(columns.balances)}
                         items={balancesItems}
@@ -396,13 +396,13 @@ class Account extends Component {
                         onPrevClick={() => this.onBalancePrev()}
                         onNextClick={() => this.onBalanceNext()}
                         isFirstPage={balancesRes.idx === 0}
-                        isLastPage={balancesRes.idx + 3 >= balances.length} />
+                        isLastPage={balancesRes.idx + 10 >= balances.length} />
                     <BalanceRespList items={balancesItems}
                         history={this.props.history}
                         onPrevClick={() => this.onBalancePrev()}
                         onNextClick={() => this.onBalanceNext()}
                         isFirstPage={balancesRes.idx === 0}
-                        isLastPage={balancesRes.idx + 3 >= balances.length} />
+                        isLastPage={balancesRes.idx + 10 >= balances.length} />
                   <DataView data={this.state.raw} />
                 </Card>
             );
