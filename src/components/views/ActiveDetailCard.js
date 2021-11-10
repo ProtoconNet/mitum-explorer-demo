@@ -10,13 +10,18 @@ class ActiveDetailCard extends Component {
     constructor(props) {
         super(props);
 
+        const isOpen = [];
+        for (var i = 0; i < this.props.items.length; i++) {
+            isOpen.push(false);
+        }
+
         this.state = {
-            isOpen: false,
+            isOpen,
         }
     }
 
 
-    listComponent(item) {
+    listComponent(item, idx) {
         const { func } = this.props;
 
         return (
@@ -26,15 +31,25 @@ class ActiveDetailCard extends Component {
                     {!item[1]
                         ? false
                         : (
-                            <button id="show-button" onClick={() => this.setState({ isOpen: !this.state.isOpen })}>
-                                {this.state.isOpen ? button.up : button.down}
+                            <button id="show-button" onClick={() => {
+                                const isOpen = this.state.isOpen.map(
+                                    (x, _) => {
+                                        if( _ === idx) {
+                                            return !x;
+                                        }
+                                        return x;
+                                    }
+                                );
+                                this.setState({ isOpen, })
+                            }}>
+                                {this.state.isOpen[idx] ? button.up : button.down}
                             </button>
                         )
                     }
                 </section>
-                <section className="inner-container" style={this.state.isOpen ? {} : { display: "none" }}>
+                <section className="inner-container" style={this.state.isOpen[idx] ? {} : { display: "none" }}>
                     <ul id="inner-ul">
-                        {item[1].map((x, idx) => this.itemComponent(x, idx))}
+                        {item[1].map((x, __) => this.itemComponent(x, __))}
                     </ul>
                     {item[2] ? <DataView isSmall={true} data={item[2]} /> : false}
                 </section>
@@ -50,8 +65,8 @@ class ActiveDetailCard extends Component {
 
         const firstFuncTarget = item.length > 2 && Array.isArray(item[2]) && item[2][0] ? item[2][0] : item[0];
         const secondeFuncTarget = item.length > 2 && Array.isArray(item[2]) && item[2][1] ? item[2][1] : item[1];
-        
-        if(item.length > 2 && typeof item[2] === "boolean" && item[2]) {
+
+        if (item.length > 2 && typeof item[2] === "boolean" && item[2]) {
             firstSpaceStyle['color'] = "black";
             secondSpaceStyle['color'] = "black";
         }
@@ -80,7 +95,7 @@ class ActiveDetailCard extends Component {
             <section className="active-detail-card-container" id={isHideActive ? "hide" : (isShowActive ? "show" : "nothing")}>
                 <h3 id="title">{title}</h3>
                 <ul id="outer-ul">
-                    {items.map((item) => item ? this.listComponent(item) : false)}
+                    {items.map((item, idx) => item ? this.listComponent(item, idx) : false)}
                 </ul>
             </section>
         );
