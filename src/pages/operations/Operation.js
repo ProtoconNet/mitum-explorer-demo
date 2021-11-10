@@ -9,8 +9,8 @@ import DetailCard from "../../components/views/DetailCard";
 
 import message from '../../lib/message.json';
 import page, { operation as pageInfo } from '../../lib/page.json';
-import { operation as operKeys, keys as keysKeys, amounts as amountsKeys } from '../../lib/keys.json';
-import { getOperation, isAddress, isCurrency, isPublicKey, parseDate } from "../../lib";
+import { operation as operKeys } from '../../lib/keys.json';
+import { getOperation, isAddress, isCurrency, isPublicKey, parseDate, parseDecimalFromAmount } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import DataView from "../../components/DataView";
 import ActiveDetailCard from "../../components/views/ActiveDetailCard";
@@ -61,7 +61,7 @@ class Operation extends Component {
                     const items = Object.prototype.hasOwnProperty.call(operation.fact, "items") ? operation.fact.items.map(x => x) : [];
                     const keys = Object.prototype.hasOwnProperty.call(operation.fact, "keys") ? operation.fact.keys : {};
                     const amounts = Object.prototype.hasOwnProperty.call(operation.fact, "amounts")
-                        ? operation.fact.amounts.map(x => ({ currency: x.currency, amount: x.amount })) : [];
+                        ? operation.fact.amounts.map(x => ({ currency: x.currency, amount: parseDecimalFromAmount(x.amount) })) : [];
 
                     const sender = Object.prototype.hasOwnProperty.call(operation.fact, "sender") ? operation.fact.sender : null;
                     const factSigns = Object.prototype.hasOwnProperty.call(operation, "fact_signs") ? operation.fact_signs.map(
@@ -198,70 +198,37 @@ class Operation extends Component {
         }
     }
 
-    keysOrAmounts() {
-        const { keys, amounts } = this.state;
-        const detailInfo = [];
-        var keyIndex = null;
-
-        if (!keys || !amounts) {
-            return { keyIndex, item: [] }
-        }
-
-        if (Object.keys(keys).length > 0) {
-            detailInfo.push([keysKeys.keys,
-            [[keysKeys.threshold, keys.threshold]].concat(
-                keys.keys.map(
-                    key => [key.key, key.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]
-                ))
-            ]);
-
-            keyIndex = detailInfo.length - 1;
-        }
-        if (amounts.length > 0) {
-            detailInfo.push([amountsKeys.amounts,
-            amounts.map(amount => [amount.currency, amount.amount, [(x) => this.props.history.push(`${page.currency.default}/${x}`), null]])
-            ]);
-        }
-
-        return {
-            keyIndex,
-            item: detailInfo,
-        }
-    }
-
-    detailKeys() {
+    detailKeys(isBig) {
         const { keys } = this.state;
         if (!keys || !Object.prototype.hasOwnProperty.call(keys, "keys") || !Object.prototype.hasOwnProperty.call(keys, "threshold")) {
             return false;
         }
+        const items = keys.keys.map(x => [x.key, x.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]);
+        const smallItems = keys.keys.map(x => [x.key.substring(0, 30) + "...", x.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]);
+        const keysItems = isBig
+            ? [[`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`, [...items]]]
+            : [[`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`, [...smallItems]]];
 
-        return (
-            <ActiveDetailCard title={`${operKeys.fact.keys} (threshold: ${keys.threshold})`}
-                items={keys.keys.map(
-                    x => [x.key, [
-                        [operKeys.fact.weight, x.weight]
-                    ], null])}
-                func={[(x) => this.props.history.push(`${page.accounts.default}/${x}`), [[null, null]]]}
-                isSpaceReverse={false} />
-        )
+        if (isBig) {
+            return <DetailCard isShowActive={true} keyIndex={0} items={keysItems} isSpaceReverse={true} />;
+        }
+        else {
+            return <DetailCard isHideActive={true} keyIndex={0} items={keysItems} isSpaceReverse={true} />;
+        }
     }
 
     detailAmounts() {
         const { amounts } = this.state;
-
         if (!amounts || amounts.length < 1) {
             return false;
         }
 
-        return (
-            <ActiveDetailCard title={operKeys.fact.amounts}
-                items={amounts.map(
-                    x => [x.currency, [
-                        [operKeys.fact.amount, x.amount]
-                    ], null])}
-                func={[(x) => this.props.history.push(`${page.currency.default}/${x}`), [[null, null]]]}
-                isSpaceReverse={false} />
-        )
+        const items = amounts.map(
+            x => [x.currency, `${x.amount} ${x.currency}`, [(x) => this.props.history.push(`${page.currency.default}/${x}`), null]])
+        const amountsItems = [[operKeys.fact.amounts, items]];
+
+        return <DetailCard keyIndex={null} items={amountsItems} />;
+
     }
 
     detailItems() {
@@ -290,7 +257,7 @@ class Operation extends Component {
                 if (Object.prototype.hasOwnProperty.call(x, "amounts")) {
                     const amounts = x.amounts;
                     for (i = 0; i < amounts.length; i++) {
-                        item.push([`${operKeys.fact.amount} ${i}`, `${amounts[i].currency} (${amounts[i].amount})`, [null, amounts[i].currency]])
+                        item.push([`${operKeys.fact.amount} ${i}`, `${parseDecimalFromAmount(amounts[i].amount)} ${amounts[i].currency}`, [null, amounts[i].currency]])
                     }
                 }
 
@@ -348,7 +315,8 @@ class Operation extends Component {
                                 <DetailCard keyIndex={null} items={infoItem} />
                                 {this.factSigns(false)}
                                 {this.factSigns(true)}
-                                {this.detailKeys()}
+                                {this.detailKeys(true)}
+                                {this.detailKeys(false)}
                                 {this.detailAmounts()}
                                 {this.detailItems()}
                                 <DataView data={this.state.raw} />

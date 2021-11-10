@@ -91,11 +91,36 @@ export function parseDate(date, isFull) {
         .join('');
 
     const idx = parsed.indexOf('.');
-    if(idx < 0 || isFull) {
+    if (idx < 0 || isFull) {
         return parsed;
     }
     else {
         return parsed.substring(0, idx);
+    }
+}
+
+export function parseDecimalFromAmount(amount) {
+    console.log(amount);
+
+    const len = amount.length;
+    const precision = process.env.REACT_APP_PRECISION;
+
+    if (len > precision) {
+        const integer = amount.substring(0, len - precision);
+        const remain = amount.substring(len - precision);
+
+        console.log(integer);
+        console.log(remain);
+        return `${integer}.${remain}`;
+    }
+    else if (len === precision) {
+        return `0.${amount}`;
+    }
+    else {
+        for (var i = 0; i < precision - len; i++) {
+            amount = '0' + amount;
+        }
+        return `0.${amount}`;
     }
 }
 
@@ -121,12 +146,12 @@ export function isAddress(target, version) {
 export function isPublicKey(target, version) {
 
     const idx = target.indexOf(':');
-    if(idx < 0) {
+    if (idx < 0) {
         return false;
     }
 
-    const pubHint =  target.substring(idx + 1);
-    switch(pubHint) {
+    const pubHint = target.substring(idx + 1);
+    switch (pubHint) {
         case hint.pubkey.btc + `-${version}`:
         case hint.pubkey.ether + `-${version}`:
         case hint.pubkey.stellar + `-${version}`:

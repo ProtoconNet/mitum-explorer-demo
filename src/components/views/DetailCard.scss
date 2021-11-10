@@ -1,4 +1,4 @@
-#main-ul {
+.main-ul {
     width: 100%;
     margin: 0;
     padding: 1rem;
@@ -61,6 +61,12 @@
                 &:active {
                     background-color: lightblue;
                 }
+
+                -webkit-transition: all 0.2s ease;
+                -moz-transition: all 0.2s ease;
+                -ms-transition: all 0.2s ease;
+                -o-transition: all 0.2s ease;
+                transition: all 0.2s ease;
             }
         }
     }
@@ -91,7 +97,19 @@
 }
 
 @media screen and (max-width: 1199px) {
-    #main-ul #main-li #sub-ul {
+    .main-ul #main-li #sub-ul {
         width: 100%;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    #hide {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    #show {
+        display:  none !important;
     }
 }

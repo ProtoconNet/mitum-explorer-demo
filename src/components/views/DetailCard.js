@@ -56,10 +56,10 @@ class DetailCard extends Component {
   }
 
   render() {
-    const { items } = this.props;
+    const { items, isShowActive, isHideActive } = this.props;
 
     return (
-      <ul id="main-ul">
+      <ul className="main-ul" id={isShowActive ? 'show' : isHideActive ? 'hide' : ''}>
         {items.map((item, idx) => item ? this.listComponent(item, idx) : false)}
       </ul>
     );

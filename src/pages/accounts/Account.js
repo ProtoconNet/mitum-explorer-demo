@@ -11,7 +11,7 @@ import page, { account as pageInfo } from '../../lib/page.json';
 import { account as accountKeys } from '../../lib/keys.json';
 import message from '../../lib/message.json';
 import columns from '../../lib/columns.json';
-import { getAccount, getAccountOperations, getResponse, isAddress, parseDate } from "../../lib";
+import { getAccount, getAccountOperations, getResponse, isAddress, parseDate, parseDecimalFromAmount } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import KeyRespList from "../../components/responsive/KeyRespList";
 import BalanceRespList from "../../components/responsive/BalanceRespList";
@@ -366,10 +366,9 @@ class Account extends Component {
                         keyIndex={null}
                         items={[
                             [accountKeys.address, addressRes],
-                            [accountKeys.threshold, keysRes.threshold]
                         ]} />
 
-                    <p style={plainTitleStyle}>Keys</p>
+                    <p style={plainTitleStyle}>{`Keys (${accountKeys.threshold} : ${keysRes.threshold})`}</p>
                     <List columns={Object.values(columns.public_keys)}
                         items={pubItems}
                         onElementClick={[
@@ -388,7 +387,7 @@ class Account extends Component {
                         isLastPage={keysRes.idx + 10 >= keys.length} />
                     <p style={plainTitleStyle}>Balances</p>
                     <List columns={Object.values(columns.balances)}
-                        items={balancesItems}
+                        items={balancesItems.map(x => [x[0], parseDecimalFromAmount(x[1])])}
                         onElementClick={[
                             (x) => this.props.history.push(`${page.currency.default}/${x}`),
                             null
@@ -403,7 +402,7 @@ class Account extends Component {
                         onNextClick={() => this.onBalanceNext()}
                         isFirstPage={balancesRes.idx === 0}
                         isLastPage={balancesRes.idx + 10 >= balances.length} />
-                  <DataView data={this.state.raw} />
+                    <DataView data={this.state.raw} />
                 </Card>
             );
         }

@@ -29,12 +29,13 @@
             }
 
             p:nth-child(n+2):nth-child(-n+12) {
-                width: 25%;
+                width: 35%;
             }
 
             p {
                 text-align: left;
                 text-decoration: none;
+                letter-spacing: 0.5px;
 
                 font-size: 0.9rem;
                 font-weight: 350;
@@ -53,6 +54,12 @@
             &:active {
                 background-color: lightblue;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -86,6 +93,12 @@
             &:active {
                 background-color: darkcyan;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 }

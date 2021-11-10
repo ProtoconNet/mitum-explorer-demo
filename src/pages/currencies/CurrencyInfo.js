@@ -7,6 +7,7 @@ import DetailCard from "../../components/views/DetailCard";
 import page from "../../lib/page.json";
 import keys from "../../lib/keys.json";
 import DataView from "../../components/DataView";
+import { parseDecimalFromAmount } from "../../lib";
 
 export default function CurrencyInfo({ data, isLoad, history }) {
 
@@ -20,7 +21,7 @@ export default function CurrencyInfo({ data, isLoad, history }) {
         }
         else {
             items.push([keys.currency.currency, data.currency]);
-            items.push([keys.currency.amount, data.amount]);
+            items.push([keys.currency.amount, parseDecimalFromAmount(data.amount)]);
             items.push([keys.currency.min, data.minBalance]);
             items.push([keys.currency.feeer, [
                 [keys.feeer.type, data.feeer.type],
@@ -28,7 +29,7 @@ export default function CurrencyInfo({ data, isLoad, history }) {
                     null,
                     data.feeer.receiver ? (x) => history.push(`${page.account.default}/${x}`) : null
                 ]],
-                [keys.feeer.amount, data.feeer.amount],
+                [keys.feeer.amount, parseDecimalFromAmount(data.feeer.amount)],
             ]]);
         }
         return items;
