@@ -53,6 +53,14 @@
                 #sub-title {
                     width: 30%;
                 }
+
+                &:hover {
+                    background-color: azure;
+                }
+    
+                &:active {
+                    background-color: lightblue;
+                }
             }
         }
     }

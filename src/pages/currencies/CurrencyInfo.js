@@ -4,10 +4,11 @@ import LoadingIcon from "../../components/LoadingIcon";
 import Card from "../../components/views/Card";
 import DetailCard from "../../components/views/DetailCard";
 
+import page from "../../lib/page.json";
 import keys from "../../lib/keys.json";
 import DataView from "../../components/DataView";
 
-export default function CurrencyInfo({ data, isLoad }) {
+export default function CurrencyInfo({ data, isLoad, history }) {
 
     const items = () => {
         const items = [];
@@ -23,7 +24,10 @@ export default function CurrencyInfo({ data, isLoad }) {
             items.push([keys.currency.min, data.minBalance]);
             items.push([keys.currency.feeer, [
                 [keys.feeer.type, data.feeer.type],
-                [keys.feeer.receiver, data.feeer.receiver],
+                [keys.feeer.receiver, data.feeer.receiver, [
+                    null,
+                    data.feeer.receiver ? (x) => history.push(`${page.account.default}/${x}`) : null
+                ]],
                 [keys.feeer.amount, data.feeer.amount],
             ]]);
         }

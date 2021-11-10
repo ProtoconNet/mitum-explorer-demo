@@ -86,8 +86,8 @@ class Currencies extends Component {
                             minBalance: data.policy.new_account_min_balance,
                             feeer: {
                                 type: feeer.type,
-                                receiver: feeer.type !== "nil" ? feeer.receiver : null,
-                                amount: feeer.type !== "nil" ? feeer.amount : null,
+                                receiver: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'receiver') ? feeer.receiver : null,
+                                amount: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'amount') ? feeer.amount : null,
                             },
                             raw: JSON.stringify(data, null, 4)
                         },
@@ -163,7 +163,7 @@ class Currencies extends Component {
                         value={state.search} />
                 </Card>
                 {state.currencyRes.showResult
-                    ? <CurrencyInfo data={state.currencyRes} isLoad={state.isLoad} />
+                    ? <CurrencyInfo history={this.props.history} data={state.currencyRes} isLoad={state.isLoad} />
                     : <CurrencyList
                         isLoad={state.isLoad}
                         onPrev={() => this.onPrev()}
