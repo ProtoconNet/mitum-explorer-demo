@@ -82,17 +82,17 @@ class ActiveDetailCard extends Component {
     }
 
     render() {
-        const { title, items, func, isHideActive, isShowActive } = this.props;
+        const { title, items, func } = this.props;
 
         if (!items || !func || items === null || func === null || items.length < 1) {
-            return <section className="active-detail-card-container" id={isHideActive ? "hide" : (isShowActive ? "show" : "nothing")}>
+            return <section className="active-detail-card-container">
                 <h3 id="title">{title}</h3>
                 <p id="error">{message.replace.null}</p>
             </section>
         }
 
         return (
-            <section className="active-detail-card-container" id={isHideActive ? "hide" : (isShowActive ? "show" : "nothing")}>
+            <section className="active-detail-card-container">
                 <h3 id="title">{title}</h3>
                 <ul id="outer-ul">
                     {items.map((item, idx) => item ? this.listComponent(item, idx) : false)}

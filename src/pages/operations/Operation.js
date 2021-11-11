@@ -142,7 +142,7 @@ class Operation extends Component {
                 [operKeys.fact.hash, factHash],
                 sender ? [operKeys.sender, sender, [null, (x) => this.props.history.push(`${page.account.default}/${x}`)]] : null,
                 [operKeys.confirm, confirm ? parseDate(confirm, true) : null],
-                [operKeys.height, height, [null, height ? (x) => this.props.history.push(`${page.block.default}/${x}`) : null]],
+                [operKeys.height, height, [null, typeof height === "number" ? (x) => this.props.history.push(`${page.block.default}/${x}`) : null]],
                 [operKeys.processed, in_state !== null && in_state !== undefined ? "" + in_state : null],
                 !in_state ? [operKeys.reason, reason.msg] : null
             ]
@@ -181,7 +181,6 @@ class Operation extends Component {
         }
         return (
             <ActiveDetailCard
-                isShowActive={true}
                 title={`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`}
                 items={keys.keys.map(x => [
                     x.key, [[`weight: ${x.weight}`, null]], null])}

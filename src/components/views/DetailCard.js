@@ -22,7 +22,7 @@ class DetailCard extends Component {
     if (
       contentType === "string" ||
       contentType === "number" ||
-      content === null
+      content === null || content === 0
     ) {
       return (
         <li id="main-li" key={key()}>
@@ -56,10 +56,10 @@ class DetailCard extends Component {
   }
 
   render() {
-    const { items, isShowActive, isHideActive } = this.props;
+    const { items } = this.props;
 
     return (
-      <ul className="main-ul" id={isShowActive ? 'show' : isHideActive ? 'hide' : ''}>
+      <ul className="main-ul">
         {items.map((item, idx) => item ? this.listComponent(item, idx) : false)}
       </ul>
     );
