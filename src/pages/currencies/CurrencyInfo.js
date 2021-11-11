@@ -22,7 +22,7 @@ export default function CurrencyInfo({ data, isLoad, history }) {
         else {
             items.push([keys.currency.currency, data.currency]);
             items.push([keys.currency.amount, parseDecimalFromAmount(data.amount)]);
-            items.push([keys.currency.min, data.minBalance]);
+            items.push([keys.currency.min, parseDecimalFromAmount(data.minBalance)]);
             items.push([keys.currency.feeer, [
                 [keys.feeer.type, data.feeer.type],
                 [keys.feeer.receiver, data.feeer.receiver, [
