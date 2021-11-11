@@ -21,8 +21,8 @@ class BalanceRespList extends Component {
 
         return (
             <li key={key()}>
-                <p style={plainTextStyle}>{` ${parseDecimalFromAmount(item[1])}`}</p>
-                <p onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{` ${item[0]} `}</p>
+                <p onClick={() => this.props.history.push(`${page.currency.default}/${item[0]}`)}>{item[0]}</p>
+                <p style={plainTextStyle}>{`${parseDecimalFromAmount(item[1])}  ${item[0]}`}</p>
             </li>
 
         );

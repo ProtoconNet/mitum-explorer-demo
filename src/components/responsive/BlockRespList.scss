@@ -27,6 +27,7 @@
             #block-list-resp-title,
             #block-list-resp-content {
                 text-decoration: none;
+                letter-spacing: 0.5px;
 
                 font-size: 0.9rem;
                 font-weight: 350;
@@ -38,6 +39,17 @@
                 }
             }
 
+            #block-list-resp-content:nth-child(1) {
+                width: 30%;
+            }
+
+            #block-list-resp-content:nth-child(2) {
+                width: 70%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             &:hover {
                 background-color: azure;
             }
@@ -45,6 +57,12 @@
             &:active {
                 background-color: lightblue;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -77,6 +95,12 @@
             &:active {
                 background-color: darkcyan;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 }
@@ -87,20 +111,24 @@
     }
 }
 
-@media screen and (max-width: 735px) {
-    .block-list-resp-container ul li {
-        #block-list-resp-content {
-            font-size: 0.7rem;
-        }
-
-        #block-list-resp-title {
-            font-size: 0.8rem;
-        }
+@media screen and (max-width: 685px) {
+    .block-list-resp-container ul li #block-list-resp-content {
+        font-size: 0.8rem;
     }
 }
 
-@media screen and (max-width: 570px) {
-    .block-list-resp-container ul li #block-list-resp-content {
-        font-size: 0.6rem;
+@media screen and (max-width: 599px) {
+    .block-list-resp-container ul li {
+        #block-list-resp-content {
+            font-size: 0.75rem;
+        }
+
+        #block-list-resp-content:nth-child(1) {
+            width: 35%;
+        }
+
+        #block-list-resp-content:nth-child(2) {
+            width: 65%;
+        }
     }
 }

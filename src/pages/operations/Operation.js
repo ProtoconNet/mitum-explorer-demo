@@ -151,70 +151,45 @@ class Operation extends Component {
         return infoItem;
     }
 
-    factSigns(isBig) {
+    factSigns() {
         const { factSigns } = this.state;
         if (!factSigns) {
             return false;
         }
-
-        if (isBig) {
-            return (
-                <ActiveDetailCard
-                    isShowActive={true}
-                    title={operKeys.fact_signs.title}
-                    items={factSigns.map(
-                        x => [x.signature, [
-                            [operKeys.fact_signs.signer, x.signer],
-                            [operKeys.fact_signs.signature, x.signature],
-                            [operKeys.fact_signs.signed_at, x.signedAt]
-                        ], null])}
-                    func={[null, [
-                        [null, (x) => this.props.history.push(`${page.accounts.default}/${x}`)],
-                        [null, null],
-                        [null, null]
-                    ]]}
-                    isSpaceReverse={false} />
-            )
-        }
-        else {
-            return (
-                <ActiveDetailCard
-                    isHideActive={true}
-                    title={operKeys.fact_signs.title}
-                    items={factSigns.map(
-                        x => [x.signature.substring(0, 40) + "...", [
-                            [operKeys.fact_signs.signer, x.signer],
-                            [operKeys.fact_signs.signature, x.signature],
-                            [operKeys.fact_signs.signed_at, x.signedAt]
-                        ], null]
-                    )}
-                    func={[null, [
-                        [null, (x) => this.props.history.push(`${page.accounts.default}/${x}`)],
-                        [null, null],
-                        [null, null]
-                    ]]}
-                    isSpaceReverse={false} />
-            )
-        }
+        return (
+            <ActiveDetailCard
+                title={operKeys.fact_signs.title}
+                items={factSigns.map(
+                    x => [x.signature, [
+                        [operKeys.fact_signs.signer, x.signer],
+                        [operKeys.fact_signs.signature, x.signature],
+                        [operKeys.fact_signs.signed_at, x.signedAt]
+                    ], null])}
+                func={[null, [
+                    [null, (x) => this.props.history.push(`${page.accounts.default}/${x}`)],
+                    [null, null],
+                    [null, null]
+                ]]}
+                isSpaceReverse={false} />
+        )
     }
 
-    detailKeys(isBig) {
+    detailKeys() {
         const { keys } = this.state;
         if (!keys || !Object.prototype.hasOwnProperty.call(keys, "keys") || !Object.prototype.hasOwnProperty.call(keys, "threshold")) {
             return false;
         }
-        const items = keys.keys.map(x => [x.key, x.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]);
-        const smallItems = keys.keys.map(x => [x.key.substring(0, 30) + "...", x.weight, [(x) => this.props.history.push(`${page.accounts.default}/${x}`), null]]);
-        const keysItems = isBig
-            ? [[`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`, [...items]]]
-            : [[`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`, [...smallItems]]];
-
-        if (isBig) {
-            return <DetailCard isShowActive={true} keyIndex={0} items={keysItems} isSpaceReverse={true} />;
-        }
-        else {
-            return <DetailCard isHideActive={true} keyIndex={0} items={keysItems} isSpaceReverse={true} />;
-        }
+        return (
+            <ActiveDetailCard
+                isShowActive={true}
+                title={`${operKeys.fact.keys} (${operKeys.fact.threshold} : ${keys.threshold})`}
+                items={keys.keys.map(x => [
+                    x.key, [[`weight: ${x.weight}`, null]], null])}
+                func={[(x) => this.props.history.push(`${page.accounts.default}/${x}`), [
+                    [null, null]
+                ]]}
+                isSpaceReverse={false} />
+        );
     }
 
     detailAmounts() {
@@ -313,10 +288,8 @@ class Operation extends Component {
                         ? (
                             <Card title="Operation Information">
                                 <DetailCard keyIndex={null} items={infoItem} />
-                                {this.factSigns(false)}
-                                {this.factSigns(true)}
-                                {this.detailKeys(true)}
-                                {this.detailKeys(false)}
+                                {this.factSigns()}
+                                {this.detailKeys()}
                                 {this.detailAmounts()}
                                 {this.detailItems()}
                                 <DataView data={this.state.raw} />

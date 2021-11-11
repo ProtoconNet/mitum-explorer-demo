@@ -11,7 +11,7 @@ import page, { account as pageInfo } from '../../lib/page.json';
 import { account as accountKeys } from '../../lib/keys.json';
 import message from '../../lib/message.json';
 import columns from '../../lib/columns.json';
-import { getAccount, getAccountOperations, getResponse, isAddress, parseDate, parseDecimalFromAmount } from "../../lib";
+import { getAccount, getAccountOperations, getResponse, isAddress, parseDate } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import KeyRespList from "../../components/responsive/KeyRespList";
 import BalanceRespList from "../../components/responsive/BalanceRespList";
@@ -66,7 +66,15 @@ class Account extends Component {
                                     key: key.key,
                                     weight: key.weight,
                                 })
-                            ),
+                            ).sort((x, y) => {
+                                if (x.key < y.key) {
+                                    return -1;
+                                }
+                                else if (x.key > y.key) {
+                                    return 1;
+                                }
+                                return 0;
+                            }),
                             idx: 0,
                         },
                         balancesRes: {
@@ -75,7 +83,15 @@ class Account extends Component {
                                     currency: balance.currency,
                                     amount: balance.amount,
                                 })
-                            ),
+                            ).sort((x, y) => {
+                                if (x.currency < y.currency) {
+                                    return -1;
+                                }
+                                else if (x.currency > y.currency) {
+                                    return 1;
+                                }
+                                return 0;
+                            }),
                             idx: 0,
                         }
                     });
@@ -356,7 +372,8 @@ class Account extends Component {
             padding: "0",
             margin: "0",
             width: "100%",
-            textAlign: "start"
+            textAlign: "start",
+            letterSpacing: "0.5px",
         }
 
         if (isAccountLoad) {
@@ -386,16 +403,6 @@ class Account extends Component {
                         isFirstPage={keysRes.idx === 0}
                         isLastPage={keysRes.idx + 10 >= keys.length} />
                     <p style={plainTitleStyle}>Balances</p>
-                    <List columns={Object.values(columns.balances)}
-                        items={balancesItems.map(x => [x[0], parseDecimalFromAmount(x[1])])}
-                        onElementClick={[
-                            (x) => this.props.history.push(`${page.currency.default}/${x}`),
-                            null
-                        ]}
-                        onPrevClick={() => this.onBalancePrev()}
-                        onNextClick={() => this.onBalanceNext()}
-                        isFirstPage={balancesRes.idx === 0}
-                        isLastPage={balancesRes.idx + 10 >= balances.length} />
                     <BalanceRespList items={balancesItems}
                         history={this.props.history}
                         onPrevClick={() => this.onBalancePrev()}

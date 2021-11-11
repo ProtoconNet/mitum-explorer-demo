@@ -56,7 +56,7 @@ class Currencies extends Component {
                     this.setState({
                         isLoad: true,
                         idx: 0,
-                        currencies: parseResult
+                        currencies: parseResult.sort()
                     });
                 }
             )

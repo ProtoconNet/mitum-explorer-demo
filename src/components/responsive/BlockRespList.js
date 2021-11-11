@@ -22,9 +22,8 @@ class BlockRespList extends Component {
         return (
             <li key={key()}>
                 <p id="block-list-resp-content" style={plainTextStyle}>{`${item[2]} `}</p>
-                <p id="block-list-resp-content" onClick={() => {this.props.history.push(`${page.block.default}/${item[0]}`); window.location.reload(); }}>{item[0]}</p>
+                <p id="block-list-resp-content" onClick={() => { this.props.history.push(`${page.block.default}/${item[0]}`); window.location.reload(); }}>{item[0]}</p>
             </li>
-
         );
     }
 

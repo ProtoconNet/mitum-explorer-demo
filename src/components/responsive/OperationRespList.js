@@ -24,7 +24,6 @@ class OperationRespList extends Component {
                 <p id="operation-list-resp-content" style={plainTextStyle}>{`${item[1]} `}</p>
                 <p id="operation-list-resp-content" onClick={() => this.props.history.push(`${page.operation.default}/${item[0]}`)}>{item[0]}</p>
             </li>
-
         );
     }
 

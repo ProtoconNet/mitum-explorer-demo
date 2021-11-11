@@ -26,6 +26,7 @@
 
             p {
                 text-decoration: none;
+                letter-spacing: 0.5px;
 
                 font-size: 0.8rem;
                 font-weight: 350;
@@ -37,6 +38,18 @@
                 }
             }
 
+            p:nth-child(2) {
+                width: 10%;
+                text-align: end;
+            }
+
+            p:nth-child(1) {
+                width: 90%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             &:hover {
                 background-color: azure;
             }
@@ -44,6 +57,12 @@
             &:active {
                 background-color: lightblue;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -76,6 +95,12 @@
             &:active {
                 background-color: darkcyan;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 }

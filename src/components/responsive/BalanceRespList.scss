@@ -17,18 +17,17 @@
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            justify-content: space-between;
+            justify-content: flex-start;
 
-            padding: 0;
+            padding: 0.1rem 0 0.1rem 0;
             margin: 0;
 
             border-bottom: 0.5px solid lightgray;
 
             p {
                 text-decoration: none;
-                text-align: right;
 
-                font-size: 0.8rem;
+                font-size: 0.9rem;
                 font-weight: 350;
 
                 color: cadetblue;
@@ -39,10 +38,15 @@
             }
 
             p:nth-child(1) {
-                width: 85%;
+                width: 20%;
+                letter-spacing: 0.5px;
+                text-align: start;
             }
+
             p:nth-child(2) {
-                width: 15%;
+                width: 80%;
+                letter-spacing: 1px;
+                text-align: end;
             }
 
             &:hover {
@@ -52,6 +56,12 @@
             &:active {
                 background-color: lightblue;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -67,10 +77,11 @@
         justify-content: space-between;
 
         button {
-            width: 5rem;
-            padding: 0.4rem;
+            width: 6rem;
 
-            font-size: 0.8rem;
+            padding: 0.5rem;
+
+            font-size: 1rem;
             color: white;
             background-color: lightsteelblue;
 
@@ -84,12 +95,39 @@
             &:active {
                 background-color: darkcyan;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (max-width:899px) {
     .balance-list-resp-container {
-        display: none;
+        ul li {
+            padding: 0;
+
+            p {
+                font-size: 0.8rem;
+            }
+
+            p:nth-child(1) {
+                width: 15%;
+            }
+
+            p:nth-child(2) {
+                width: 85%;
+            }
+        }
+
+        section button {
+            width: 5rem;
+            padding: 0.4rem;
+
+            font-size: 0.9rem;
+        }
     }
 }

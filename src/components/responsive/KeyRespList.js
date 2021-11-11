@@ -21,8 +21,8 @@ class KeyRespList extends Component {
 
         return (
             <li key={key()}>
-                <p id="short" onClick={() => this.props.history.push(`${page.accounts.default}/${item[0]}`)}>{`${item[0].substring(0, 35)}...(${item[1]})`}</p>
-                <p id="full" onClick={() => this.props.history.push(`${page.accounts.default}/${item[0]}`)}>{`${item[0]} (${item[1]})`}</p>
+                <p onClick={() => this.props.history.push(`${page.accounts.default}/${item[0]}`)}>{item[0]}</p>
+                <p style={plainTextStyle}>{item[1]}</p>
             </li>
 
         );

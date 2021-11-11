@@ -30,12 +30,24 @@
 
                 font-size: 0.9rem;
                 font-weight: 350;
+                letter-spacing: 0.5px;
 
                 color: cadetblue;
 
                 &:hover {
                     text-decoration: underline;
                 }
+            }
+
+            #operation-list-resp-content:nth-child(1) {
+                width: 30%;
+            }
+
+            #operation-list-resp-content:nth-child(2) {
+                width: 70%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             &:hover {
@@ -45,6 +57,12 @@
             &:active {
                 background-color: lightblue;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 
@@ -77,6 +95,12 @@
             &:active {
                 background-color: darkcyan;
             }
+
+            -webkit-transition: all 0.2s ease;
+            -moz-transition: all 0.2s ease;
+            -ms-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
         }
     }
 }
@@ -87,20 +111,24 @@
     }
 }
 
-@media screen and (max-width: 735px) {
-    .operation-list-resp-container ul li {
-        #operation-list-resp-content {
-            font-size: 0.7rem;
-        }
-
-        #operation-list-resp-title {
-            font-size: 0.8rem;
-        }
+@media screen and (max-width: 685px) {
+    .operation-list-resp-container ul li #operation-list-resp-content {
+        font-size: 0.8rem;
     }
 }
 
-@media screen and (max-width: 570px) {
-    .operation-list-resp-container ul li #operation-list-resp-content {
-        font-size: 0.6em;
+@media screen and (max-width: 599px) {
+    .operation-list-resp-container ul li {
+        #operation-list-resp-content {
+            font-size: 0.75rem;
+        }
+
+        #operation-list-resp-content:nth-child(1) {
+            width: 35%;
+        }
+
+        #operation-list-resp-content:nth-child(2) {
+            width: 65%;
+        }
     }
 }
