@@ -258,6 +258,7 @@ class Operation extends Component {
     parseRedirect(target) {
         target = target.trim();
         const version = this.props.modelVersion;
+
         if (isAddress(target, version)) {
             this.props.history.push(`${page.account.default}/${target}`);
         }

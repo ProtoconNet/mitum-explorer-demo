@@ -65,7 +65,7 @@ export async function getCurrency(api, currency) {
 
 // libs
 export function parseCurrency(currency) {
-    var idx = currency.indexOf(':');
+    var idx = currency.indexOf('~');
     if (idx < 0 || currency.indexOf('{') > -1) {
         return null;
     }
@@ -130,7 +130,7 @@ export function key() {
 
 export function isAddress(target, version) {
 
-    const idx = target.indexOf(`:${hint.account}-${version}`);
+    const idx = target.indexOf(`~${hint.account}-${version}`);
     if (idx < 0) {
         return false;
     }
@@ -145,7 +145,7 @@ export function isAddress(target, version) {
 
 export function isPublicKey(target, version) {
 
-    const idx = target.indexOf(':');
+    const idx = target.indexOf('~');
     if (idx < 0) {
         return false;
     }
