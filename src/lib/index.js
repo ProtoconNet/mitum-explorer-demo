@@ -65,8 +65,12 @@ export async function getCurrency(api, currency) {
 
 // libs
 export function parseCurrency(currency) {
-    var idx = currency.indexOf('~');
-    if (idx < 0 || currency.indexOf('{') > -1) {
+    var idx = currency.indexOf(':');
+    if (idx < 0) {
+        return null;
+    }
+
+    if(currency.indexOf('{') > -1 || currency.indexOf('}') > -1) {
         return null;
     }
     return currency.substring(idx + 1, currency.length);
