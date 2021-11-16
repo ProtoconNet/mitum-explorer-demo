@@ -100,7 +100,6 @@ export function parseDate(date, isFull) {
 }
 
 export function parseDecimalFromAmount(amount) {
-    console.log(amount);
 
     const len = amount.length;
     const precision = process.env.REACT_APP_PRECISION;
@@ -109,8 +108,6 @@ export function parseDecimalFromAmount(amount) {
         const integer = amount.substring(0, len - precision);
         const remain = amount.substring(len - precision);
 
-        console.log(integer);
-        console.log(remain);
         return `${integer}.${remain}`;
     }
     else if (len === precision) {
