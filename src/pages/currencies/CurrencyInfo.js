@@ -16,22 +16,50 @@ export default function CurrencyInfo({ data, isLoad, history }) {
         if (data.currency === null) {
             items.push([keys.currency.currency, null]);
             items.push([keys.currency.amount, null]);
-            items.push([keys.currency.min, null]);
-            items.push([keys.currency.feeer, null]);
+            items.push([keys.currency.balance, null]);
+            items.push([keys.feeer.feeer, null]);
         }
         else {
             items.push([keys.currency.currency, data.currency]);
             items.push([keys.currency.amount, parseDecimalFromAmount(data.amount)]);
-            items.push([keys.currency.min, parseDecimalFromAmount(data.minBalance)]);
-            items.push([keys.currency.feeer, [
-                [keys.feeer.type, data.feeer.type],
-                [keys.feeer.receiver, data.feeer.receiver, [
-                    null,
-                    data.feeer.receiver ? (x) => history.push(`${page.account.default}/${x}`) : null
-                ]],
-                [keys.feeer.amount, parseDecimalFromAmount(data.feeer.amount)],
-            ]]);
+            items.push([keys.currency.balance, parseDecimalFromAmount(data.minBalance)]);
+
+            var upToFeeer = [];
+            if(data.feeer.type === 'fixed') {
+                upToFeeer.push(
+                    [keys.feeer.receiver, data.feeer.receiver, [
+                        null,
+                        (x) => history.push(`${page.account.default}/${x}`)
+                    ]]
+                );
+                upToFeeer.push(
+                    [keys.feeer.amount, parseDecimalFromAmount(data.feeer.amount)]
+                );
+            }
+            else if (data.feeer.type === 'ratio') {
+                upToFeeer.push(
+                    [keys.feeer.receiver, data.feeer.receiver, [
+                        null,
+                        (x) => history.push(`${page.account.default}/${x}`)
+                    ]]
+                );
+                upToFeeer.push(
+                    [keys.feeer.ratio, data.feeer.ratio],
+                );
+                upToFeeer.push(
+                    [keys.feeer.min, parseDecimalFromAmount(data.feeer.min)]
+                );
+                upToFeeer.push(
+                    [keys.feeer.max, parseDecimalFromAmount(data.feeer.max)]
+                );
+            }
         }
+
+        items.push([keys.currency.feeer, [
+            [keys.feeer.type, data.feeer.type],
+            ...upToFeeer
+        ]]);
+
         return items;
     }
 

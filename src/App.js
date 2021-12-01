@@ -38,7 +38,7 @@ class App extends Component {
           const suffrages = data.suffrage.map(
             suffrage => ({
               address: suffrage.address,
-              url: suffrage.conninfo.url
+              url: suffrage.conninfo ? suffrage.conninfo.url : "Dead",
             })
           );
           this.props.setNodeInfo(modelVersion, networkVersion, blockHeight, suffrages);

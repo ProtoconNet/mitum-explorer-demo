@@ -7,14 +7,17 @@
     },
     "currency": {
         "currency": "Currency ID", 
-        "amount": "Total amount", 
-        "min": "Minimum balance for new account", 
-        "feeer": "Feeer"
+        "amount": "Total amount",
+        "balance": "Minimum balance for new account"
     },
     "feeer": {
         "type": "Type",
         "receiver": "Receiver", 
-        "amount": "Amount"
+        "amount": "Amount",
+        "feeer": "Feeer",
+        "min": "Minimum Fee",
+        "max": "Maximum Fee",
+        "ratio": "Fee Ratio"
     },
     "operation": {
         "title": "Operation Overview",
