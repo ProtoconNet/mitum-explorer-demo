@@ -81,6 +81,10 @@ class Currencies extends Component {
                     const data = res.data._embedded;
                     const feeer = data.policy.feeer;
 
+                    const type = feeer._hint.indexOf('nil') > -1 ? 'nil' 
+                        : feeer._hint.indexOf('fixed') ? 'fixed' 
+                        : feeer._hint.indexOf('ratio') ? 'ratio' : null;
+
                     this.setState({
                         currencyRes: {
                             showResult: true,
@@ -88,12 +92,12 @@ class Currencies extends Component {
                             amount: data.amount.amount,
                             minBalance: data.policy.new_account_min_balance,
                             feeer: {
-                                type: feeer.type,
-                                receiver: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'receiver') ? feeer.receiver : null,
-                                amount: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'amount') ? feeer.amount : null,
-                                ratio: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'ratio') ? feeer.ratio : null,
-                                min: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, "min") ? feeer.min : null,
-                                max: feeer.type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'max') ? feeer.max : null,
+                                type: type,
+                                receiver: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'receiver') ? feeer.receiver : null,
+                                amount: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'amount') ? feeer.amount : null,
+                                ratio: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'ratio') ? feeer.ratio : null,
+                                min: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, "min") ? feeer.min : null,
+                                max: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'max') ? feeer.max : null,
                             },
                             raw: JSON.stringify(data, null, 4)
                         },
