@@ -1,7 +1,12 @@
 import React from "react";
 import "./Footer.scss";
 
-export default function Navigation() {
+function openTab(url) {
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
+}
+
+export default function Footer() {
     const reload = () => {
         window.location.reload();
     }
@@ -14,7 +19,7 @@ export default function Navigation() {
             <footer>
                 <div id="copyright">
                     <p>{`Copyright © 2021 `}</p>
-                    <p id="copyright-link" onClick={() => window.location.href = copyrightLink}>{copyrightText}</p>
+                    <p id="copyright-link" onClick={() => openTab(copyrightLink)}>{copyrightText}</p>
                     <p>{` All rights reserved`}</p>
                 </div>
             </footer>
