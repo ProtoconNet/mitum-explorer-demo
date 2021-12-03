@@ -4,10 +4,17 @@
   height: 100%;
   width: 100%;
 
+  min-height: 100vh;
+
   p,
   pre {
     overflow: visible;
     white-space: pre-wrap;
     word-break: break-all;
   }
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between
 }
