@@ -7,11 +7,13 @@
     align-items: center;
     justify-content: space-between;
 
-    background-color: #003547;
+    background-color: darkslategray;
     color: white;
 
     padding: 0.2rem 0.5rem 0.2rem 0.5rem;
     margin: 0;
+
+    opacity: 0.9;
 
     .nav-title {
         display: flex;
@@ -19,11 +21,11 @@
         align-items: center;
         justify-content: center;
 
-        font-size: 1.15rem;
+        font-size: 1rem;
 
         #logo {
             width: auto;
-            height: 60px;
+            height: 50px;
         }
     }
 

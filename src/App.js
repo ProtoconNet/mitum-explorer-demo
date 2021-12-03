@@ -19,6 +19,7 @@ import { getNodeInfo } from './lib';
 import { setNodeInfo } from './store/actions';
 import NetworkBox from './components/NetworkBox';
 import DropNavigation from './components/DropNavigation';
+import Footer from './components/Footer';
 
 class App extends Component {
 
@@ -85,6 +86,7 @@ class App extends Component {
           <Route exact path={currency.default} component={Currencies} />
           <Route path={currency.params} component={Currencies} />
           <NetworkBox />
+          <Footer />
         </BrowserRouter>
       </div>
     );

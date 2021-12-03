@@ -10,13 +10,15 @@
     left: 0;
     right: 0;
 
-    background-color: #003547;
+    background-color: darkslategray;
     text-align: center;
     vertical-align: middle;
 
+    opacity: 0.9;
+
     .drop-nav-menu {
         position: absolute;
-        background-color: #003547;
+        background-color: darkslategray;
 
         width: 100%;
         height: 0;
@@ -177,7 +179,7 @@
     }
 
     .burger-check:checked~.drop-nav-menu {
-        background-color: #003547;
+        background-color: darkslategray;
     }
 
     .burger-check:checked~.drop-nav-menu #menus {
