@@ -85,9 +85,9 @@ class App extends Component {
           <Route exact path={currencies.default} component={Currencies} />
           <Route exact path={currency.default} component={Currencies} />
           <Route path={currency.params} component={Currencies} />
-          <NetworkBox />
-          <Footer />
         </BrowserRouter>
+        <NetworkBox />
+        <Footer />
       </div>
     );
   }
