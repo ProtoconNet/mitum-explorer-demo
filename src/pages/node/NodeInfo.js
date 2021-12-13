@@ -33,16 +33,15 @@ class NodeInfo extends Component {
 
     onSearch() {
         const search = this.state.search.trim();
-        const version = this.props.modelVersion;
 
         if (!search) {
             return;
         }
 
-        if (isAddress(search, version)) {
+        if (isAddress(search)) {
             this.props.history.push(`${page.account.default}/${search}`);
         }
-        else if(isPublicKey(search, version)) {
+        else if(isPublicKey(search)) {
             this.props.history.push(`${page.accounts.default}/${search}`);
         }
         else {

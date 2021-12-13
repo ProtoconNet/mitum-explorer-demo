@@ -129,14 +129,14 @@ export function key() {
     return "" + Math.random();
 }
 
-export function isAddress(target, version) {
+export function isAddress(target) {
 
-    const idx = target.indexOf(`~${hint.account}-${version}`);
-    if (idx < 0) {
+    const type = target.substring(target.length - 3);
+    if(type.length !== 3 || type !== "mca") {
         return false;
     }
 
-    const address = target.substring(0, idx);
+    const address = target.substring(0, target.length - 3);
     if (!/^[a-zA-Z0-9]+(?![^a-zA-Z0-9])\b/.test(address.trim())) {
         return false;
     }
@@ -144,21 +144,14 @@ export function isAddress(target, version) {
     return true;
 }
 
-export function isPublicKey(target, version) {
+export function isPublicKey(target) {
 
-    const idx = target.indexOf('~');
-    if (idx < 0) {
+    const type = target.substring(target.length - 3);
+    if(type.length !== 3 || type !== "mpu") {
         return false;
     }
-
-    const pubHint = target.substring(idx + 1);
-    switch (pubHint) {
-        case hint.pubkey.btc + `-${version}`:
-        case hint.pubkey.ether + `-${version}`:
-        case hint.pubkey.stellar + `-${version}`:
-            return true;
-        default: return false;
-    }
+    
+    return true;
 }
 
 export function isCurrency(target) {

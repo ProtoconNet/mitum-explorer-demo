@@ -101,9 +101,8 @@ class Accounts extends Component {
 
     onSearch() {
         const search = this.state.search.trim();
-        const version = this.props.modelVersion;
 
-        if (isAddress(search, version)) {
+        if (isAddress(search)) {
             this.props.history.push(`${page.account.default}/${search}`);
         }
         else {

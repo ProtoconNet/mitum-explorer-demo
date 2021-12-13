@@ -117,13 +117,12 @@ class Operation extends Component {
 
     onSearch() {
         const search = this.state.search.trim();
-        const version = this.props.modelVersion;
 
         if (!search) {
             return;
         }
 
-        if (isAddress(search, version)) {
+        if (isAddress(search)) {
             this.props.history.push(`${page.account.default}/${search}`);
         }
         else {
@@ -257,12 +256,11 @@ class Operation extends Component {
 
     parseRedirect(target) {
         target = target.trim();
-        const version = this.props.modelVersion;
 
-        if (isAddress(target, version)) {
+        if (isAddress(target)) {
             this.props.history.push(`${page.account.default}/${target}`);
         }
-        else if (isPublicKey(target, version)) {
+        else if (isPublicKey(target)) {
             this.props.history.push(`${page.accounts.default}/${target}`);
         }
         else if (isCurrency(target)) {

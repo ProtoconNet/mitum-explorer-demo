@@ -178,13 +178,12 @@ class Account extends Component {
 
     onSearch() {
         const search = this.state.search.trim();
-        const version = this.props.modelVersion;
 
         if (!search) {
             return;
         }
 
-        if (isAddress(search, version)) {
+        if (isAddress(search)) {
             this.props.history.push(`${page.account.default}/${search}`);
             window.location.reload();
         }

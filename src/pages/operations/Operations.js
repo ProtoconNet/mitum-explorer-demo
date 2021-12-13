@@ -187,13 +187,12 @@ class Operations extends Component {
 
     onSearch() {
         const search = this.state.search.trim();
-        const version = this.props.modelVersion;
 
         if (!search) {
             return;
         }
 
-        if (isAddress(search, version)) {
+        if (isAddress(search)) {
             this.props.history.push(`${page.account.default}/${search}`);
         }
         else {
@@ -212,7 +211,7 @@ class Operations extends Component {
                 <Card id="search" title="Search">
                     <SearchBox
                         disabled={false}
-                        placeholder={message.placeholder.account}
+                        placeholder={message.placeholder.operation}
                         onChange={(e) => this.onSearchChange(e)}
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />
