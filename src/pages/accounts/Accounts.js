@@ -212,7 +212,7 @@ class Accounts extends Component {
                         <DetailCard 
                             keyIndex={null}
                             items={[
-                            [accountsKeys.keys, accounts.length > 0 ? pubKey : message.replace.null],
+                            [accountsKeys.keys, accounts.length > 0 ? pubKey : message.replace.empty],
                         ]} />
                         <List isShow={true}
                             columns={Object.values(columns.accounts)}

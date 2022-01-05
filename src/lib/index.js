@@ -1,5 +1,4 @@
 import axios from 'axios';
-import hint from './hint.json';
 
 const env = process.env;
 export const urls = {
