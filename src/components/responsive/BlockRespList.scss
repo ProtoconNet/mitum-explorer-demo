@@ -83,17 +83,17 @@
 
             font-size: 0.9rem;
             color: white;
-            background-color: lightsteelblue;
+            background-color: gray;
 
             border-radius: 2px;
             border: 0px solid transparent;
 
             &:hover {
-                background-color: cornflowerblue;
+                background-color: lightslategray;
             }
 
             &:active {
-                background-color: darkcyan;
+                background-color: lightgray;
             }
 
             -webkit-transition: all 0.2s ease;

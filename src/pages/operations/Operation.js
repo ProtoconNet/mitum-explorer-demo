@@ -10,6 +10,7 @@ import DetailCard from "../../components/views/DetailCard";
 import message from '../../lib/message.json';
 import page, { operation as pageInfo } from '../../lib/page.json';
 import { operation as operKeys } from '../../lib/keys.json';
+import { blockcity as bcHint } from '../../lib/hint';
 import { getOperation, isAddress, isCurrency, isPublicKey, parseDate, parseDecimalFromAmount } from "../../lib";
 import LoadingIcon from "../../components/LoadingIcon";
 import DataView from "../../components/DataView";
@@ -206,46 +207,123 @@ class Operation extends Component {
 
     detailItems() {
         const { items } = this.state;
+        const exist = Object.prototype.hasOwnProperty;
         var i;
-        var maxLen = 0;
 
         if (!items || items.length < 1) {
             return false;
         }
 
+        const func = [];
         const detailItems = items.map(
             (x, idx) => {
                 const item = [];
-                if (Object.prototype.hasOwnProperty.call(x, "receiver")) {
-                    item.push([operKeys.fact.receiver, x.receiver]);
-                }
-                if (Object.prototype.hasOwnProperty.call(x, "keys")) {
-                    item.push([operKeys.fact.threshold, x.keys.threshold, true]);
+                
+                if (exist.call(x, "doctype")) {
+                    const docType = x.doctype;
+                    item.push([operKeys.fact.blockcity.doctype, docType])
+                    item.push([operKeys.fact.blockcity.docid, x.doc.info.docid.id])
+                    item.push([operKeys.fact.currency, x.currency, [null, x.currency]])
+                    item.push([operKeys.fact.blockcity.owner, x.doc.owner, [null, x.doc.owner]])
+                    func.push([null, null])
+                    func.push([null, null])
+                    func.push([null, (x) => this.parseRedirect(x)])
+                    func.push([null, (x) => this.parseRedirect(x)])
 
+                    switch(docType) {
+                        case bcHint.doctype.user:
+                            item.push([operKeys.fact.blockcity.user.gold, x.doc.gold])
+                            item.push([operKeys.fact.blockcity.user.bankgold, x.doc.bankgold])
+                            item.push([operKeys.fact.blockcity.user.hp, x.doc.statistics.hp])
+                            item.push([operKeys.fact.blockcity.user.str, x.doc.statistics.strength])
+                            item.push([operKeys.fact.blockcity.user.agi, x.doc.statistics.agility])
+                            item.push([operKeys.fact.blockcity.user.dex, x.doc.statistics.dexterity])
+                            item.push([operKeys.fact.blockcity.user.cha, x.doc.statistics.charisma])
+                            item.push([operKeys.fact.blockcity.user.intel, x.doc.statistics.intelligence])
+                            item.push([operKeys.fact.blockcity.user.vital, x.doc.statistics.vital])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            break;
+                        case bcHint.doctype.land:
+                            item.push([operKeys.fact.blockcity.land.address, x.doc.address])
+                            item.push([operKeys.fact.blockcity.land.area, x.doc.area])
+                            item.push([operKeys.fact.blockcity.land.renter, x.doc.renter])
+                            item.push([operKeys.fact.blockcity.land.account, x.doc.account, [null, x.doc.account]])
+                            item.push([operKeys.fact.blockcity.land.rentdate, x.doc.rentdate])
+                            item.push([operKeys.fact.blockcity.land.period, x.doc.periodday])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, (x) => this.parseRedirect(x)])
+                            func.push([null, null])
+                            func.push([null, null])
+                            break;
+                        case bcHint.doctype.vote:
+                            item.push([operKeys.fact.blockcity.vote.round, x.doc.round])
+                            item.push([operKeys.fact.blockcity.vote.endtime, x.doc.endvotetime])
+                            item.push([operKeys.fact.blockcity.vote.bossname, x.doc.bossname])
+                            item.push([operKeys.fact.blockcity.vote.account, x.doc.account, [null, x.doc.account]])
+                            item.push([operKeys.fact.blockcity.vote.office, x.doc.termofoffice])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, (x) => this.parseRedirect(x)])
+                            func.push([null, null])
+                            for(i = 0; i < x.doc.candidates.length; i++)  {
+                                item.push([`${operKeys.fact.blockcity.vote.candidate} ${i}`, x.doc.candidates[i].address, [null, x.doc.candidates[i].address]])
+                                func.push([null, (x) => this.parseRedirect(x)])
+                            }
+                            break;
+                        case bcHint.doctype.history:
+                            item.push([operKeys.fact.blockcity.history.name, x.doc.name])
+                            item.push([operKeys.fact.blockcity.history.account, x.doc.account, [null, x.doc.account]])
+                            item.push([operKeys.fact.blockcity.history.date, x.doc.date])
+                            item.push([operKeys.fact.blockcity.history.usage, x.doc.usage])
+                            item.push([operKeys.fact.blockcity.history.app, x.doc.application])
+                            func.push([null, null])
+                            func.push([null, (x) => this.parseRedirect(x)])
+                            func.push([null, null])
+                            func.push([null, null])
+                            func.push([null, null])
+                            break;
+                        default:
+                            console.error("Invalid document type for item " + idx);
+                    }
+                }
+                
+                if (exist.call(x, "receiver")) {
+                    item.push([operKeys.fact.receiver, x.receiver]);
+                    func.push([null, null])
+                }
+
+                if (exist.call(x, "keys")) {
+                    item.push([operKeys.fact.threshold, x.keys.threshold, true]);
+                    func.push([null, null])
                     const keys = x.keys.keys;
                     for (i = 0; i < keys.length; i++) {
                         item.push([`${operKeys.fact.key} ${i}`, `${keys[i].key} (${keys[i].weight})`, [null, keys[i].key]])
+                        func.push([null, (x) => this.parseRedirect(x)])
                     }
                 }
-                if (Object.prototype.hasOwnProperty.call(x, "amounts")) {
+                if (exist.call(x, "amounts")) {
                     const amounts = x.amounts;
                     for (i = 0; i < amounts.length; i++) {
                         item.push([`${operKeys.fact.amount} ${i}`, `${parseDecimalFromAmount(amounts[i].amount)} ${amounts[i].currency}`, [null, amounts[i].currency]])
+                        func.push([null, (x) => this.parseRedirect(x)])
                     }
-                }
-
-                if (maxLen < item.length) {
-                    maxLen = item.length;
                 }
 
                 return [`[${idx}] ` + this.parseType(x._hint), item, JSON.stringify(x, null, 4)];
             }
         )
-
-        const func = [];
-        for (i = 0; i < maxLen; i++) {
-            func.push([null, (x) => this.parseRedirect(x)])
-        }
+        
         return (
             <ActiveDetailCard title={operKeys.items}
                 items={detailItems}

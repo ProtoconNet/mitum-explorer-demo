@@ -3,6 +3,18 @@ html {
   height: 100%;
 
   overflow-x: hidden;
+
+  --background: #e8e8e8;
+  --text: black;
+  --card-title: gray;
+  --link-text: cadetblue;
+  --link-hover: cadetblue;
+  --background-hover: azure;
+  --background-active: lightblue;
+  --search-box-border: lightgray;
+  --search-box-border-focus: slategray;
+  --search-button-hover: aliceblue;
+  --search-button-active: lightblue;
 }
 
 body {
@@ -11,7 +23,7 @@ body {
   
   min-height: 100vh;
 
-  background-color: #f5fbfe;
+  background-color: #f2f2f2;
 
   overflow-y: auto;
   overflow-x: hidden;

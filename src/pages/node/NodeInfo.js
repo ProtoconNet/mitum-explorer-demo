@@ -74,7 +74,7 @@ class NodeInfo extends Component {
                         onSearch={() => this.onSearch()}
                         value={this.state.search} />
                 </Card>
-                <Card id="list" title="Protocon Network Information">
+                <Card id="list" title="BlockCity Network Information">
                     {this.props.isLoad ? <DetailCard items={items} keyIndex={null} /> : <LoadingIcon />}
                 </Card>
             </div>

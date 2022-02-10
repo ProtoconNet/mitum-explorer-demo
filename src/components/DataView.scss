@@ -12,18 +12,18 @@
 
         font-size: 1rem;
         font-weight: 500;
-        color: cadetblue;
+        color: gray;
         background-color: transparent;
         border: 3px solid transparent;
 
         &:hover {
             width: 100%;
-            border-bottom: 3px solid cadetblue;
+            border-bottom: 3px solid gray;
         }
 
         &:active {
             width: 30%;
-            border-bottom: 3px solid cadetblue;
+            border-bottom: 3px solid lightgray;
         }
 
         -webkit-transition: all 0.2s ease-in-out;
@@ -51,7 +51,7 @@
 
         &:active {
             width: 30%;
-            border-bottom: 2px solid gray;
+            border-bottom: 2px solid lightgray;
         }
 
         -webkit-transition: all 0.2s ease-in-out;
@@ -120,11 +120,11 @@
         border: 2px solid transparent;
 
         &:hover {
-            border-bottom: 2px solid cadetblue;
+            border-bottom: 2px solid gray;
         }
 
         &:active {
-            border-bottom: 2px solid cadetblue;
+            border-bottom: 2px solid lightgray;
         }
     }
 
@@ -138,7 +138,7 @@
         }
 
         &:active {
-            border-bottom: 1px solid gray;
+            border-bottom: 1px solid lightgray;
         }
     }
 }

@@ -52,12 +52,13 @@
 .footer footer #copyright {
 
     #copyright-link {
-        color: cadetblue;
+        color: black;
         text-decoration: none;
         font-weight: 400;
 
         &:hover {
-            color: chartreuse;
+            color: gray;
+            text-decoration: underline;
         }
 
         -webkit-transition: color 0.2s;
@@ -80,12 +81,13 @@
 
     .footer footer #copyright {
         #copyright-link {
-            color: cadetblue;
+            color: black;
             text-decoration: none;
             font-weight: 400;
 
             &:hover {
-                color: chartreuse;
+                color: gray;
+                text-decoration: underline;
             }
 
             -webkit-transition: color 0.2s;

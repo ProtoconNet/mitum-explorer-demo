@@ -1,6 +1,7 @@
 {
   "name": "protocon-explorer",
   "version": "0.1.0",
+  "explorer-type": "block-city",
   "private": false,
   "dependencies": {
     "@babel/core": "7.12.3",

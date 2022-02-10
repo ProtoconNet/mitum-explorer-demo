@@ -4,5 +4,13 @@
         "btc": "btc-pub",
         "ether": "ether-pub",
         "stellar": "stellar-pub"
+    },
+    "blockcity": {
+        "doctype": {
+            "user": "mitum-blockcity-document-user-data",
+            "land": "mitum-blockcity-document-land-data",
+            "vote": "mitum-blockcity-document-voting-data",
+            "history": "mitum-blockcity-document-history-data"
+        }
     }
 }
