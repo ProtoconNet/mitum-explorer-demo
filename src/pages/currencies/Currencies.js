@@ -99,7 +99,7 @@ class Currencies extends Component {
                                 min: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, "min") ? feeer.min : null,
                                 max: type !== "nil" && Object.prototype.hasOwnProperty.call(feeer, 'max') ? feeer.max : null,
                             },
-                            raw: JSON.stringify(data, null, 4)
+                            raw: JSON.stringify(res.data, null, 4)
                         },
                         search: "",
                         isLoad: true,

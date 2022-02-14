@@ -70,7 +70,7 @@ class Operation extends Component {
                     ) : null;
 
                     this.setState({
-                        raw: JSON.stringify(data, null, 4),
+                        raw: JSON.stringify(res.data, null, 4),
                         operationHash: operation.hash,
                         factHash: operation.fact.hash,
                         type: this.parseType(operation._hint),

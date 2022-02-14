@@ -116,7 +116,7 @@ class Blocks extends Component {
                         height,
                         create: created_at,
                         confirm: confirmed_at,
-                        raw: JSON.stringify(data, null, 4),
+                        raw: JSON.stringify(res.data, null, 4),
                     }
 
                     getBlockOperations(this.props.api, block)
