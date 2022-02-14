@@ -111,5 +111,46 @@
         "height": "Block Height",
         "create": "Created at",
         "confirm": "Confirmed at"
+    },
+    "document": {
+        "title": "Document Overview",
+        "doctype": "Document Type",
+        "docid": "Document ID",
+        "owner": "Owner",
+        "height": "Block Height",
+        "user": {
+            "gold": "Gold",
+            "bankgold": "Bank Gold",
+            "hp": "HP",
+            "str": "Strength",
+            "dex": "Dexterity",
+            "agi": "Agility",
+            "cha": "Charisma",
+            "intel": "Intelligence",
+            "vital": "Vital"
+        },
+        "land": {
+            "address": "Address",
+            "area": "Area",
+            "renter": "Renter",
+            "account": "Account",
+            "rentdate": "Rent Date",
+            "period": "Period Day"
+        },
+        "vote": {
+            "round": "Round",
+            "endtime": "End Vote Time",
+            "bossname": "Boss Name",
+            "account": "Account",
+            "office": "termofoffice",
+            "candidate": "Candidate"
+        },
+        "history": {
+            "name": "name",
+            "account": "account",
+            "date": "date",
+            "usage": "usage",
+            "app": "application"
+        }
     }
 }

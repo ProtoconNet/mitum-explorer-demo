@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { blockcity as bcHint } from './hint.json';
 
 const env = process.env;
 export const urls = {
@@ -12,6 +13,7 @@ export const urls = {
     operations: env.REACT_APP_OPERATIONS,
     operation: env.REACT_APP_OPERATION,
     allOperation: env.REACT_APP_ALL_OPERATIONS,
+    document: env.REACT_APP_DOCUMENT
 }
 
 export async function getResponse(api, next) {
@@ -60,6 +62,10 @@ export async function getCurrencies(api) {
 
 export async function getCurrency(api, currency) {
     return await axios.get(api + urls.currencies + "/" + currency);
+}
+
+export async function getDocument(api, id) {
+    return await axios.get(api + urls.document + id);
 }
 
 // libs
@@ -158,4 +164,21 @@ export function isCurrency(target) {
         return false;
     }
     return true;
+}
+
+export function isBlockCityDocumentId(target) {
+    if(target.length < 3) {
+        return false;
+    }
+
+    const type = target.substring(target.length - 3);
+
+    switch(type){
+        case bcHint.docid.user:
+        case bcHint.docid.land:
+        case bcHint.docid.vote:
+        case bcHint.docid.history:
+            return true;
+        default: return false;
+    }
 }

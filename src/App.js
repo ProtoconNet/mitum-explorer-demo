@@ -12,6 +12,7 @@ import Currencies from './pages/currencies/Currencies';
 import NodeInfo from './pages/node/NodeInfo';
 import Operation from './pages/operations/Operation';
 import Operations from './pages/operations/Operations';
+import Document from './pages/documents/Document';
 
 import page from './lib/page.json';
 import { getNodeInfo } from './lib';
@@ -58,7 +59,7 @@ class App extends Component {
   }
 
   render() {
-    const { node, account, accounts, block, blocks, operation, operations, currency, currencies } = page;
+    const { node, account, accounts, block, blocks, operation, operations, currency, currencies, document } = page;
     return (
       <div className="App" >
         <BrowserRouter>
@@ -81,6 +82,9 @@ class App extends Component {
 
           <Route exact path={operation.default} component={Operation} />
           <Route exact path={operation.params} component={Operation} />
+
+          <Route exact path={document.default} component={Document} />
+          <Route exact path={document.params} component={Document} />
 
           <Route exact path={currencies.default} component={Currencies} />
           <Route exact path={currency.default} component={Currencies} />

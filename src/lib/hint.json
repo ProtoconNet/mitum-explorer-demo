@@ -11,6 +11,12 @@
             "land": "mitum-blockcity-document-land-data",
             "vote": "mitum-blockcity-document-voting-data",
             "history": "mitum-blockcity-document-history-data"
+        },
+        "docid": {
+            "user": "cui",
+            "land": "cli",
+            "vote": "cvi",
+            "history": "chi"
         }
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './DropNavigation.scss';
 
-import logo from "../images/logo_white.png";
+import logo from "../images/logo.png";
 import page from '../lib/page.json';
 import message from '../lib/message.json';
 
@@ -59,6 +59,10 @@ class DropNavigation extends Component {
                         <Link to={page.currencies.default}
                             onClick={() => this.onCheckOut()}>
                             <p>{message.menu.currencies}</p>
+                        </Link>
+                        <Link to={page.document.default}
+                            onClick={() => this.onCheckOut()}>
+                            <p>{message.menu.document}</p>
                         </Link>
                     </section>
                 </div>

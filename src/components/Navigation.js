@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Navigation.scss";
-import logo from "../images/logo_white.png";
+import logo from "../images/logo.png";
 import message from "../lib/message.json";
 
 export default function Navigation() {
@@ -20,6 +20,7 @@ export default function Navigation() {
         <Link to="/operations">{message.menu.operations}</Link>
         <Link to="/accounts">{message.menu.accounts}</Link>
         <Link to="/currencies">{message.menu.currencies}</Link>
+        <Link to="/document">{message.menu.document}</Link>
       </nav>
     </header>
   );
