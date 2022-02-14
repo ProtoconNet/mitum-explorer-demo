@@ -57,7 +57,7 @@ class Account extends Component {
 
                     this.setState({
                         isAccountLoad: true,
-                        raw: JSON.stringify(data, null, 4),
+                        raw: JSON.stringify(res.data, null, 4),
                         addressRes: data.address,
                         keysRes: {
                             threshold: data.keys.threshold,
