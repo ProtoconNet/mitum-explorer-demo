@@ -30,7 +30,8 @@
         "currency": "Cannot load currency information.",
         "currencies": "Cannot load currencies.",
         "block": "Cannot load block information.",
-        "blocks": "Cannot load blocks."       
+        "blocks": "Cannot load blocks.", 
+        "documents": "Cannot load documents."   
     },
     "button": {
         "prev": "PREV",

@@ -22,5 +22,11 @@
     },
     "currencies": {
         "currency": "Currency ID"
+    },
+    "documents": {
+        "doctype": "Type",
+        "docid": "ID",
+        "owner": "Owner",
+        "height": "Block Height"
     }
 }

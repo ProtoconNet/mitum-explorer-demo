@@ -8,6 +8,9 @@ const plainTextStyle = {
     textDecoration: "none",
 }
 
+const leftSide = "left";
+const rightSide = "right";
+
 class List extends Component {
 
     contentComponent(content, func, lonely) {
@@ -32,6 +35,8 @@ class List extends Component {
     }
 
     listComponent(rowData, isAttribute, lonely) {
+        const side = !(this.props.side === leftSide || this.props.side === rightSide) ? "right" : "left";
+
         const textStyle = {
             ...plainTextStyle,
         }
@@ -42,7 +47,7 @@ class List extends Component {
 
         if (isAttribute) {
             return (
-                <li key={key()} style={{ color: "black", backgroundColor: "transparent" }}>
+                <li id={"list-" + side} key={key()} style={{ color: "black", backgroundColor: "transparent" }}>
                     {rowData.map(
                         x => (
                             <p key={key()} style={{ ...textStyle, fontWeight: "400" }}>{x}</p>
@@ -65,7 +70,7 @@ class List extends Component {
             }
 
             return (
-                <li key={key()}>
+                <li id={"list-" + side} key={key()}>
                     {
                         combined.map(x => this.contentComponent(x[0], x[1], lonely))
                     }

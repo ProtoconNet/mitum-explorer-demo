@@ -1,4 +1,4 @@
-.list-container {
+.document-list-resp-container {
     width: 100%;
 
     margin: 0;
@@ -16,28 +16,40 @@
 
             display: flex;
             flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
+            align-items: flex-start;
+            justify-content: flex-start;
 
-            padding: 0.1rem 0 0.1rem 0;
+            padding: 0;
             margin: 0;
 
             border-bottom: 0.5px solid lightgray;
 
-            p {
-                text-align: left;
+            #document-list-resp-title,
+            #document-list-resp-content {
                 text-decoration: none;
-                letter-spacing: 0.5px;
 
                 font-size: 0.9rem;
                 font-weight: 350;
+                letter-spacing: 0.5px;
 
                 color: cadetblue;
 
                 &:hover {
                     text-decoration: underline;
-                    color: cadetblue;
                 }
+            }
+
+            #document-list-resp-content:nth-child(1) {
+                width: 20%;
+            }
+
+            #document-list-resp-content:nth-child(2) {
+                width: 80%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                text-align: end;
             }
 
             &:hover {
@@ -54,30 +66,6 @@
             -o-transition: all 0.2s ease;
             transition: all 0.2s ease;
         }
-
-        #list-left {
-            p:nth-child(1),
-            p:nth-child(4) {
-                width: 15%;
-            }
-
-            p:nth-child(2) {
-                width: 25%;
-            }
-            p:nth-child(3) {
-                width: 45%;
-            }
-        }
-
-        #list-right {
-            p:nth-child(1) {
-                width: 30%;
-            }
-
-            p:nth-child(n+2):nth-child(-n+12) {
-                width: 30%;
-            }
-        }
     }
 
     section {
@@ -92,11 +80,10 @@
         justify-content: space-between;
 
         button {
-            width: 6rem;
+            width: 5rem;
+            padding: 0.4rem;
 
-            padding: 0.5rem;
-
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: white;
             background-color: gray;
 
@@ -104,11 +91,11 @@
             border: 0px solid transparent;
 
             &:hover {
-                background-color: lightgray;
+                background-color: lightslategray;
             }
 
             &:active {
-                background-color: gray;
+                background-color: lightgray;
             }
 
             -webkit-transition: all 0.2s ease;
@@ -120,17 +107,22 @@
     }
 }
 
-@media screen and (max-width: 1199px) {
-    .list-container section button {
-        width: 5rem;
-        padding: 0.4rem;
-
-        font-size: 0.9rem;
+@media screen and (min-width: 900px) {
+    .document-list-resp-container {
+        display: none;
     }
 }
 
-@media screen and (max-width: 899px) {
-    .list-container {
-        display: none;
+@media screen and (max-width: 685px) {
+    .document-list-resp-container ul li #document-list-resp-content {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .document-list-resp-container ul li {
+        #document-list-resp-content {
+            font-size: 0.75rem;
+        }
     }
 }

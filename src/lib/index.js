@@ -13,7 +13,8 @@ export const urls = {
     operations: env.REACT_APP_OPERATIONS,
     operation: env.REACT_APP_OPERATION,
     allOperation: env.REACT_APP_ALL_OPERATIONS,
-    document: env.REACT_APP_DOCUMENT
+    document: env.REACT_APP_DOCUMENT,
+    documents: env.REACT_APP_DOCUMENTS,
 }
 
 export async function getResponse(api, next) {
@@ -34,6 +35,10 @@ export async function getAllOperations(api) {
 
 export async function getAccountOperations(api, address) {
     return await axios.get(api + urls.account + address + urls.operations);
+}
+
+export async function getAccountDocuments(api, address) {
+    return await axios.get(api + urls.account + address + urls.documents);
 }
 
 export async function getOperation(api, hash) {

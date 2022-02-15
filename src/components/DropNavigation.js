@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './DropNavigation.scss';
 
-import logo from "../images/logo.png";
+import logo from "../images/logo2.png";
 import page from '../lib/page.json';
 import message from '../lib/message.json';
 

@@ -10,11 +10,11 @@
     left: 0;
     right: 0;
 
-    background-color: black;
+    background-color: gray;
     text-align: center;
     vertical-align: middle;
 
-    opacity: 0.75;
+    opacity: 0.9;
 
     .drop-nav-menu {
         position: absolute;
@@ -85,6 +85,7 @@
     }
 
     #header {
+        
         .burger-icon {
             cursor: pointer;
 
@@ -153,8 +154,9 @@
             text-decoration: none;
 
             #logo {
-                width: 45px;
-                height: 45px;
+                width: 35px;
+                height: 35px;
+                margin: 5px 10px 5px 10px;
             }
 
             &:hover {

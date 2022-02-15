@@ -12,6 +12,7 @@ import message from '../../lib/message.json';
 import { document as docKeys } from '../../lib/keys.json';
 import page, { document as pageInfo } from '../../lib/page.json';
 import { blockcity as hint } from '../../lib/hint.json';
+import { connect } from 'react-redux';
 
 const initialState = {
     raw: "",
@@ -35,12 +36,12 @@ class Document extends Component {
     }
 
     loadDocument(id) {
-        getDocument(id)
+        getDocument(this.props.api, id)
             .then(
                 res => {
                     const data = res.data._embedded;
                     const document = data.document
-                    const docType = document.info.docType;
+                    const docType = document.info.doctype;
                     const owner = document.owner;
                     const height = data.height;
 
@@ -88,7 +89,7 @@ class Document extends Component {
 
                     this.setState({
                         isLoad: true,
-                        raw: res.data,
+                        raw: JSON.stringify(res.data, null, 4),
                         id: document.info.docid.id,
                         detailed,
                         docType,
@@ -134,12 +135,19 @@ class Document extends Component {
 
         if (isBlockCityDocumentId(search)) {
             this.props.history.push(`${page.document.default}/${search}`);
+            window.location.reload();
+        }
+        else {
+            alert("invalid document id")
+            this.setState({
+                search: ""
+            });
         }
     }
 
     userData() {
         const { detailed } = this.state;
-        const user = [
+        const user = [[
             "User Data", [
                 [docKeys.user.gold, detailed.gold],
                 [docKeys.user.bankgold, detailed.bankgold],
@@ -150,14 +158,14 @@ class Document extends Component {
                 [docKeys.user.intel, detailed.statistics.intelligence],
                 [docKeys.user.vital, detailed.statistics.vital]
             ]
-        ];
+        ]];
 
         return <DetailCard keyIndex={null} items={user} />
     }
 
     landData() {
         const { detailed } = this.state;
-        const land = [
+        const land = [[
             "Land Data", [
                 [docKeys.land.address, detailed.address],
                 [docKeys.land.area, detailed.area],
@@ -166,7 +174,7 @@ class Document extends Component {
                 [docKeys.land.rentdate, detailed.rentdate],
                 [docKeys.land.period, detailed.periodday]
             ]
-        ]
+        ]]
 
         return <DetailCard keyIndex={null} items={land} />
     }
@@ -177,7 +185,7 @@ class Document extends Component {
             (x, idx) => ([`${docKeys.vote.candidate} ${idx}`, x.address, [null, (x) => this.props.history.push(`${page.account.default}/${x}`)]])
         )
 
-        const vote = [
+        const vote = [[
             "Vote Data", [
                 [docKeys.vote.round, detailed.round],
                 [docKeys.vote.endtime, detailed.endvotetime],
@@ -186,7 +194,7 @@ class Document extends Component {
                 [docKeys.vote.office, detailed.termofoffice],
                 ...candidates
             ]
-        ]
+        ]]
 
         return <DetailCard keyIndex={null} items={vote} />
     }
@@ -194,7 +202,7 @@ class Document extends Component {
     historyData() {
         const { detailed } = this.state;
 
-        const history = [
+        const history = [[
             "History Data", [
                 [docKeys.history.name, detailed.name],
                 [docKeys.history.account, detailed.account, [null, (x) => this.props.history.push(`${page.account.default}/${x}`)]],
@@ -202,7 +210,7 @@ class Document extends Component {
                 [docKeys.history.usage, detailed.usage],
                 [docKeys.history.app, detailed.application]
             ]
-        ]
+        ]]
 
         return <DetailCard keyIndex={null} items={history} />
     }
@@ -268,4 +276,12 @@ class Document extends Component {
     }
 }
 
-export default Document;
+const mapStateToProps = state => ({
+    modelVersion: state.info.modelVersion,
+    api: state.network.api,
+});
+
+export default connect(
+    mapStateToProps,
+    null
+)(Document);
