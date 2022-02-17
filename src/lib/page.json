@@ -38,6 +38,9 @@
         "params": "/operations/:address",
         "key": "address"
     },
+    "documents": {
+        "default": "/documents"
+    },
     "document": {
         "default": "/document",
         "params": "/document/:id",

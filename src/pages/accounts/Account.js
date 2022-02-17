@@ -433,7 +433,7 @@ class Account extends Component {
 
     }
 
-    onDocumentsNext() {
+    onDocumentNext() {
         const { idx, linkStack } = this.state.documentsRes;
 
         if (idx + 1 >= linkStack.length) {
@@ -449,10 +449,11 @@ class Account extends Component {
                             ...this.state.documentsRes,
                             documents: documents.map(
                                 doc => {
-                                    const id = doc.document.info.docid.id;
+                                    const id = doc._embedded.document.info.docid.id;
+                                    const suffix = id.substring(id.length - 3);
                                     let docType = "UNKNOWN";
-    
-                                    switch(id) {
+
+                                    switch(suffix) {
                                         case docHint.docid.user:
                                             docType = DOC_USER;
                                             break;
@@ -471,8 +472,8 @@ class Account extends Component {
                                     return {
                                         docType,
                                         id,
-                                        owner: doc.document.owner,
-                                        height: doc.height
+                                        owner: doc._embedded.document.owner,
+                                        height: doc._embedded.height
                                     };
                                 }
                             ),
@@ -525,7 +526,7 @@ class Account extends Component {
         }
     }
 
-    onDocumentsPrev() {
+    onDocumentPrev() {
         const { idx, linkStack } = this.state.documentsRes;
  
         if (idx <= 0) {
@@ -543,10 +544,11 @@ class Account extends Component {
                                 ...this.state.documentsRes,
                                 documents: documents.map(
                                     doc => {
-                                        const id = doc.document.info.docid.id;
+                                        const id = doc._embedded.document.info.docid.id;
+                                        const suffix = id.substring(id.length - 3);
                                         let docType = "UNKNOWN";
         
-                                        switch(id) {
+                                        switch(suffix) {
                                             case docHint.docid.user:
                                                 docType = DOC_USER;
                                                 break;
@@ -565,8 +567,8 @@ class Account extends Component {
                                         return {
                                             docType,
                                             id,
-                                            owner: doc.document.owner,
-                                            height: doc.height
+                                            owner: doc._embedded.document.owner,
+                                            height: doc._embedded.height
                                         };
                                     }
                                 ),

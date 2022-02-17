@@ -21,6 +21,7 @@ import { setNodeInfo } from './store/actions';
 import NetworkBox from './components/NetworkBox';
 import DropNavigation from './components/DropNavigation';
 import Footer from './components/Footer';
+import Documents from './pages/documents/Documents';
 
 class App extends Component {
 
@@ -59,7 +60,7 @@ class App extends Component {
   }
 
   render() {
-    const { node, account, accounts, block, blocks, operation, operations, currency, currencies, document } = page;
+    const { node, account, accounts, block, blocks, operation, operations, currency, currencies, document, documents } = page;
     return (
       <div className="App" >
         <BrowserRouter>
@@ -83,8 +84,9 @@ class App extends Component {
           <Route exact path={operation.default} component={Operation} />
           <Route exact path={operation.params} component={Operation} />
 
+          <Route exact path={documents.default} component={Documents} />
           <Route exact path={document.default} component={Document} />
-          <Route exact path={document.params} component={Document} />
+          <Route path={document.params} component={Document} />
 
           <Route exact path={currencies.default} component={Currencies} />
           <Route exact path={currency.default} component={Currencies} />

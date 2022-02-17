@@ -15,6 +15,7 @@ export const urls = {
     allOperation: env.REACT_APP_ALL_OPERATIONS,
     document: env.REACT_APP_DOCUMENT,
     documents: env.REACT_APP_DOCUMENTS,
+    allDocument: env.REACT_APP_ALL_DOCUMENTS,
 }
 
 export async function getResponse(api, next) {
@@ -71,6 +72,10 @@ export async function getCurrency(api, currency) {
 
 export async function getDocument(api, id) {
     return await axios.get(api + urls.document + id);
+}
+
+export async function getAllDocuments(api) {
+    return await axios.get(api + urls.allDocument);
 }
 
 // libs

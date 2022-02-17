@@ -5,7 +5,7 @@
         "operations": "Operations",
         "accounts": "Accounts",
         "currencies": "Currencies",
-        "document": "Document"
+        "documents": "Documents"
     },
     "placeholder": {
         "node": "Enter fact hash, account address, or public key...",

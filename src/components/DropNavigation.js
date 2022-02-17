@@ -60,9 +60,9 @@ class DropNavigation extends Component {
                             onClick={() => this.onCheckOut()}>
                             <p>{message.menu.currencies}</p>
                         </Link>
-                        <Link to={page.document.default}
+                        <Link to={page.documents.default}
                             onClick={() => this.onCheckOut()}>
-                            <p>{message.menu.document}</p>
+                            <p>{message.menu.documents}</p>
                         </Link>
                     </section>
                 </div>

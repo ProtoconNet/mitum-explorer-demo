@@ -20,7 +20,7 @@ export default function Navigation() {
         <Link to="/operations">{message.menu.operations}</Link>
         <Link to="/accounts">{message.menu.accounts}</Link>
         <Link to="/currencies">{message.menu.currencies}</Link>
-        <Link to="/document">{message.menu.document}</Link>
+        <Link to="/documents">{message.menu.documents}</Link>
       </nav>
     </header>
   );
