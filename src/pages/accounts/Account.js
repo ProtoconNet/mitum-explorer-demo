@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { connect } from 'react-redux';
 
 import './Account.scss';
@@ -55,6 +55,8 @@ const DOC_HISTORY = "HISTORY";
 class Account extends Component {
     constructor(props) {
         super(props);
+
+        this.accRef = createRef();
 
         this.state = {
             search: "",
@@ -760,6 +762,12 @@ class Account extends Component {
         );
     }
 
+    scrollToElement() {
+        if(this.accRef.current) {
+            this.accRef.current.scrollIntoView({ block: "start", behavior: "smooth" });
+        }
+    }
+
     render() {
         const state = this.state;
         return (
@@ -772,9 +780,11 @@ class Account extends Component {
                         onSearch={() => this.onSearch()}
                         value={state.search} />
                 </Card>
+                <div ref={this.accRef} style={{width: 0, weight: 0}}></div>
                 {this.renderAccountInfo()}
                 {this.renderOperations()}
                 {this.renderDocuments()}
+                {this.state.isAccountLoad ? this.scrollToElement() : null}
             </div>
         )
     }
